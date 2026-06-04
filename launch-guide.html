@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGP — New Site Launch Guide</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #181c27;
+      --surface2: #1e2333;
+      --border: #2a3048;
+      --accent: #6c8ef5;
+      --accent-dim: #232d5a;
+      --green: #34c97d;
+      --green-dim: #1a4a35;
+      --yellow: #f5c842;
+      --yellow-dim: #4a3d10;
+      --text: #e2e8f0;
+      --text-muted: #8892a4;
+      --text-dim: #4a5470;
+      --radius: 12px;
+      --radius-sm: 7px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px 100px;
+    }
+
+    .container { max-width: 780px; margin: 0 auto; }
+
+    /* ── Header ── */
+    .page-header { margin-bottom: 44px; }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .page-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.55;
+    }
+
+    /* ── Progress strip ── */
+    .progress-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: sticky;
+      top: 16px;
+      z-index: 50;
+      box-shadow: 0 4px 24px rgba(0,0,0,.5);
+    }
+    .progress-numbers {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .progress-numbers span { font-size: 14px; font-weight: 400; color: var(--text-muted); }
+    .progress-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* ── Step card ── */
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .step.done { border-color: var(--green-dim); }
+    .step.open { border-color: var(--accent-dim); }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .step-header:hover { background: rgba(255,255,255,.02); }
+
+    .step-num {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+    .step.done .step-num {
+      background: var(--green-dim);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .step.done .step-num::after { content: '✓'; }
+    .step.done .step-num-inner { display: none; }
+
+    .step-info { flex: 1; }
+    .step-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .step-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .step-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 99px;
+      letter-spacing: .04em;
+    }
+    .pill-start { background: var(--accent-dim); color: var(--accent); }
+    .pill-files { background: #2a2242; color: #a78bfa; }
+    .pill-email { background: #1e3a2a; color: #4ade80; }
+    .pill-deploy { background: #2a1a3a; color: #c084fc; }
+    .pill-check { background: #2a2210; color: var(--yellow); }
+
+    .chevron {
+      font-size: 11px;
+      color: var(--text-dim);
+      transition: transform .25s;
+    }
+    .step.open .chevron { transform: rotate(90deg); }
+
+    /* ── Step body ── */
+    .step-body {
+      display: none;
+      padding: 0 22px 22px;
+      border-top: 1px solid var(--border);
+    }
+    .step.open .step-body { display: block; }
+
+    /* ── Content placeholder (shell mode) ── */
+    .shell-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+      gap: 10px;
+    }
+    .shell-icon { font-size: 28px; }
+    .shell-text {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+    .shell-badge {
+      font-size: 11px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+    .step-pending {
+      opacity: 0.45;
+      filter: grayscale(0.4);
+      pointer-events: none;
+    }
+    .step-pending .step-num-inner {
+      background: var(--surface2);
+      color: var(--text-dim);
+      border: 2px dashed var(--border);
+    }
+    .step-pending .step-title { color: var(--text-muted); }
+    .step-pending .step-desc { color: var(--text-dim); }
+    .step-pending .shell-badge {
+      background: var(--surface2);
+      color: var(--text-dim);
+    }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; margin-top: 16px; }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      flex: 1;
+    }
+    .checklist input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      background: var(--surface2);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: background .15s, border-color .15s;
+      position: relative;
+    }
+    .checklist input[type="checkbox"]:checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .checklist input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px; top: 1px;
+      width: 8px; height: 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg);
+    }
+    .checklist li.checked .item-text {
+      color: var(--text-dim);
+      text-decoration: line-through;
+      text-decoration-color: var(--text-dim);
+    }
+    .item-text { flex: 1; }
+    .item-note {
+      display: block;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ── Section heading inside body ── */
+    .body-heading {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-dim);
+      margin: 20px 0 6px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .body-heading:first-of-type { border-top: none; margin-top: 18px; }
+
+    /* ── Info / tip boxes ── */
+    .info-box {
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 14px 0;
+      line-height: 1.6;
+    }
+    .tip-box {
+      border-left: 3px solid var(--yellow);
+      background: var(--yellow-dim);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #c9a32a;
+      margin: 14px 0;
+    }
+    .tip-box strong { color: var(--yellow); }
+
+    /* ── Table ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 12px 0;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 8px 12px;
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table code {
+      background: #0d1119;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: #a8c4f0;
+    }
+    .data-table .note { color: var(--text-muted); font-size: 12px; }
+
+    /* ── Links ── */
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Done banner ── */
+    .done-banner {
+      display: none;
+      background: var(--green-dim);
+      border: 1px solid var(--green);
+      border-radius: var(--radius);
+      padding: 18px 24px;
+      color: var(--green);
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 32px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-eyebrow">AGP · New Client Site</div>
+    <h1 class="page-title">Site Launch Guide <span style="font-size:16px; font-weight:500; color:var(--text-muted); margin-left:8px;">v1</span></h1>
+    <p class="page-sub">Follow these steps in order — from creating the repo to handing off a live site. Check things off as you go.</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-strip">
+    <div class="progress-numbers"><span id="prog-done">0</span> <span>/ <span id="prog-total">0</span> done</span></div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="prog-label">Let's get started</div>
+  </div>
+
+  <!-- ── Step 1 ── -->
+  <div class="step" id="step1">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">1</span></div>
+      <div class="step-info">
+        <div class="step-title">Crawl the existing site</div>
+        <div class="step-desc">Run Screaming Frog on the client's current site and save the export</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-files">Prep</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="info-box">
+        This crawl captures everything on the client's current site before we touch anything. It's used by the audit and kickoff script to map out existing pages, spot issues, and build a redirect plan. Do this before running the audit.
+      </div>
+
+      <p class="body-heading">Run the crawl</p>
+      <ul class="checklist" data-step="1">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open Screaming Frog on your computer
+            <span class="item-note">Don't have it? Download free at <a href="https://www.screamingfrog.co.uk/seo-spider/" target="_blank">screamingfrog.co.uk</a> — the free version crawls up to 500 URLs which covers most clients.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Type the client's current domain into the search bar at the top and hit <strong>Start</strong>
+            <span class="item-note">Use the live domain — the one their site is currently on, not the new one we're building.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Wait for the crawl to finish — the counter at the top will stop moving</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Export the files</p>
+      <ul class="checklist" data-step="1">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">In the filter dropdown (top left, usually set to "All"), switch it to <strong>Internal</strong>
+            <span class="item-note">This filters to just pages on the client's own site — no external links or third-party URLs.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go to <strong>File → Export → Export All</strong> and save the file as <code>sf_internal.csv</code>
+            <span class="item-note">Save it temporarily to the <strong>AGP – Org / 11 - Web Development</strong> folder in Google Drive. Once the repo is cloned, you'll move it into the <code>exports/</code> folder inside the project.</span>
+          </span></label>
+        </li>
+      </ul>
+
+      <div class="tip-box">
+        <strong>Do you need to export anything else?</strong> For most clients, Internal is all you need — it gives you every page on the site which is what the audit and redirect map use. One extra export worth grabbing if the client has a lot of content is <strong>Response Codes</strong> (shows any existing 404s or broken pages). Everything else — external links, images, etc. — isn't needed for our workflow.
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- ── Step 2 ── -->
+  <div class="step" id="step2">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">2</span></div>
+      <div class="step-info">
+        <div class="step-title">Run the Growth Audit</div>
+        <div class="step-desc">Create a new Claude project from the audit template and follow the instructions inside</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-check">Audit</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="info-box">
+        The Growth Audit is a scored report of the client's current digital presence — SEO health, site performance, local search, and more. It becomes the foundation for the playbook and tells us what to prioritize on the new site.
+      </div>
+
+      <p class="body-heading">Set up the project</p>
+      <ul class="checklist" data-step="2">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open Claude and go to <strong>Projects</strong> in the left sidebar</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Find the <strong>[Client] Audit</strong> template project and duplicate it — rename it to the client's name
+            <span class="item-note">If you don't see a template, ask Skyler — it lives in the AGP shared Claude organization.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the new project and read the instructions pinned at the top before starting
+            <span class="item-note">The project has a built-in guide — follow it step by step. It tells you exactly what to give Claude and what to expect back.</span>
+          </span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Run the audit</p>
+      <ul class="checklist" data-step="2">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Follow all the steps inside the Claude project to completion</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Save the final audit HTML output to <strong>AGP – Org / 11 - Web Development / [Client Folder]</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Copy the latest master brief into the same folder — <strong>AGP – Org / 11 - Web Development / [Client Folder]</strong>
+            <span class="item-note">This keeps all the pre-build deliverables in one place and makes it easy to move everything into the repo at once in Step 4.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Audit is reviewed and ready — no major blockers before proceeding</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 3 ── -->
+  <div class="step" id="step3">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">3</span></div>
+      <div class="step-info">
+        <div class="step-title">Build the Sitemap</div>
+        <div class="step-desc">Create a new Claude project from the sitemap template and follow the instructions inside</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-files">Sitemap</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="info-box">
+        The Sitemap deliverable plans out every page the new site will have — URLs, page hierarchy, keyword targets, and internal linking structure. It drives how the repo gets configured and what pages get built.
+      </div>
+
+      <p class="body-heading">Set up the project</p>
+      <ul class="checklist" data-step="3">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go back to <strong>Projects</strong> in Claude</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Find the <strong>[Client] Sitemap</strong> template project and duplicate it — rename it to the client's name</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the new project and read the instructions pinned at the top before starting</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Build the sitemap</p>
+      <ul class="checklist" data-step="3">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Follow all the steps inside the Claude project to completion</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Save the final sitemap HTML output to <strong>AGP – Org / 11 - Web Development</strong>
+            <span class="item-note">Drop it in the root alongside the audit and master brief — everything stays together until the repo is ready.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Sitemap is reviewed and approved — page list and URLs are locked in</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 4 ── -->
+  <div class="step" id="step4">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">4</span></div>
+      <div class="step-info">
+        <div class="step-title">Create &amp; clone the repo</div>
+        <div class="step-desc">Use the AGP template on GitHub, then get it onto your computer</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-start">Setup</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Create the repo from the template</p>
+      <div class="info-box">
+        The AGP Astro starter is a GitHub template — not a regular repo. Using "Use this template" gives the new site its own clean history, completely separate from the starter.
+      </div>
+      <ul class="checklist" data-step="4">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go to <a href="https://github.com/alloygp/agp-astro-starter" target="_blank">github.com/alloygp/agp-astro-starter</a>
+            <span class="item-note">You need to be logged into GitHub and have access to the AloyGP org.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Click <strong>Use this template → Create a new repository</strong>
+            <span class="item-note">Name it something like <code>clientname-site</code> — all lowercase, hyphens not spaces.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check the box for <strong>Include all branches</strong> before creating
+            <span class="item-note">This copies the full branch structure (main, dev, staging) from the template — Vercel uses these branches to power separate dev and staging environments.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Set the owner to <strong>alloygp</strong> and visibility to <strong>Private</strong>, then click Create repository</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Clone it to your computer</p>
+      <div class="info-box">
+        Cloning downloads a copy of the repo to your machine so you can work on it locally. Two options below — use whichever you're comfortable with.
+      </div>
+      <ul class="checklist" data-step="4">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text"><strong>Option A — GitHub Desktop (no terminal):</strong> Click the green <strong>Code</strong> button on the repo page → <strong>Open with GitHub Desktop</strong> → choose a folder on your computer → Clone
+            <span class="item-note">GitHub Desktop is available at <a href="https://desktop.github.com" target="_blank">desktop.github.com</a> if you don't have it.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text"><strong>Option B — Terminal:</strong> Copy the repo URL from GitHub, then run <code>git clone [url]</code> in your terminal
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm the folder is on your computer and you can see the files inside it</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Move your files into the repo</p>
+      <div class="info-box">
+        Now that the repo is on your computer, move the files you've been collecting into the right folders. The kickoff script will look for them here automatically when it runs.
+      </div>
+      <ul class="checklist" data-step="4">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Move <code>sf_internal.csv</code> from your Google Drive temp folder into the <code>exports/</code> folder inside the repo
+            <span class="item-note">This folder is gitignored — the file won't be committed to GitHub, it's only used locally by the kickoff script.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Move the master brief into the <code>_client/</code> folder inside the repo — name it <code>master_brief.html</code> (or <code>.pdf</code>)
+            <span class="item-note">The kickoff script picks it up from here automatically and copies it into <code>_build/</code> alongside the SEO tracker and launch readiness file.</span>
+          </span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 5 ── -->
+  <div class="step" id="step5">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">5</span></div>
+      <div class="step-info">
+        <div class="step-title">Run the kickoff</div>
+        <div class="step-desc">Claude configures the entire repo — fills in the client's details, generates the SEO tracker, and sets up the .env file</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-start">Kickoff</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="info-box">
+        The kickoff script does about 20 minutes of manual setup work in one shot — it wires the client's details into all the config files, generates the SEO tracker spreadsheet, and creates the launch readiness checklist. Only the name and domain are required to get started. Everything else Claude asks for can be grabbed from the master brief or skipped and filled in later — nothing will break, it just stays as a placeholder.
+      </div>
+
+      <p class="body-heading">Set up the Cowork project</p>
+      <ul class="checklist" data-step="5">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open Cowork and find the <strong>AGP Astro Starter</strong> project in the projects list</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Create a new project from that template — rename it to the client's name
+            <span class="item-note">The template has instructions and context already set up inside. Don't start from a blank project.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Add the cloned repo folder as the working folder for the project
+            <span class="item-note">In Cowork, use the folder picker to point it at the repo you cloned in Step 4. This is how Claude can read and write the actual site files.</span>
+          </span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">The only two required things</p>
+      <ul class="checklist" data-step="5">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Client's full business name <span class="item-note">e.g. "Edison Association Management"</span></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Production domain <span class="item-note">e.g. "edisonassociationmanagement.com" — no https://, no trailing slash</span></span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Grab from the brief if you have it</p>
+      <div class="info-box">
+        Claude will ask for these — pull them from the master brief if it's done. If not, just hit Enter to skip and they'll be filled in as TODOs for later.
+      </div>
+      <ul class="checklist" data-step="5">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Tagline <span class="item-note">Goes in the browser tab title alongside the client name — e.g. "Edison AM — HOA Management Made Simple"</span></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Phone number, city, and state <span class="item-note">Used in the invisible schema markup search engines read. For multi-location clients just use the primary or HQ. Can be added later.</span></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Lead notification email <span class="item-note">Where form submissions get delivered. Usually the client's main contact email — important to get right before launch.</span></span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Run it</p>
+      <ul class="checklist" data-step="5">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the repo folder in Cowork — make sure Claude has the repo selected as its working folder</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Type: <strong>"Kick off [Client Name] on [domain.com]"</strong> and send it
+            <span class="item-note">Claude will confirm the details and ask for anything missing before running. Review the summary it shows before saying yes.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Wait for it to finish — Claude will tell you when it's done and list anything that still needs to be filled in manually</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Confirm what was generated</p>
+      <ul class="checklist" data-step="5">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the <code>_build/</code> folder in the repo — you should see the SEO tracker (<code>.xlsx</code>) and launch readiness file (<code>.html</code>)
+            <span class="item-note">If the Screaming Frog export was in place, the launch readiness file will include a redirect map. If not, it'll still generate — just without that section.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the SEO tracker and confirm the client name and domain look correct on the first tab</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check the <code>.env</code> file in the root of the repo — it should have the client's domain and notify email filled in
+            <span class="item-note">API keys will show as placeholders for now — those get added in the Resend &amp; Mailchimp step.</span>
+          </span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 7 ── -->
+  <div class="step" id="step7">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">7</span></div>
+      <div class="step-info">
+        <div class="step-title">Add brand assets</div>
+        <div class="step-desc">Logo, OG image, and favicon — drop them into the repo before launch</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-files">Assets</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="info-box">
+        All three files go into the same folder: <code>public/assets/</code> inside the repo. The names must match exactly — the site references them by filename.
+      </div>
+
+      <p class="body-heading">Logo</p>
+      <ul class="checklist" data-step="7">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Get the client's logo file from the brand assets folder or from the client directly</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Convert or export it as an <strong>SVG file</strong> — name it exactly <code>logo.svg</code>
+            <span class="item-note">SVG is required — it scales cleanly at any size and keeps the file small. If you only have a PNG, ask the client for the SVG or check the brand guide. Most logos will have an SVG version.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Drop it into <code>public/assets/logo.svg</code> in the repo</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">OG Image (social share card)</p>
+      <ul class="checklist" data-step="7">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Create the OG image using <strong>Claude Design</strong> in Cowork
+            <span class="item-note">Open a new Cowork conversation, select the Canvas Design skill, and ask Claude to create a social share image for the client. Give it the brand colors, logo, and tagline. This is the sitewide default — every page will use this image when shared on social. Per-page dynamic OG images come later.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Export as a <strong>PNG file, exactly 1200 × 630 pixels</strong> — name it <code>og.png</code>
+            <span class="item-note">1200×630 is the universal size that works across LinkedIn, Slack, iMessage, Facebook, and X. Keep the file under 300KB — compress it at <a href="https://tinypng.com" target="_blank">tinypng.com</a> if needed.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Drop it into <code>public/assets/og.png</code> in the repo</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Preview how it looks when shared by pasting the live URL into <a href="https://www.opengraph.xyz" target="_blank">opengraph.xyz</a> after deploying
+            <span class="item-note">Do this after Step 9 (Deploy) — you need a live URL for it to work.</span>
+          </span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Favicon</p>
+      <ul class="checklist" data-step="7">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Export a square version of the logo mark as a <strong>PNG file, 512 × 512 pixels</strong> — name it <code>favicon.png</code>
+            <span class="item-note">Use just the mark or icon — not the full horizontal logo lockup. It needs to read clearly at very small sizes (16px in some browsers). 512px gives the browser enough resolution to scale it down cleanly for any device.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Drop it into <code>public/assets/favicon.png</code> in the repo</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 8 ── -->
+  <div class="step" id="step8">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">8</span></div>
+      <div class="step-info">
+        <div class="step-title">Hook up Resend</div>
+        <div class="step-desc">Verify the sender domain so the site can deliver emails</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-email">Email</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Step 1 — Add the domain in Resend</p>
+      <div class="info-box">
+        Go to <a href="https://resend.com/domains" target="_blank">resend.com</a> → <strong>Domains → Add Domain</strong> and enter the client domain. Resend will give you DNS records to add — they'll look like this:
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Type</th><th>Name</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>TXT</td>
+            <td><code>resend._domainkey</code></td>
+            <td><span class="note"><code>p=MIGf...</code> (DKIM key Resend generates)</span></td>
+          </tr>
+          <tr>
+            <td>MX</td>
+            <td><code>send</code></td>
+            <td><code>feedback-smtp.us-east-1.amazonses.com</code> <span class="note">(priority 10)</span></td>
+          </tr>
+          <tr>
+            <td>TXT</td>
+            <td><code>send</code></td>
+            <td><code>v=spf1 include:amazonses.com ~all</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px; color:var(--text-muted); margin-top:8px;">Add these wherever the client's DNS is managed (GoDaddy, Cloudflare, etc.). Verification usually takes a few minutes.</p>
+
+      <p class="body-heading">Step 2 — Get your Resend API key</p>
+      <div class="info-box">
+        Resend → <strong>API Keys → Create API Key</strong> → name it "[Client] Production" → copy it. You'll add this to Vercel in Step 9.
+      </div>
+
+      <ul class="checklist" data-step="8">
+        <li><label><input type="checkbox" /><span class="item-text">Domain added in Resend and DNS records entered at the client's registrar</span></label></li>
+        <li><label><input type="checkbox" /><span class="item-text">Resend domain shows as <strong>Verified</strong></span></label></li>
+        <li><label><input type="checkbox" /><span class="item-text">Resend API key created and copied — ready to paste into Vercel</span></label></li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 9 ── -->
+  <div class="step" id="step9">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">9</span></div>
+      <div class="step-info">
+        <div class="step-title">Deploy to Vercel</div>
+        <div class="step-desc">Push to GitHub, connect Vercel, wire up env vars, and set up dev &amp; staging environments</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-deploy">Deploy</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Push to GitHub with GitHub Desktop</p>
+      <div class="info-box">
+        Everything you've done so far is only on your local machine. This step pushes it up to GitHub so Vercel can see it and deploy it.
+      </div>
+      <ul class="checklist" data-step="9">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open <strong>GitHub Desktop</strong> and make sure the client repo is selected in the top-left dropdown</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">You'll see all the changed files listed on the left — add a short summary in the <strong>Summary</strong> field at the bottom (e.g. "Initial kickoff setup")
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Click <strong>Commit to main</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Click <strong>Publish repository</strong> (if first push) or <strong>Push origin</strong> (if the repo already exists on GitHub)
+            <span class="item-note">If it asks about visibility, keep it set to Private.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm the repo appears on GitHub — go to <a href="https://github.com/alloygp" target="_blank">github.com/alloygp</a> and check it's there with your latest files</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Connect to Vercel</p>
+      <ul class="checklist" data-step="9">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go to <a href="https://vercel.com" target="_blank">vercel.com</a> and open the AGP team account</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Click <strong>Add New → Project</strong> and select the client repo from the GitHub list</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Vercel will detect it as an Astro project automatically — leave the build settings as-is and click <strong>Deploy</strong>
+            <span class="item-note">The first deploy will be to a temporary Vercel URL like <code>clientname.vercel.app</code> — that's fine, the real domain gets added next.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Wait for the build to finish — the status bar will turn green when it's done. If it fails, check the build log for errors.</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Set up dev and staging environments</p>
+      <div class="info-box">
+        The template repo has three branches — <code>main</code>, <code>dev</code>, and <code>staging</code>. Vercel maps each branch to its own URL. This is how you get three live environments (dev, staging, production) from one repo so the team can review changes before anything goes to the real site.
+      </div>
+      <ul class="checklist" data-step="9">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">In Vercel, go to <strong>Project → Settings → Domains</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Add <code>dev-[client].alloygp.co</code> and assign it to the <strong>dev</strong> branch
+            <span class="item-note">Replace <code>[client]</code> with the client slug — all lowercase, hyphens. E.g. <code>dev-acmemanagement.alloygp.co</code></span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Add <code>stg-[client].alloygp.co</code> and assign it to the <strong>staging</strong> branch</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Vercel will show DNS records to add — these go on the <strong>alloygp.co</strong> domain, not the client's domain. Add the CNAME records in wherever alloygp.co DNS is managed.</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm both subdomains resolve and the site loads — dev branch changes show at the dev URL, staging branch shows at the staging URL
+            <span class="item-note">The production domain (the client's real domain) gets added at launch — not now.</span>
+          </span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 10 ── -->
+  <div class="step" id="step10">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">10</span></div>
+      <div class="step-info">
+        <div class="step-title">Build the site with Claude</div>
+        <div class="step-desc">Hand off the design to Claude, port it to Astro, push to staging</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-start">Build</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Get the Claude Design handoff</p>
+      <div class="info-box">
+        Claude Design produces a handoff document alongside the design export — it describes every component, layout, color, and spacing decision in plain language so Claude can build it accurately in code. You need that file before you open Cowork.
+      </div>
+      <ul class="checklist" data-step="10">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the Claude Design project and export the finished design
+            <span class="item-note">Use the export or handoff option inside the canvas — it will produce a zip or folder with component files and the handoff doc.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Save the handoff document and any exported assets to the <strong>AGP – Org / 11 - Web Development</strong> folder — you'll reference it in the next step</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Open the client Cowork project</p>
+      <div class="info-box">
+        Each client has its own Cowork project pre-wired to the client repo. This is where you hand Claude the design and let it build.
+      </div>
+      <ul class="checklist" data-step="10">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open Cowork and switch to the <strong>[Client]</strong> project (not the AGP Astro Starter template — the one you created for this client in Step 5)</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm the working folder is still pointed at the client repo on your computer</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Tell Claude to build from the handoff</p>
+      <div class="info-box">
+        Attach the handoff document and any exported design files, then send Claude the prompt below. It will read the handoff and start building the Astro components and pages.
+      </div>
+      <ul class="checklist" data-step="10">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Attach the handoff document to the message (drag it into the Cowork chat or use the attachment button)</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Send Claude this prompt:<br><br>
+            <span class="item-note" style="display:block; white-space:pre-wrap; font-family: monospace; font-size:12px; padding:10px 12px; margin-top:6px; line-height:1.6;">"Using the attached handoff document, build out all the pages and components in this Astro repo. Follow the design specs exactly — colors, fonts, spacing, copy. Use the existing BaseLayout, site.ts config, and schema utilities already in the repo. Don't change anything in src/config/site.ts or the SEO infrastructure — only build the page components and layouts."</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Review Claude's output as it builds — if something looks off, tell it in plain language ("the header should be sticky" / "the CTA button color is wrong") and it will fix it</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Push to staging with GitHub Desktop</p>
+      <div class="info-box">
+        Once the build looks good locally, push to the <code>staging</code> branch so you can see it at the live staging URL and share it for review.
+      </div>
+      <ul class="checklist" data-step="10">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open <strong>GitHub Desktop</strong>, confirm the client repo is selected, and switch to the <strong>staging</strong> branch
+            <span class="item-note">Use the branch dropdown at the top — click it and select <code>staging</code>. If you don't see it, click Fetch origin first.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Add a summary (e.g. "Port design to Astro") and click <strong>Commit to staging</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Click <strong>Push origin</strong> to send it up to GitHub</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go to Vercel and watch the deployment — wait for it to turn green, then open <code>stg-[client].alloygp.co</code> and confirm the site looks right
+            <span class="item-note">If the build fails, copy the error from the Vercel build log and paste it to Claude in Cowork — it will identify and fix the issue.</span>
+          </span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 11 ── -->
+  <div class="step" id="step11">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">11</span></div>
+      <div class="step-info">
+        <div class="step-title">Wire up forms &amp; test</div>
+        <div class="step-desc">Add API keys to Vercel, test every form, add spam protection</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-email">Forms</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Add environment variables in Vercel</p>
+      <div class="info-box">
+        These values live in the <code>.env</code> file the kickoff script generated — open that file and copy them into Vercel under <strong>Project → Settings → Environment Variables</strong>. Each variable has an environment scope — set it exactly as shown so dev/staging don't accidentally fire production analytics or send real emails.
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Variable</th><th>Value</th><th>Environment</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>RESEND_API_KEY</code></td>
+            <td>The API key you created in Resend (Step 8)</td>
+            <td>Production &amp; Preview</td>
+          </tr>
+          <tr>
+            <td><code>INTERNAL_NOTIFY_EMAIL</code></td>
+            <td>The inbox that receives form submissions (e.g. <code>hello@clientdomain.com</code>)</td>
+            <td>Production &amp; Preview</td>
+          </tr>
+          <tr>
+            <td><code>PUBLIC_ENV</code></td>
+            <td><code>production</code></td>
+            <td>Production only</td>
+          </tr>
+          <tr>
+            <td><code>PUBLIC_ENV</code></td>
+            <td><code>development</code></td>
+            <td>Preview only</td>
+          </tr>
+          <tr>
+            <td><code>GA_MEASUREMENT_ID</code></td>
+            <td><code>G-XXXXXXXXXX</code> — from Google Analytics</td>
+            <td>Production &amp; Preview</td>
+          </tr>
+          <tr>
+            <td><code>MAILCHIMP_API_KEY</code></td>
+            <td>From Mailchimp → Account → Extras → API keys</td>
+            <td>Production &amp; Preview</td>
+          </tr>
+          <tr>
+            <td><code>MAILCHIMP_LIST_ID</code></td>
+            <td>Audience ID from Mailchimp → Audience → Settings</td>
+            <td>Production &amp; Preview</td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="checklist" data-step="11">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">All variables above added in Vercel under <strong>Project → Settings → Environment Variables</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Trigger a redeploy — <strong>Deployments → latest deploy → Redeploy</strong> — so the new variables take effect</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Test the contact form</p>
+      <div class="info-box">
+        Forms are the most common thing to silently break after a deploy. Astro's server-side form handling needs specific syntax to work in a deployed environment — if a form works locally but fails on Vercel, it almost always means the form action or API route isn't wired up correctly for SSR. Claude can fix this in seconds.
+      </div>
+      <ul class="checklist" data-step="11">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the staging site and submit the contact form with a real test entry</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm the notification email arrived in <code>INTERNAL_NOTIFY_EMAIL</code>
+            <span class="item-note">If nothing arrived: check Resend → Logs first. If the email never hit Resend, the form isn't submitting correctly — fix that first (see below). If it hit Resend but didn't deliver, it's a DNS/domain verification issue.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm the success state / thank-you message shows after submit</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">If the form isn't working — ask Claude to fix it</p>
+      <div class="info-box">
+        Open the client's Cowork project and paste this prompt. Claude will audit the form code and fix the deployment syntax automatically.
+      </div>
+      <ul class="checklist" data-step="11">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the Cowork project and send Claude:
+            <span class="item-note" style="display:block; white-space:pre-wrap; font-family: monospace; font-size:12px; padding:10px 12px; margin-top:6px; line-height:1.6;">"The contact form on the staging site isn't sending emails. Review the form component and its API route — check that the form action is correct for Astro SSR on Vercel, that the API endpoint is handling POST requests properly, and that the Resend integration is wired up correctly. Fix whatever is broken so the form submits and the notification email arrives."</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Commit the fix via GitHub Desktop and push to staging — retest the form</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Add honeypot spam protection</p>
+      <div class="info-box">
+        A honeypot is a hidden field bots fill in but real users never see. Any submission that includes it gets silently dropped — no CAPTCHA needed, no friction for real visitors. This should be on every form.
+      </div>
+      <ul class="checklist" data-step="11">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">In the Cowork project, send Claude:
+            <span class="item-note" style="display:block; white-space:pre-wrap; font-family: monospace; font-size:12px; padding:10px 12px; margin-top:6px; line-height:1.6;">"Add honeypot spam protection to all forms on the site. Add a hidden input field that real users won't see (styled with CSS to be invisible and outside the tab order), and in the form handler reject any submission where that field has a value."</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Commit and push to staging — retest the form to confirm it still works correctly for a real submission</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 12 ── -->
+  <div class="step" id="step12">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">12</span></div>
+      <div class="step-info">
+        <div class="step-title">Mobile optimization</div>
+        <div class="step-desc">Check every page on mobile, fix layout issues with Claude</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-check">Mobile</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Review each page on mobile</p>
+      <div class="info-box">
+        Open the staging site on your phone, or use Chrome DevTools — right-click anywhere → Inspect → click the phone/tablet icon in the top-left of the panel. Go through every page and look for anything that's broken, cramped, or hard to read.
+      </div>
+      <ul class="checklist" data-step="12">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go through every page and check for text that overflows, images that are too wide, or sections that feel cramped
+            <span class="item-note">Common issues: hero text too large, two-column layouts that don't stack, CTA buttons too close together, padding too tight on section edges.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check that all buttons and links are easy to tap — nothing too small or too close to another tap target</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check the navigation — menu opens and closes correctly, all links work on touch</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check forms — inputs are large enough to tap, keyboard pops up correctly, and submit works on mobile</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check at tablet size too — resize the browser to ~768px wide and spot any layout issues between mobile and desktop</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Fix any issues with Claude</p>
+      <div class="info-box">
+        Describe exactly what you're seeing and on which page. The more specific you are, the faster Claude will fix it.
+      </div>
+      <ul class="checklist" data-step="12">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the Cowork project and describe any issues you found — e.g. "On the homepage, the hero text is too large on mobile and pushes the CTA button below the fold. Fix the font size and spacing so both are visible on a 390px screen."</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Commit the fixes via GitHub Desktop and push to staging — recheck on mobile before moving on</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 13 ── -->
+  <div class="step" id="step13">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">13</span></div>
+      <div class="step-info">
+        <div class="step-title">Internal review &amp; client approval</div>
+        <div class="step-desc">Review in Pastel, fix feedback, get client sign-off</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-files">Review</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Add the site to Pastel</p>
+      <div class="info-box">
+        Pastel is a website annotation tool — it lets reviewers click anywhere on a live page and leave a comment pinned to that exact element. No screenshots, no vague emails. Go to <a href="https://usepastel.com" target="_blank">usepastel.com</a>, create a new review, and paste in the staging URL.
+      </div>
+      <ul class="checklist" data-step="13">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go to <a href="https://usepastel.com" target="_blank">usepastel.com</a>, log in, and create a new review — paste in <code>stg-[client].alloygp.co</code> as the URL</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Copy the Pastel review URL — you'll use it in the next step</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Get Claude to build a page-by-page review list</p>
+      <div class="info-box">
+        Pastel lets you navigate to any page within the review by appending the path to the review URL. Ask Claude to generate a full list of every page on the site with clickable Pastel links so the review team can jump directly to each page without navigating manually.
+      </div>
+      <ul class="checklist" data-step="13">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the Cowork project and send Claude:
+            <span class="item-note" style="display:block; white-space:pre-wrap; font-family: monospace; font-size:12px; padding:10px 12px; margin-top:6px; line-height:1.6;">"List every page on this site as a complete sitemap. Then reformat it as a review checklist — for each page, create a Pastel link using this base URL: [paste your Pastel review URL here]. The format for each link is: [Pastel base URL]?url=[full staging page URL]"</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Copy the output — this is your review checklist with a direct Pastel link to every page on the site</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Internal review</p>
+      <div class="info-box">
+        Send the Pastel review link to the internal team before it goes to the client. Use the page-by-page checklist to make sure every page gets eyes on it.
+      </div>
+      <ul class="checklist" data-step="13">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Share the Pastel review URL (and the page checklist) with the internal team</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Internal team reviews each page in Pastel and leaves comments on anything that needs to change</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Work through all internal comments — use the Cowork project to make fixes, commit and push to staging after each batch</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm all internal comments are resolved in Pastel before sending to the client</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Client review</p>
+      <div class="info-box">
+        Once the internal team is satisfied, send the same Pastel link to the client. They can click on any element and leave a comment directly on the page — no back-and-forth over email trying to describe what they mean.
+      </div>
+      <ul class="checklist" data-step="13">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Share the Pastel review URL with the client</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Work through client feedback — make fixes in Cowork, push to staging, confirm changes in Pastel</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Get written sign-off from the client that the site is approved — a reply email or Slack message works</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 14 ── -->
+  <div class="step" id="step14">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">14</span></div>
+      <div class="step-info">
+        <div class="step-title">SEO Pre-launch</div>
+        <div class="step-desc">Everything you can verify and set up before the production domain is live</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-check">SEO</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Meta &amp; schema</p>
+      <ul class="checklist" data-step="14">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm every page has a unique <code>&lt;title&gt;</code> (50–60 chars) and <code>&lt;meta description&gt;</code> (140–155 chars) — no duplicates, no placeholder text</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Paste the staging URL into <a href="https://search.google.com/test/rich-results" target="_blank">Google Rich Results Test</a> — Organization schema should pass with no errors</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Preview the OG card at <a href="https://www.opengraph.xyz" target="_blank">opengraph.xyz</a> — image, title, and description should all render correctly</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Crawlability &amp; redirects</p>
+      <ul class="checklist" data-step="14">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Verify <code>robots.txt</code> is correct — accessible at <code>/robots.txt</code>, Sitemap line points to the production URL, nothing important is blocked</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Verify the XML sitemap is generating and contains all pages — accessible at <code>/sitemap.xml</code> or <code>/sitemap-index.xml</code></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Review canonical tags across all pages — view source and confirm <code>&lt;link rel="canonical"&gt;</code> matches the page's actual URL with no www mismatch or trailing slash inconsistency</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Verify redirect map coverage — check that every old URL from the Screaming Frog export has either a matching new URL or a redirect in <code>vercel.json</code>
+            <span class="item-note">Orphaned URLs mean lost backlink equity and broken bookmarks. Ask Claude to audit the redirect map against the SF export and flag anything missing.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check for 404s — click every internal link across all pages and confirm nothing is broken</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Tracking setup</p>
+      <ul class="checklist" data-step="14">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm GA4 measurement ID is in the repo and the tag is <strong>not</strong> firing on dev or staging — <code>PUBLIC_ENV</code> must be set to <code>production</code> for the tag to load</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Set up conversion events in GA4 — mark <strong>form submissions</strong> and <strong>phone number clicks</strong> as conversions under <strong>Admin → Events → Mark as conversion</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Set up the client in <a href="https://www.whatconverts.com" target="_blank">WhatConverts</a> — create a new profile, add the tracking script via the Cowork project
+            <span class="item-note">Ask Claude to add the WhatConverts snippet to <code>BaseLayout.astro</code> using <code>is:inline</code>, scoped to <code>PUBLIC_ENV === 'production'</code>.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm the site is set up as a project in <a href="https://ahrefs.com" target="_blank">Ahrefs</a> — should already exist from the Growth Audit in Step 2. If not, add it under <strong>Dashboard → New Project</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Add the production domain as a property in <a href="https://search.google.com/search-console" target="_blank">Google Search Console</a> — use the "Domain" property type so it covers www and non-www automatically
+            <span class="item-note">You can add it now and verify ownership once DNS is pointed at launch.</span>
+          </span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Console check</p>
+      <ul class="checklist" data-step="14">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Open the staging site in Chrome, right-click → Inspect → Console tab — confirm there are no red errors
+            <span class="item-note">Yellow warnings are usually fine. Red errors mean something is broken — paste them into Cowork and ask Claude to fix.</span>
+          </span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 15 ── -->
+  <div class="step" id="step15">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">15</span></div>
+      <div class="step-info">
+        <div class="step-title">Launch</div>
+        <div class="step-desc">Point the production domain, verify SSL, submit to Search Console</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-deploy">Launch</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Merge staging to main</p>
+      <div class="info-box">
+        The production deployment in Vercel is tied to the <code>main</code> branch. Merging staging into main triggers the production build.
+      </div>
+      <ul class="checklist" data-step="15">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">In GitHub Desktop, switch to the <strong>main</strong> branch</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Go to <strong>Branch → Merge into current branch</strong> → select <strong>staging</strong> → click Merge</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Click <strong>Push origin</strong> — Vercel will start a production build automatically</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Wait for the Vercel production build to go green</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Point the production domain</p>
+      <ul class="checklist" data-step="15">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">In Vercel → <strong>Project → Settings → Domains</strong> — add the client's production domain (e.g. <code>clientdomain.com</code>)
+            <span class="item-note">Add both the root domain and <code>www</code> — set the root as primary so Vercel redirects www → root automatically.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Vercel shows the DNS records to add — go to the client's domain registrar (GoDaddy, Cloudflare, Namecheap, etc.) and add them exactly as shown
+            <span class="item-note">Usually an A record and a CNAME. Vercel shows exactly what to copy — don't guess.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Wait for DNS to propagate and the domain status in Vercel to turn green — usually 5–30 minutes
+            <span class="item-note">Vercel provisions an SSL certificate automatically once DNS resolves. No action needed on your end.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Visit the live domain in a browser and confirm it loads over HTTPS with the correct content</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Notify the client</p>
+      <ul class="checklist" data-step="15">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Send the client the live URL and let them know the site is live</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── Step 16 ── -->
+  <div class="step" id="step16">
+    <div class="step-header" onclick="toggleStep(this)">
+      <div class="step-num"><span class="step-num-inner">16</span></div>
+      <div class="step-info">
+        <div class="step-title">SEO Post-launch</div>
+        <div class="step-desc">Day 1, Week 1, and Month 1 checks once the production domain is live</div>
+      </div>
+      <div class="step-right">
+        <span class="step-pill pill-check">SEO</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <p class="body-heading">Day 1</p>
+      <ul class="checklist" data-step="16">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm the site is <strong>not</strong> set to noindex in production — view source on the homepage and search for "noindex". It should not be there.
+            <span class="item-note">In Vercel, confirm <code>PUBLIC_ENV</code> is set to <code>production</code> on the Production environment. If noindex is on, Google won't index a single page.</span>
+          </span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm SSL is active — the site loads at <code>https://</code> and <code>http://</code> redirects to it</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm <code>www</code> redirects to the non-www domain (or vice versa) — both should not resolve independently</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Verify GSC ownership and submit the sitemap — <strong>Search Console → Sitemaps</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Request indexing on the homepage — URL Inspection tool → paste homepage URL → <strong>Request Indexing</strong></span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm all pages are rendering correctly on the live domain — click through every page</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm GA4 is firing on the live site — check <strong>Realtime</strong> in GA4 while visiting pages</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm WhatConverts is receiving leads — submit a test form and make a test call, verify both show in the WhatConverts dashboard</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Run the homepage through <a href="https://pagespeed.web.dev" target="_blank">PageSpeed Insights</a> and record the mobile and desktop scores as a baseline</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Week 1</p>
+      <ul class="checklist" data-step="16">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Monitor crawl stats in Google Search Console — check the Coverage report for any errors or excluded pages</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Check for 404s and crawl errors in Search Console → <strong>Pages</strong> report</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Verify pages are being indexed — URL Inspection on key pages, or check the Index report in Search Console</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Address any bugs or issues reported by the client since launch</span></label>
+        </li>
+      </ul>
+
+      <p class="body-heading">Month 1</p>
+      <ul class="checklist" data-step="16">
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Confirm all pages are indexed in Search Console — no important pages stuck in "Discovered, not indexed" or "Crawled, not indexed"</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Compare traffic to the pre-launch baseline — check GA4 for sessions, users, and channel breakdown vs. the old site</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Verify redirect coverage — spot-check that old URLs are still redirecting correctly and look for any missed URLs showing up as 404s in Search Console</span></label>
+        </li>
+        <li>
+          <label><input type="checkbox" />
+          <span class="item-text">Client check-in — confirm the site is functioning as expected, forms are submitting, leads are coming in</span></label>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <div class="done-banner" id="done-banner">🎉 All done — this site is live and ready for handoff.</div>
+
+</div>
+
+<script>
+  const CHECKS_KEY = 'agp-v2-checks';
+
+  function toggleStep(header) {
+    const step = header.closest('.step');
+    const wasOpen = step.classList.contains('open');
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('open'));
+    if (!wasOpen) step.classList.add('open');
+  }
+
+  function getChecks() {
+    try { return JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}'); } catch { return {}; }
+  }
+  function saveChecks(c) { localStorage.setItem(CHECKS_KEY, JSON.stringify(c)); }
+  function cbId(cb) {
+    return (cb.closest('label')?.innerText || '').slice(0, 60).trim().replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const done = document.querySelectorAll('.checklist input[type="checkbox"]:checked');
+    const pct = all.length ? Math.round(done.length / all.length * 100) : 0;
+    document.getElementById('prog-done').textContent = done.length;
+    document.getElementById('prog-total').textContent = all.length;
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').textContent =
+      pct === 100 ? '🎉 All done!' :
+      pct > 0 ? `${pct}% there` : 'Let\'s get started';
+
+    // mark steps with all boxes checked
+    document.querySelectorAll('.step').forEach(step => {
+      const sCBs = step.querySelectorAll('.checklist input[type="checkbox"]');
+      const sDone = step.querySelectorAll('.checklist input[type="checkbox"]:checked');
+      if (sCBs.length && sDone.length === sCBs.length) step.classList.add('done');
+      else step.classList.remove('done');
+    });
+
+    document.getElementById('done-banner').style.display =
+      all.length && done.length === all.length ? 'block' : 'none';
+  }
+
+  function init() {
+    const saved = getChecks();
+    document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
+      if (saved[cbId(cb)]) {
+        cb.checked = true;
+        cb.closest('li').classList.add('checked');
+      }
+      cb.addEventListener('change', () => {
+        const c = getChecks();
+        c[cbId(cb)] = cb.checked;
+        saveChecks(c);
+        cb.closest('li').classList.toggle('checked', cb.checked);
+        updateProgress();
+      });
+    });
+    updateProgress();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

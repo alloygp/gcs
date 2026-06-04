@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MANUAL SITEMAP — keep in sync with src/pages/ as you build.
+
+  Priority guide:
+    1.0  Homepage
+    0.9  Primary service / money pages
+    0.85 Secondary service pages
+    0.8  Resource / article pages
+    0.7  About, Contact, FAQ
+    0.5  Legal (privacy, terms)
+
+  Change frequency guide:
+    weekly   → homepage, key service pages
+    monthly  → most content pages
+    yearly   → legal pages
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- ── Core ─────────────────────────────────────────────────────────── -->
+  <url>
+    <loc>https://TODO.com/</loc>
+    <lastmod>2026-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- ── TODO: add pages as you build them ────────────────────────────── -->
+  <!--
+  <url>
+    <loc>https://TODO.com/services</loc>
+    <lastmod>2026-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  -->
+
+</urlset>

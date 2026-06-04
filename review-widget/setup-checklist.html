@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review Widget — Reference &amp; Setup</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      background: #f4f2f9;
+      color: #1a1a2e;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+    }
+
+    .page-header {
+      max-width: 720px;
+      margin: 0 auto 40px;
+    }
+    .page-header .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #d9356e;
+      margin-bottom: 10px;
+    }
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #381c4f;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .page-header p {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* ── Day-to-day section ─────────────────────────────────────── */
+    .daily-wrap {
+      max-width: 720px;
+      margin: 0 auto 48px;
+    }
+    .daily-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .daily-badge {
+      background: #d9356e;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+    .daily-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #381c4f;
+    }
+    .daily-subtitle {
+      max-width: 720px;
+      margin: 0 auto 16px;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .flow-step {
+      background: #fff;
+      border-radius: 0;
+      border-bottom: 1px solid #f0ecf8;
+      padding: 18px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      position: relative;
+    }
+    .flow-step:first-child { border-radius: 14px 14px 0 0; }
+    .flow-step:last-child { border-radius: 0 0 14px 14px; border-bottom: none; }
+    .flow-step:only-child { border-radius: 14px; }
+    .flow-num {
+      width: 26px;
+      height: 26px;
+      background: #381c4f;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .flow-body {}
+    .flow-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #381c4f;
+      margin-bottom: 4px;
+    }
+    .flow-desc {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.55;
+    }
+    .flow-desc strong { color: #381c4f; }
+    .flow-desc code {
+      font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+      font-size: 11px;
+      background: #ede9f8;
+      color: #381c4f;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .claude-prompt {
+      background: #1e1433;
+      color: #c9c3e0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 10px;
+      font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .claude-prompt .label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #7a6a9a;
+      margin-bottom: 6px;
+      font-family: "Inter", sans-serif;
+    }
+    .claude-prompt .example { color: #7dd3b0; }
+
+    .url-example {
+      background: #f0faf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 10px;
+      font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+      font-size: 12px;
+      color: #166534;
+    }
+
+    /* ── Divider ────────────────────────────────────────────────── */
+    .divider {
+      max-width: 720px;
+      margin: 0 auto 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .divider-line { flex: 1; height: 1px; background: #e0daea; }
+    .divider-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #b0a8c8;
+    }
+
+    /* ── Setup accordion ────────────────────────────────────────── */
+    .setup-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      background: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(56,28,79,.07);
+      margin-bottom: 0;
+      transition: background 150ms;
+    }
+    .accordion-trigger:hover { background: #faf8fd; }
+    .accordion-trigger.open { border-radius: 14px 14px 0 0; }
+    .accordion-trigger-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .accordion-icon {
+      width: 32px;
+      height: 32px;
+      background: #ede9f8;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .accordion-title { font-size: 15px; font-weight: 800; color: #381c4f; }
+    .accordion-sub { font-size: 12px; color: #999; margin-top: 1px; }
+    .accordion-chevron {
+      color: #b0a8c8;
+      font-size: 18px;
+      transition: transform 200ms;
+    }
+    .accordion-trigger.open .accordion-chevron { transform: rotate(180deg); }
+
+    .accordion-body {
+      display: none;
+      background: #fff;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 4px 16px rgba(56,28,79,.08);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .accordion-body.open { display: block; }
+
+    /* Progress bar (setup only) */
+    .setup-progress-wrap {
+      padding: 16px 22px 0;
+      border-bottom: 1px solid #f5f3fc;
+    }
+    .progress-bar-bg {
+      background: #e8e4f0;
+      border-radius: 99px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #381c4f, #d9356e);
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+    .progress-text {
+      font-size: 11px;
+      color: #999;
+      padding-bottom: 12px;
+    }
+    .progress-text span { color: #381c4f; font-weight: 700; }
+
+    /* ── Shared card styles ─────────────────────────────────────── */
+    .section { padding: 20px 22px 4px; border-bottom: 1px solid #f5f3fc; }
+    .section:last-of-type { border-bottom: none; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .section-num {
+      width: 22px;
+      height: 22px;
+      background: #ede9f8;
+      color: #381c4f;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title { font-size: 13px; font-weight: 800; color: #381c4f; text-transform: uppercase; letter-spacing: .04em; }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f8f7fc;
+      cursor: pointer;
+      transition: opacity 120ms;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item:hover { opacity: .85; }
+    .check-item.done { opacity: .5; }
+
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #d1cce0;
+      border-radius: 5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 150ms;
+    }
+    .check-item.done .checkbox { background: #22c55e; border-color: #22c55e; }
+    .check-icon { display: none; color: #fff; font-size: 11px; font-weight: 800; }
+    .check-item.done .check-icon { display: block; }
+
+    .check-body { flex: 1; }
+    .check-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #381c4f;
+      margin-bottom: 2px;
+    }
+    .check-item.done .check-label { text-decoration: line-through; color: #aaa; }
+    .check-desc { font-size: 12px; color: #888; line-height: 1.5; }
+
+    .check-extra { margin-top: 8px; }
+    code {
+      font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+      font-size: 11px;
+      background: #ede9f8;
+      color: #381c4f;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .code-block {
+      font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+      font-size: 11px;
+      background: #1e1433;
+      color: #c9c3e0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 6px;
+      white-space: pre;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .code-block .kw { color: #d9356e; }
+    .code-block .str { color: #7dd3b0; }
+    .code-block .cm { color: #6b6080; font-style: italic; }
+    .note {
+      background: #fff8e1;
+      border-left: 3px solid #f59e0b;
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: #7a5c00;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .note strong { color: #5a4000; }
+    .tag { display: inline-block; background: #ede9f8; color: #381c4f; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+    .tag.red { background: #fee2e2; color: #991b1b; }
+
+    /* Done banner */
+    .done-banner {
+      padding: 28px;
+      background: linear-gradient(135deg, #381c4f, #d9356e);
+      text-align: center;
+      color: #fff;
+      display: none;
+    }
+    .done-banner.visible { display: block; }
+    .done-banner h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .done-banner p { font-size: 13px; opacity: .8; }
+    .reset-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,.35);
+      color: #fff;
+      border-radius: 6px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: background 150ms;
+    }
+    .reset-btn:hover { background: rgba(255,255,255,.1); }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <img src="https://alloygp.co/assets/alloy-logo-full-color.svg" alt="Alloy Growth Partners" style="height:36px; margin-bottom:20px; display:block;" />
+    <h1>Review Widget</h1>
+    <p>How to run a client review. One-time setup guide is below.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       DAY-TO-DAY: RUNNING A REVIEW SESSION
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="daily-wrap">
+    <div class="daily-header">
+      <div class="daily-badge">Every review</div>
+      <div class="daily-title">Starting a review session</div>
+    </div>
+    <p class="daily-subtitle">3 steps. ~2 minutes.</p>
+
+    <div class="flow-steps">
+
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-body">
+          <div class="flow-label">Create a Zendesk ticket</div>
+          <div class="flow-desc">Apply macro <strong>"Start a review ticket"</strong> — no requester, status <strong>New</strong>. Note the ticket ID from the URL.</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-body">
+          <div class="flow-label">Ask Claude to set up the review</div>
+          <div class="flow-desc">Open a new Cowork chat. Use the format below — give Claude the client name, the staging page URLs, and the ticket ID. Claude handles everything automatically. <strong>Wait 60 seconds</strong> for changes to take effect, then copy the URL Claude gives you.</div>
+          <div class="claude-prompt">
+            <div class="label">Use this format</div>
+            <span class="example">"Set up a review for Keys-Caldwell. Pages: https://stg-keys-caldwell.alloygp.co/, https://stg-keys-caldwell.alloygp.co/hoa-management/. Ticket: 12345."</span>
+          </div>
+          <div id="timer-wrap" style="margin-top:10px;">
+            <button id="timer-btn" onclick="startTimer()" style="background:#381c4f;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit;">
+              <span>&#9201;</span> Start 60s timer
+            </button>
+            <div id="timer-display" style="display:none;margin-top:8px;background:#1e1433;border-radius:10px;padding:12px 16px;align-items:center;gap:12px;">
+              <div id="timer-ring" style="width:44px;height:44px;flex-shrink:0;position:relative;">
+                <svg width="44" height="44" style="transform:rotate(-90deg);">
+                  <circle cx="22" cy="22" r="18" fill="none" stroke="#3a2d5a" stroke-width="4"/>
+                  <circle id="timer-arc" cx="22" cy="22" r="18" fill="none" stroke="#d9356e" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear, stroke 0.3s;"/>
+                </svg>
+                <div id="timer-num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;font-family:inherit;">60</div>
+              </div>
+              <div>
+                <div id="timer-label" style="font-size:13px;font-weight:700;color:#c9c3e0;">Waiting for Vercel to deploy…</div>
+                <div id="timer-sub" style="font-size:11px;color:#6b6080;margin-top:2px;">Copy the URL Claude gave you once the timer ends</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-body">
+          <div class="flow-label">Update the Zendesk ticket</div>
+          <div class="flow-desc">On the ticket you created in step 1, apply the <strong>"Review link sent"</strong> macro. Paste the URL into the link field. Change status to <strong>Pending Review</strong>. Done.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       DIVIDER
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-label">One-time setup</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SETUP ACCORDION
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="setup-wrap">
+    <button class="accordion-trigger" id="setup-trigger" onclick="toggleAccordion()">
+      <div class="accordion-trigger-left">
+        <div class="accordion-icon">🔧</div>
+        <div>
+          <div class="accordion-title">Installing the widget in a new project</div>
+          <div class="accordion-sub">9 sections · ~45 min · only needed once per client site</div>
+        </div>
+      </div>
+      <div class="accordion-chevron">⌄</div>
+    </button>
+
+    <div class="accordion-body" id="setup-body">
+
+      <div class="setup-progress-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="progress-text" id="progress-text"><span>0</span> of <span id="total-count">0</span> steps complete</div>
+      </div>
+
+      <!-- Section 1 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <div class="section-title">Copy the widget code</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Open Keys-Caldwell BaseLayout.astro as reference</div>
+            <div class="check-desc">File is at <code>keys-caldwell-astro/src/layouts/BaseLayout.astro</code>. You'll copy the widget block from here into the new project.</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Copy the widget script block into the new BaseLayout.astro</div>
+            <div class="check-desc">Copy everything from <code>&lt;!-- ── Alloy Preview Review Widget</code> through the closing <code>})();</code> and <code>&lt;/script&gt;</code>. Paste just before <code>&lt;/body&gt;</code> in the new project.</div>
+            <div class="check-extra">
+              <div class="note"><strong>Critical:</strong> The script must stay as <code>is:inline define:vars</code>. External JS bundles get stripped by Pastel's proxy — do not move it to a separate file.</div>
+            </div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Update the localStorage key prefix for this client</div>
+            <div class="check-desc">Change <code>kc_</code> to the new client's initials so review state doesn't bleed between projects.</div>
+            <div class="check-extra">
+              <div class="code-block"><span class="kw">var</span> SK  = <span class="str">'xx_review_v1'</span>;
+<span class="kw">var</span> TK  = <span class="str">'xx_review_v1_ticket'</span>;
+<span class="kw">var</span> ISK = <span class="str">'xx_review_v1_started'</span>;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <div class="section-title">Create review.ts</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Create <code>src/config/review.ts</code> with all site pages</div>
+            <div class="check-desc">Start with all pages set to <code>false</code>. Add every reviewable page. Labels should be human-readable; paths must match exactly including trailing slash.</div>
+            <div class="check-extra">
+              <div class="code-block"><span class="kw">export const</span> PASTEL_BASE = <span class="str">''</span>; <span class="cm">// ← add later</span>
+<span class="kw">export const</span> REVIEW_ITEMS = [
+  { label: <span class="str">'Homepage'</span>, path: <span class="str">'/'</span>,       review: <span class="kw">false</span> },
+  { label: <span class="str">'About'</span>,    path: <span class="str">'/about/'</span>, review: <span class="kw">false</span> },
+];</div>
+            </div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Import review.ts in BaseLayout.astro</div>
+            <div class="check-extra">
+              <div class="code-block"><span class="cm">// frontmatter:</span>
+<span class="kw">import</span> { REVIEW_ITEMS, PASTEL_BASE } <span class="kw">from</span> <span class="str">'../config/review.ts'</span>;
+<span class="cm">// script tag:</span>
+&lt;script is:inline define:vars={{ reviewItems: REVIEW_ITEMS, pastelBase: PASTEL_BASE }}&gt;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div class="section-title">Add assets</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Add <code>public/assets/alloy-icon.png</code></div>
+            <div class="check-desc">Displayed at 20×20px in the pill and 28×28px in the panel header.</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Add Gotham font files to <code>public/fonts/</code></div>
+            <div class="check-desc"><code>Gotham-Book.woff2</code>, <code>Gotham-Medium.woff2</code>, <code>Gotham-Bold.woff2</code>, <code>Gotham-Black.woff2</code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <div class="section-title">Create the API route</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Create <code>src/pages/api/review-complete.ts</code></div>
+            <div class="check-desc">Copy from Keys-Caldwell. Handles the POST on submission — fires Slack notification and comments on the Zendesk ticket.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">5</div>
+          <div class="section-title">Set up Pastel</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Create a new Pastel project pointed at the stg URL</div>
+            <div class="check-desc">Use <code>https://stg-[client].alloygp.co</code> as the canvas URL.</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Copy the share link into <code>PASTEL_BASE</code> in review.ts</div>
+            <div class="check-desc">Format: <code>https://usepastel.com/link/abc123/#</code> — the trailing <code>#</code> is required.</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Confirm the widget loads inside Pastel</div>
+            <div class="check-desc">Open the Pastel share link — widget should appear bottom-right and open automatically.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">6</div>
+          <div class="section-title">Configure Vercel</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Add env vars to the stg Vercel project (Preview environment only)</div>
+            <div class="check-extra">
+              <div class="code-block">REVIEW_SLACK_WEBHOOK  = https://hooks.slack.com/...
+ZENDESK_SUBDOMAIN     = alloycreatives
+ZENDESK_EMAIL         = admin@alloygp.co
+ZENDESK_API_TOKEN     = xxxxxxxxxxxxxxxx</div>
+            </div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Confirm <code>PUBLIC_ENV=production</code> is NOT set on stg</div>
+            <div class="check-desc">If present on the Preview environment it will hide the widget entirely.</div>
+            <div class="check-extra"><div class="note"><span class="tag red">Gotcha</span> Most common reason the widget disappears after deployment. Always check this first.</div></div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Redeploy stg after adding env vars</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 7 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">7</div>
+          <div class="section-title">Set up git branches</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Create <code>stg</code> and <code>dev</code> branches and push both to origin</div>
+            <div class="check-extra">
+              <div class="code-block">git checkout -b stg && git push origin stg
+git push origin stg:dev</div>
+            </div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Configure Vercel to deploy both branches as Preview</div>
+            <div class="check-desc">Map <code>stg-[client].alloygp.co</code> to the <code>stg</code> branch deployment.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 8 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">8</div>
+          <div class="section-title">Install the Claude skill</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Install <code>review-widget-setup.skill</code> in Cowork</div>
+            <div class="check-desc">This enables the day-to-day workflow above. Any employee can set up a review session just by asking Claude.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 9 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">9</div>
+          <div class="section-title">Final smoke test</div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Enable 2–3 pages and push to stg</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Open <code>https://stg-[client].alloygp.co?review=TEST</code> through Pastel</div>
+            <div class="check-desc">Widget should open automatically on the cover screen.</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Complete the full review flow</div>
+            <div class="check-desc">Cover screen → check all pages → confetti fires → submit → success state appears → Slack notification fires.</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="checkbox"><span class="check-icon">✓</span></div>
+          <div class="check-body">
+            <div class="check-label">Reset review.ts back to all <code>false</code></div>
+            <div class="check-desc">Widget stays hidden until the first real review session.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done banner -->
+      <div class="done-banner" id="done-banner">
+        <h3>🎉 Widget is live!</h3>
+        <p>All setup steps complete. Use the day-to-day steps above for every review session from here.</p>
+        <button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+      </div>
+
+    </div><!-- /accordion-body -->
+  </div><!-- /setup-wrap -->
+
+  <!-- ══════════════════════════════════════════════════════════════
+       HOW IT WORKS ACCORDION
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="setup-wrap" style="margin-top: 12px;">
+    <button class="accordion-trigger" id="how-trigger" onclick="toggleHow()">
+      <div class="accordion-trigger-left">
+        <div class="accordion-icon">⚙️</div>
+        <div>
+          <div class="accordion-title">How it works — under the hood</div>
+          <div class="accordion-sub">Full technical walkthrough of every moving part</div>
+        </div>
+      </div>
+      <div class="accordion-chevron">⌄</div>
+    </button>
+
+    <div class="accordion-body" id="how-body">
+
+      <!-- Part 1: Config file -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <div class="section-title">review.ts — the source of truth</div>
+        </div>
+        <div class="check-desc" style="padding: 0 0 14px;">
+          <p style="margin-bottom:10px;">Every review session is controlled by a single file: <code>src/config/review.ts</code>. It holds three things:</p>
+          <div class="code-block"><span class="kw">export const</span> PASTEL_BASE = <span class="str">'https://usepastel.com/link/opjd87ro/#'</span>; <span class="cm">// fixed per client, set once</span>
+<span class="kw">export const</span> TICKET_ID   = <span class="str">'12345'</span>;                                  <span class="cm">// updated each review by Claude</span>
+
+<span class="kw">export const</span> REVIEW_ITEMS = [
+  { label: <span class="str">'Homepage'</span>,       path: <span class="str">'/'</span>,                review: <span class="kw">true</span> },
+  { label: <span class="str">'HOA Management'</span>, path: <span class="str">'/hoa-management/'</span>, review: <span class="kw">true</span> },
+];</div>
+          <p style="margin-top:10px;"><strong>PASTEL_BASE</strong> never changes — it's the permanent Pastel share URL for this client. <strong>TICKET_ID</strong> and the <strong>REVIEW_ITEMS</strong> list are rewritten by Claude via the GitHub API at the start of each review session. Only pages with <code>review: true</code> appear in the widget. If no pages are <code>true</code>, the widget is completely hidden.</p>
+        </div>
+      </div>
+
+      <!-- Part 2: GitHub API push -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <div class="section-title">How Claude updates the file</div>
+        </div>
+        <div class="check-desc" style="padding: 0 0 14px;">
+          <p style="margin-bottom:10px;">When an employee asks Claude to set up a review, Claude uses the <strong>GitHub REST API</strong> — no git credentials, no Terminal, no mounted folders. It does two API calls:</p>
+          <div class="code-block"><span class="cm"># 1. Read current file to get its SHA (required for update)</span>
+GET /repos/alloygp/{client}-astro/contents/src/config/review.ts?ref=stg
+
+<span class="cm"># 2. Write the new file content (base64-encoded) back to stg</span>
+PUT /repos/alloygp/{client}-astro/contents/src/config/review.ts
+    → message, content (base64), sha, branch: "stg"
+
+<span class="cm"># 3. Force-sync dev to match stg</span>
+PATCH /repos/alloygp/{client}-astro/git/refs/heads/dev
+    → sha: &lt;new commit sha&gt;, force: true</div>
+          <p style="margin-top:10px;">A fine-grained PAT scoped to the <code>alloygp</code> org (Contents: read/write) is embedded in the skill. Claude derives the repo name automatically from the client name using the slug convention: <code>{slug}-astro</code>.</p>
+        </div>
+      </div>
+
+      <!-- Part 3: Vercel deploy -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div class="section-title">Vercel picks up the push and deploys</div>
+        </div>
+        <div class="check-desc" style="padding: 0 0 14px;">
+          <p>Pushing to the <code>stg</code> branch triggers a Vercel Preview deployment automatically. This is why employees wait 60 seconds after Claude finishes — Vercel needs time to build and deploy the new <code>review.ts</code>. The <code>dev</code> branch is force-synced to the same commit so both branches stay in sync.</p>
+        </div>
+      </div>
+
+      <!-- Part 4: Widget injection -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <div class="section-title">Widget injection via BaseLayout.astro</div>
+        </div>
+        <div class="check-desc" style="padding: 0 0 14px;">
+          <p style="margin-bottom:10px;">The widget lives inside <code>BaseLayout.astro</code> as a single <code>&lt;script is:inline define:vars&gt;</code> block. At build time, Astro bakes the config values directly into the HTML:</p>
+          <div class="code-block"><span class="cm">// Astro reads review.ts at build time:</span>
+<span class="kw">import</span> { REVIEW_ITEMS, PASTEL_BASE, TICKET_ID } <span class="kw">from</span> <span class="str">'../config/review.ts'</span>;
+
+<span class="cm">// Values get baked into the rendered HTML as inline JS vars:</span>
+&lt;script is:inline define:vars={{ reviewItems: REVIEW_ITEMS, pastelBase: PASTEL_BASE, ticketIdFromConfig: TICKET_ID }}&gt;</div>
+          <p style="margin-top:10px;">Because the config is baked in at render time, the widget works even inside Pastel's proxy — no external fetch needed. The <code>is:inline</code> flag prevents Astro from bundling the script, which would break Pastel compatibility.</p>
+          <div class="note"><strong>Why not a URL param?</strong> Early versions used <code>?review=TICKETID</code> in the URL. That was dropped because the Pastel link is fixed and can't change each session. Now the ticket ID travels via the deployed file instead.</div>
+        </div>
+      </div>
+
+      <!-- Part 5: Client experience -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">5</div>
+          <div class="section-title">What the client sees</div>
+        </div>
+        <div class="check-desc" style="padding: 0 0 14px;">
+          <p style="margin-bottom:10px;">The client opens the fixed Pastel URL (e.g. <code>https://usepastel.com/link/opjd87ro/</code>) and sees the staging site inside Pastel's frame. The widget loads bottom-right and opens automatically with a cover screen. The flow:</p>
+          <div class="code-block">Cover screen (intro + start button)
+  ↓
+Page checklist (only pages with review: true)
+  ↓  client navigates to each page via sidebar, checks it off
+Confetti fires when all pages are checked
+  ↓
+"Submit review" button appears
+  ↓
+Success state — widget closes, submission sent</div>
+          <p style="margin-top:10px;">State (which pages are checked, ticket ID) is saved to <code>localStorage</code> so the client can close and reopen without losing progress. Everything is cleared after submission so the next review session starts fresh.</p>
+        </div>
+      </div>
+
+      <!-- Part 6: Submission -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">6</div>
+          <div class="section-title">What happens on submit</div>
+        </div>
+        <div class="check-desc" style="padding: 0 0 14px;">
+          <p style="margin-bottom:10px;">On submit, the widget POSTs to the Astro API route <code>/api/review-complete</code> with the ticket ID and list of reviewed pages. The API route does two things in parallel:</p>
+          <div class="code-block"><span class="cm"># 1. Slack notification → #pastel-review channel</span>
+POST REVIEW_SLACK_WEBHOOK
+  { "text": "✅ Keys-Caldwell review complete — ticket #12345\nPages: Homepage, HOA Management" }
+
+<span class="cm"># 2. Zendesk ticket comment</span>
+POST https://{ZENDESK_SUBDOMAIN}.zendesk.com/api/v2/tickets/{ticketId}/comments
+  { "body": "Client completed review. Pages approved: ..." }</div>
+          <p style="margin-top:10px;">All credentials (<code>REVIEW_SLACK_WEBHOOK</code>, <code>ZENDESK_SUBDOMAIN</code>, <code>ZENDESK_EMAIL</code>, <code>ZENDESK_API_TOKEN</code>) are stored as Vercel environment variables on the stg project — never in the codebase.</p>
+        </div>
+      </div>
+
+      <!-- Part 7: Production guard -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">7</div>
+          <div class="section-title">Production guard</div>
+        </div>
+        <div class="check-desc" style="padding: 0 0 14px;">
+          <p>The widget checks for <code>PUBLIC_ENV === 'production'</code> at runtime. If that env var is set, the widget never renders — it exits silently at the top of the script. This prevents the widget from accidentally appearing on the live client site. The <code>stg</code> Vercel project must <strong>not</strong> have this var set.</p>
+        </div>
+      </div>
+
+    </div><!-- /accordion-body -->
+  </div><!-- /how-wrap -->
+
+  <!-- ══════════════════════════════════════════════════════════════
+       GOTCHAS ACCORDION
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="setup-wrap" style="margin-top: 12px;">
+    <button class="accordion-trigger" id="gotcha-trigger" onclick="toggleGotchas()">
+      <div class="accordion-trigger-left">
+        <div class="accordion-icon">⚠️</div>
+        <div>
+          <div class="accordion-title">Gotchas &amp; lessons learned</div>
+          <div class="accordion-sub">Traps we've already fallen into — don't repeat them</div>
+        </div>
+      </div>
+      <div class="accordion-chevron">⌄</div>
+    </button>
+
+    <div class="accordion-body" id="gotcha-body">
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">1</div><div class="section-title">Widget must use <code style="font-size:11px;">is:inline define:vars</code></div></div>
+        <div class="check-desc" style="padding:0 0 14px;">External JS bundles are stripped by the Pastel proxy. The entire widget must be inline. <code>define:vars</code> bakes server-side config into the HTML at render time — it wraps the script in an outer IIFE. Never move the widget to a separate <code>.js</code> file or import it as a module.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">2</div><div class="section-title">No git merge conflict markers inside the script block</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">Unresolved conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) inside the script block cause a silent JS syntax error. The widget appears in the HTML but never runs. Always resolve merge conflicts cleanly before pushing.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">3</div><div class="section-title">Body opacity — widget needs <code style="font-size:11px;">opacity:1</code> explicitly</div></div>
+        <div class="check-desc" style="padding:0 0 14px;"><code>global.css</code> has <code>@supports not (view-transition-name: none) &#123; body &#123; opacity: 0; &#125; &#125;</code> — body starts invisible on some browsers. The widget container needs <code>opacity:1 !important</code> in its inline style to counteract inheritance, otherwise it never appears.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">4</div><div class="section-title">Confetti must attach to <code style="font-size:11px;">document.body</code>, not the widget wrapper</div></div>
+        <div class="check-desc" style="padding:0 0 14px;"><code>wrap.innerHTML = html</code> wipes everything inside the wrapper on every render. Attaching confetti particles to the wrapper means they get destroyed the next render cycle. Attach them directly to <code>document.body</code> with <code>position:fixed</code>, and always call <code>launchConfetti()</code> <em>after</em> <code>render()</code>, not before.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">5</div><div class="section-title">Confetti z-index must be higher than the panel</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">Widget panel is <code>z-index: 2147483647</code>. Confetti particles must be <code>2147483648</code> or higher, otherwise they render behind the panel and are invisible.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">6</div><div class="section-title">"Open page" links use direct paths, not Pastel URLs</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">Early versions linked to <code>pastelBase + item.path</code>. This caused <em>"invalid-proxy-usage"</em> errors when the Pastel link was stale or malformed. Links now go directly to <code>item.path</code> (same-tab navigation). The client stays inside Pastel's proxy because they loaded the page through Pastel in the first place.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">7</div><div class="section-title">Pastel comment mode is undetectable from our JS</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">We investigated every possible signal — body classes, style tag counts, fixed overlays, PerformanceObserver, localStorage. Nothing changes between Browse and Comment mode from our page's perspective. The blue border lives on Pastel's outer application frame, which is cross-origin. The cover screen Browse mode reminder is the only viable solution.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">8</div><div class="section-title">Pastel's own "Finish review" button can't be hidden</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">Pastel injects its own "Finish review" button into the toolbar. The toolbar is iframe-sandboxed so CSS and MutationObserver both fail. A best-effort CSS rule is in the widget but may not work. If it becomes a problem, ask Pastel support if there's a setting to disable it.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">9</div><div class="section-title">Most common reason the widget disappears: <code style="font-size:11px;">PUBLIC_ENV=production</code> on stg</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">If <code>PUBLIC_ENV=production</code> is set on the stg Vercel project (even under Preview environment), the widget's visibility guard suppresses it entirely. Always check this first when a widget that was working stops appearing. Remove the var — let <code>review: true/false</code> in <code>review.ts</code> control visibility.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-num">10</div><div class="section-title">Google Drive can silently revert files</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">If another process conflicts with a file open in Google Drive, Drive may revert it. Before assuming Claude's GitHub API push was wrong, check the actual file content on GitHub directly. The push either succeeded (check commit history) or failed with an explicit error — Drive conflicts are a separate issue.</div>
+      </div>
+
+      <div class="section" style="border-bottom:none;">
+        <div class="section-header"><div class="section-num">11</div><div class="section-title">Git lock files in Terminal</div></div>
+        <div class="check-desc" style="padding:0 0 14px;">If Terminal shows "lock file already exists," run:
+          <div class="code-block">rm -f .git/HEAD.lock .git/index.lock .git/CHERRY_PICK_HEAD.lock .git/packed-refs.lock</div>
+        </div>
+      </div>
+
+    </div><!-- /accordion-body -->
+  </div><!-- /gotcha-wrap -->
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MARKETING OVERVIEW ACCORDION
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="setup-wrap" style="margin-top: 12px; margin-bottom: 48px;">
+    <button class="accordion-trigger" id="mkt-trigger" onclick="toggleMkt()">
+      <div class="accordion-trigger-left">
+        <div class="accordion-icon">✨</div>
+        <div>
+          <div class="accordion-title">Client-facing overview</div>
+          <div class="accordion-sub">How to describe this to a client</div>
+        </div>
+      </div>
+      <div class="accordion-chevron">⌄</div>
+    </button>
+
+    <div class="accordion-body" id="mkt-body">
+
+      <div class="section" style="border-bottom:none;">
+        <div class="check-desc" style="padding: 0 0 6px;">
+
+          <!-- Hero tagline -->
+          <div style="background: linear-gradient(135deg, #381c4f 0%, #6b2d8b 60%, #d9356e 100%); border-radius: 10px; padding: 24px 24px 22px; margin-bottom: 20px; color: #fff;">
+            <div style="font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; opacity: .65; margin-bottom: 8px;">Alloy Preview Review</div>
+            <div style="font-size: 22px; font-weight: 800; line-height: 1.25; margin-bottom: 10px;">Your website review, simplified.</div>
+            <div style="font-size: 14px; opacity: .8; line-height: 1.6;">No emails back and forth. No screenshots. No "which version is this?" — just a clean, guided walkthrough of every page that needs your sign-off.</div>
+          </div>
+
+          <!-- Value props -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+
+            <div style="background: #faf8fd; border: 1px solid #ede9f8; border-radius: 10px; padding: 16px;">
+              <div style="font-size: 18px; margin-bottom: 6px;">🔗</div>
+              <div style="font-size: 13px; font-weight: 800; color: #381c4f; margin-bottom: 4px;">One link, every time</div>
+              <div style="font-size: 12px; color: #777; line-height: 1.5;">You get the same Alloy preview link for every review. Bookmark it — you'll use it every time we have pages ready for your feedback.</div>
+            </div>
+
+            <div style="background: #faf8fd; border: 1px solid #ede9f8; border-radius: 10px; padding: 16px;">
+              <div style="font-size: 18px; margin-bottom: 6px;">✅</div>
+              <div style="font-size: 13px; font-weight: 800; color: #381c4f; margin-bottom: 4px;">Built-in checklist</div>
+              <div style="font-size: 12px; color: #777; line-height: 1.5;">A sidebar panel lists every page we need you to review. Check them off as you go — nothing gets missed, and we always know where things stand.</div>
+            </div>
+
+            <div style="background: #faf8fd; border: 1px solid #ede9f8; border-radius: 10px; padding: 16px;">
+              <div style="font-size: 18px; margin-bottom: 6px;">💬</div>
+              <div style="font-size: 13px; font-weight: 800; color: #381c4f; margin-bottom: 4px;">Leave comments in context</div>
+              <div style="font-size: 12px; color: #777; line-height: 1.5;">See something that needs a tweak? Click directly on the page to leave a pinned comment — no separate tool, no "third paragraph, second sentence" confusion.</div>
+            </div>
+
+            <div style="background: #faf8fd; border: 1px solid #ede9f8; border-radius: 10px; padding: 16px;">
+              <div style="font-size: 18px; margin-bottom: 6px;">⚡</div>
+              <div style="font-size: 13px; font-weight: 800; color: #381c4f; margin-bottom: 4px;">Instant handoff to our team</div>
+              <div style="font-size: 12px; color: #777; line-height: 1.5;">When you hit submit, our team is notified immediately. No follow-up email needed — we pick up revisions the moment you're done.</div>
+            </div>
+
+          </div>
+
+          <!-- How it works for the client -->
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 12px; font-weight: 800; color: #381c4f; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px;">How a review works</div>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+
+              <div style="display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; background: #fff; border: 1px solid #ede9f8; border-radius: 10px 10px 0 0;">
+                <div style="width:24px; height:24px; background:#381c4f; color:#fff; border-radius:50%; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">1</div>
+                <div>
+                  <div style="font-size:13px; font-weight:700; color:#381c4f; margin-bottom:2px;">You get a link from us</div>
+                  <div style="font-size:12px; color:#777; line-height:1.5;">We send your Alloy preview link with the pages that are ready. Click it to open the staging site in the Pastel review environment.</div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; background: #fff; border: 1px solid #ede9f8; border-top: none;">
+                <div style="width:24px; height:24px; background:#381c4f; color:#fff; border-radius:50%; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">2</div>
+                <div>
+                  <div style="font-size:13px; font-weight:700; color:#381c4f; margin-bottom:2px;">Review each page</div>
+                  <div style="font-size:12px; color:#777; line-height:1.5;">A panel on the right shows your page list. Navigate to each one, leave any comments directly on the page, then check it off.</div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; background: #fff; border: 1px solid #ede9f8; border-top: none;">
+                <div style="width:24px; height:24px; background:#381c4f; color:#fff; border-radius:50%; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">3</div>
+                <div>
+                  <div style="font-size:13px; font-weight:700; color:#381c4f; margin-bottom:2px;">Hit submit when you're done</div>
+                  <div style="font-size:12px; color:#777; line-height:1.5;">Once all pages are checked, hit "Submit review." Our team gets notified instantly and we get to work on any revisions.</div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; background: #fff; border: 1px solid #ede9f8; border-top: none; border-radius: 0 0 10px 10px;">
+                <div style="width:24px; height:24px; background:#22c55e; color:#fff; border-radius:50%; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">✓</div>
+                <div>
+                  <div style="font-size:13px; font-weight:700; color:#166534; margin-bottom:2px;">That's it</div>
+                  <div style="font-size:12px; color:#777; line-height:1.5;">No email, no PDF, no spreadsheet. Your feedback is logged, the ticket is updated, and we're already on it.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Suggested client email -->
+          <div style="margin-bottom: 6px;">
+            <div style="font-size: 12px; font-weight: 800; color: #381c4f; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;">Suggested intro email to client</div>
+            <div style="background: #1e1433; color: #c9c3e0; border-radius: 10px; padding: 16px 18px; font-size: 12px; line-height: 1.7; font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace; white-space: pre-wrap;">Subject: Your staging site is ready to review
+
+Hi [Name],
+
+Your first round of pages is ready for review! We've set up a simple review tool that makes it easy to go through each page and leave feedback directly on the site — no email thread required.
+
+Here's your review link:
+→ [PASTEL URL]
+
+Just click through each page in the panel on the right, leave any comments by clicking directly on the page, check each one off as you go, and hit "Submit" when you're done.
+
+Let us know if you have any questions — otherwise we'll pick up your feedback as soon as you submit.
+
+[Your name]</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /accordion-body -->
+  </div><!-- /mkt-wrap -->
+
+  <script>
+    // ── 60-second deploy timer ───────────────────────────────────────
+    var timerInterval = null;
+
+    function playChime() {
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6
+        notes.forEach(function(freq, i) {
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          var t = ctx.currentTime + i * 0.18;
+          gain.gain.setValueAtTime(0, t);
+          gain.gain.linearRampToValueAtTime(0.25, t + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+          osc.start(t);
+          osc.stop(t + 0.55);
+        });
+      } catch(e) {}
+    }
+
+    function launchTimerConfetti() {
+      var colors = ['#381c4f','#d9356e','#7dd3b0','#f59e0b','#60a5fa','#fff'];
+      for (var i = 0; i < 120; i++) {
+        (function(i) {
+          setTimeout(function() {
+            var el = document.createElement('div');
+            var size = Math.random() * 8 + 5;
+            var color = colors[Math.floor(Math.random() * colors.length)];
+            var shape = Math.random() > 0.5 ? '50%' : '0';
+            el.style.cssText = [
+              'position:fixed',
+              'left:' + (Math.random() * 100) + 'vw',
+              'top:-10px',
+              'width:' + size + 'px',
+              'height:' + size + 'px',
+              'background:' + color,
+              'border-radius:' + shape,
+              'opacity:1',
+              'z-index:99999',
+              'pointer-events:none',
+              'transform:rotate(' + (Math.random()*360) + 'deg)',
+              'transition:transform ' + (1.5+Math.random()*2) + 's ease-in, top ' + (1.5+Math.random()*2) + 's ease-in, opacity 0.5s ease ' + (2+Math.random()) + 's'
+            ].join(';');
+            document.body.appendChild(el);
+            requestAnimationFrame(function() {
+              el.style.top = (80 + Math.random() * 20) + 'vh';
+              el.style.transform = 'rotate(' + (Math.random()*720) + 'deg)';
+              el.style.opacity = '0';
+            });
+            setTimeout(function() { el.remove(); }, 4000);
+          }, i * 18);
+        })(i);
+      }
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      var btn = document.getElementById('timer-btn');
+      var display = document.getElementById('timer-display');
+      var num = document.getElementById('timer-num');
+      var arc = document.getElementById('timer-arc');
+      var label = document.getElementById('timer-label');
+      var sub = document.getElementById('timer-sub');
+      var circumference = 113;
+      var total = 60;
+      var remaining = total;
+
+      btn.style.display = 'none';
+      display.style.display = 'flex';
+
+      timerInterval = setInterval(function() {
+        remaining--;
+        num.textContent = remaining;
+        arc.style.strokeDashoffset = circumference * (1 - remaining / total);
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          arc.style.stroke = '#22c55e';
+          num.textContent = '&#10003;';
+          label.textContent = 'Ready! Open the URL Claude gave you.';
+          label.style.color = '#7dd3b0';
+          sub.textContent = 'Vercel has had time to deploy the changes.';
+          playChime();
+          launchTimerConfetti();
+        }
+      }, 1000);
+    }
+
+        var STORAGE_KEY = 'agp-widget-setup-v2';
+
+    function getState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+    }
+    function saveState(obj) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch(e) {}
+    }
+
+    function allItems() { return document.querySelectorAll('.check-item'); }
+
+    function updateProgress() {
+      var items = allItems();
+      var done = document.querySelectorAll('.check-item.done').length;
+      var total = items.length;
+      document.getElementById('total-count').textContent = total;
+      var pct = total ? Math.round(done / total * 100) : 0;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').innerHTML =
+        '<span>' + done + '</span> of <span id="total-count">' + total + '</span> steps complete';
+      document.getElementById('done-banner').classList.toggle('visible', done === total && total > 0);
+    }
+
+    function toggle(el) {
+      el.classList.toggle('done');
+      var state = getState();
+      var items = allItems();
+      items.forEach(function(item, i) { state['step_' + i] = item.classList.contains('done'); });
+      saveState(state);
+      updateProgress();
+    }
+
+    function resetAll() {
+      allItems().forEach(function(el) { el.classList.remove('done'); });
+      saveState({});
+      updateProgress();
+    }
+
+    function toggleAccordion() {
+      var trigger = document.getElementById('setup-trigger');
+      var body = document.getElementById('setup-body');
+      var isOpen = body.classList.contains('open');
+      trigger.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+      try { localStorage.setItem('agp-setup-accordion', !isOpen ? '1' : '0'); } catch(e) {}
+    }
+
+    function toggleHow() {
+      var trigger = document.getElementById('how-trigger');
+      var body = document.getElementById('how-body');
+      var isOpen = body.classList.contains('open');
+      trigger.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+      try { localStorage.setItem('agp-how-accordion', !isOpen ? '1' : '0'); } catch(e) {}
+    }
+
+    function toggleGotchas() {
+      var trigger = document.getElementById('gotcha-trigger');
+      var body = document.getElementById('gotcha-body');
+      var isOpen = body.classList.contains('open');
+      trigger.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+      try { localStorage.setItem('agp-gotcha-accordion', !isOpen ? '1' : '0'); } catch(e) {}
+    }
+
+    function toggleMkt() {
+      var trigger = document.getElementById('mkt-trigger');
+      var body = document.getElementById('mkt-body');
+      var isOpen = body.classList.contains('open');
+      trigger.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+      try { localStorage.setItem('agp-mkt-accordion', !isOpen ? '1' : '0'); } catch(e) {}
+    }
+
+    // Restore state
+    (function() {
+      var state = getState();
+      var items = allItems();
+      items.forEach(function(item, i) { if (state['step_' + i]) item.classList.add('done'); });
+      // Restore accordion state
+      try {
+        if (localStorage.getItem('agp-setup-accordion') === '1') {
+          document.getElementById('setup-trigger').classList.add('open');
+          document.getElementById('setup-body').classList.add('open');
+        }
+        if (localStorage.getItem('agp-gotcha-accordion') === '1') {
+          document.getElementById('gotcha-trigger').classList.add('open');
+          document.getElementById('gotcha-body').classList.add('open');
+        }
+        if (localStorage.getItem('agp-how-accordion') === '1') {
+          document.getElementById('how-trigger').classList.add('open');
+          document.getElementById('how-body').classList.add('open');
+        }
+        if (localStorage.getItem('agp-mkt-accordion') === '1') {
+          document.getElementById('mkt-trigger').classList.add('open');
+          document.getElementById('mkt-body').classList.add('open');
+        }
+      } catch(e) {}
+      updateProgress();
+    })();
+  </script>
+
+</body>
+</html>

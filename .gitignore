@@ -1,0 +1,15 @@
+dist/
+.astro/
+node_modules/
+.env
+.env.*
+!.env.example
+.vercel/
+.DS_Store
+*.log
+
+# Generated outputs — rebuilt by scripts, don't commit
+_build/
+
+# Raw data exports (Screaming Frog, Ahrefs CSVs) — large files, no need to commit
+exports/

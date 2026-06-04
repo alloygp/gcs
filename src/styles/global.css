@@ -1,0 +1,56 @@
+/* ==========================================================================
+   global.css — start here, add client's design system below
+   ========================================================================== */
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+img, video { max-width: 100%; display: block; }
+
+/* ---------- Font faces ----------
+   Add @font-face declarations here for any self-hosted fonts.
+   Example:
+
+   @font-face {
+     font-family: "ClientFont";
+     font-weight: 400;
+     font-style: normal;
+     font-display: swap;
+     src: url("/fonts/ClientFont-Regular.woff2") format("woff2");
+   }
+*/
+
+/* ---------- CSS custom properties ----------
+   Define the client's design tokens here.
+   Reference these throughout the rest of the CSS — never hardcode values.
+
+   --color-primary:    #000000;
+   --color-accent:     #000000;
+   --color-bg:         #ffffff;
+   --color-text:       #333333;
+
+   --font-display:     "ClientFont", sans-serif;
+   --font-body:        "ClientFont", sans-serif;
+
+   --space-1: 4px;    --space-2: 8px;   --space-3: 12px;
+   --space-4: 16px;   --space-5: 24px;  --space-6: 32px;
+   --space-7: 48px;   --space-8: 64px;  --space-9: 96px;
+*/
+
+:root {
+  /* Replace with client values */
+  --color-primary: #000000;
+  --color-accent:  #000000;
+  --color-bg:      #ffffff;
+  --color-text:    #333333;
+  --font-display:  system-ui, sans-serif;
+  --font-body:     system-ui, sans-serif;
+}
+
+/* ---------- Base ---------- */
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}

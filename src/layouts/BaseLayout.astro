@@ -1,0 +1,135 @@
+---
+// src/layouts/BaseLayout.astro
+// Generic root layout — works for any AGP client site.
+// All SEO defaults pulled from src/config/site.ts.
+//
+// Usage (minimal):
+//   <BaseLayout title="Page Title" description="Page description.">
+//     ...page content...
+//   </BaseLayout>
+//
+// Usage (article with custom OG image + schema):
+//   <BaseLayout title="..." description="..." ogType="article" ogImage="/assets/og/article.png" pageSchema={articleSchema}>
+//     ...
+//   </BaseLayout>
+
+import '../styles/global.css';
+import { SITE } from '../config/site.ts';
+
+interface Props {
+  /** <title> tag. Keep ≤ 60 chars. Required. */
+  title: string;
+  /** Meta description. Keep 120–160 chars. Required. */
+  description: string;
+  /** og:type. Default: 'website'. Use 'article' for blog/resource pages. */
+  ogType?: 'website' | 'article';
+  /** Per-page OG image path from /public. Default: SITE.defaultOgImage. Must be 1200×630 PNG. */
+  ogImage?: string;
+  /** robots meta. Omit for normal indexed pages. Use 'noindex,nofollow' for thank-you pages etc. */
+  robots?: string;
+  /** Page-specific JSON-LD schema. Pass a single object or array. */
+  pageSchema?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  ogType = 'website',
+  ogImage: ogImageProp,
+  robots,
+  pageSchema,
+} = Astro.props;
+
+const canonicalUrl    = new URL(Astro.url.pathname, Astro.site ?? SITE.url).toString();
+const resolvedOgImage = new URL(ogImageProp ?? SITE.defaultOgImage, Astro.site ?? SITE.url).toString();
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': SITE.org.type,
+  name: SITE.name,
+  url: SITE.url,
+  logo: SITE.org.logo,
+  description,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: SITE.org.addressLocality,
+    addressRegion:   SITE.org.addressRegion,
+    addressCountry:  SITE.org.addressCountry,
+  },
+  telephone: SITE.org.telephone,
+  email:     SITE.org.email,
+  areaServed: SITE.org.areaServed,
+  priceRange: SITE.org.priceRange,
+};
+
+const gaMeasurementId = import.meta.env.GA_MEASUREMENT_ID;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/assets/favicon.png" />
+
+    {robots && <meta name="robots" content={robots} />}
+
+    <!-- Open Graph -->
+    <meta property="og:title"       content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url"         content={canonicalUrl} />
+    <meta property="og:type"        content={ogType} />
+    <meta property="og:site_name"   content={SITE.name} />
+    <meta property="og:locale"      content={SITE.locale} />
+    <meta property="og:image"       content={resolvedOgImage} />
+    <meta property="og:image:type"  content="image/png" />
+    <meta property="og:image:width" content={SITE.ogImageWidth} />
+    <meta property="og:image:height" content={SITE.ogImageHeight} />
+    <meta property="og:image:alt"   content={SITE.name} />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content={SITE.twitterHandle} />
+    <meta name="twitter:title"       content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={resolvedOgImage} />
+    <meta name="twitter:image:alt"   content={SITE.name} />
+
+    <!-- Font preloads — update hrefs to match client's actual font files -->
+    <!-- <link rel="preload" href="/fonts/ClientFont-Regular.woff2" as="font" type="font/woff2" crossorigin /> -->
+    <!-- <link rel="preload" href="/fonts/ClientFont-Bold.woff2" as="font" type="font/woff2" crossorigin /> -->
+
+    <!-- JSON-LD: Organization (every page) -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
+    {pageSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+    )}
+
+    <!-- Google Analytics: deferred until after page paint to avoid forced reflow -->
+    {gaMeasurementId && (
+      <script is:inline define:vars={{ gaMeasurementId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaMeasurementId);
+        window.addEventListener('load', function() {
+          var s = document.createElement('script');
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaMeasurementId;
+          document.head.appendChild(s);
+        });
+      </script>
+    )}
+  </head>
+  <body>
+    <!-- Add your SiteHeader component here -->
+    <main>
+      <slot />
+    </main>
+    <!-- Add your SiteFooter component here -->
+  </body>
+</html>

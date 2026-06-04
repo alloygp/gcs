@@ -1,0 +1,30 @@
+{
+  "name": "agp-client-starter",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "AGP client site — replace with client name",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^4.1.1",
+    "@astrojs/sitemap": "^3.0.0",
+    "@astrojs/vercel": "^8.2.11",
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@vercel/speed-insights": "^2.0.0",
+    "astro": "^5.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "resend": "^6.12.2",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5"
+  }
+}
