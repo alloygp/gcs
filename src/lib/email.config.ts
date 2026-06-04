@@ -5,7 +5,7 @@
 export const EMAIL_CONFIG = {
 
   brand: {
-    name: 'Client Name',
+    name: 'German Car Specialists',
     url:  'https://clientsite.com',
     team: 'The Team',
   },
@@ -46,6 +46,15 @@ export const EMAIL_CONFIG = {
       confirmBody: (name: string) =>
         `<p>Hi${name ? ` ${name}` : ''},</p>
         <p>Thanks for subscribing. We'll be in touch soon.</p>
+        <p>— The Team</p>`,
+    },
+    appointment: {
+      confirmSubject: 'We received your appointment request',
+      confirmBody: (name: string, slot: string) =>
+        `<p>Hi ${name},</p>
+        <p>Thanks for requesting an appointment${slot ? ` for <strong>${slot}</strong>` : ''}.
+        This is a <em>request</em>, not a confirmed booking — we'll review it and
+        reach out to confirm the exact time.</p>
         <p>— The Team</p>`,
     },
   },

@@ -15,6 +15,7 @@
 
 import '../styles/global.css';
 import { SITE } from '../config/site.ts';
+import SiteHeader from '../components/SiteHeader.astro';
 
 interface Props {
   /** <title> tag. Keep ≤ 60 chars. Required. */
@@ -126,7 +127,7 @@ const gaMeasurementId = import.meta.env.GA_MEASUREMENT_ID;
     )}
   </head>
   <body>
-    <!-- Add your SiteHeader component here -->
+    <SiteHeader />
     <main>
       <slot />
     </main>

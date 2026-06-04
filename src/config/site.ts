@@ -9,7 +9,7 @@ export const SITE = {
   url: 'https://clientsite.com',
 
   /** Display name — used in og:site_name, JSON-LD, email footer */
-  name: 'Client Name',
+  name: 'German Car Specialists',
 
   /** Twitter/X handle — include the @ */
   twitterHandle: '@clienthandle',

@@ -1,0 +1,108 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Request an Appointment"
+  description="Request a service appointment online. Tell us your vehicle, the service you need, and a preferred time — we'll confirm the details."
+>
+  <section style="padding: 80px 24px; max-width: 640px; margin: 0 auto;">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Request an Appointment</h1>
+    <p style="color: #555; margin-bottom: 2rem;">
+      Pick a preferred time and we'll reach out to confirm. Your request isn't
+      booked until we confirm it.
+    </p>
+
+    <form id="appt-form" style="display: grid; gap: 16px;">
+      <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+        Full name *
+        <input name="name" type="text" required autocomplete="name"
+               style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;" />
+      </label>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+          Email *
+          <input name="email" type="email" required autocomplete="email"
+                 style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;" />
+        </label>
+        <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+          Phone *
+          <input name="phone" type="tel" required autocomplete="tel"
+                 style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;" />
+        </label>
+      </div>
+
+      <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+        Service needed
+        <input name="service" type="text" placeholder="e.g. Oil change, brake inspection"
+               style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;" />
+      </label>
+
+      <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+        Vehicle
+        <input name="vehicle" type="text" placeholder="e.g. 2018 Toyota Tacoma"
+               style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;" />
+      </label>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+          Preferred date *
+          <input name="date" type="date" required
+                 style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;" />
+        </label>
+        <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+          Preferred time *
+          <input name="time" type="time" required
+                 style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;" />
+        </label>
+      </div>
+
+      <label style="display: grid; gap: 6px; font-size: 0.9rem;">
+        Anything else?
+        <textarea name="message" rows="4"
+                  style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; resize: vertical;"></textarea>
+      </label>
+
+      <button type="submit" id="appt-submit"
+              style="padding: 12px 28px; background: #333; color: #fff; border: 0; border-radius: 6px; font-size: 1rem; cursor: pointer;">
+        Request appointment
+      </button>
+
+      <p id="appt-status" role="status" aria-live="polite" style="margin: 0; font-size: 0.95rem;"></p>
+    </form>
+  </section>
+
+  <script>
+    const form   = document.getElementById('appt-form') as HTMLFormElement;
+    const button = document.getElementById('appt-submit') as HTMLButtonElement;
+    const status = document.getElementById('appt-status') as HTMLParagraphElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      button.disabled = true;
+      status.style.color = '#555';
+      status.textContent = 'Sending your request…';
+
+      const formData = new FormData(form);
+      formData.set('source', `${location.href} · ${navigator.userAgent}`);
+
+      try {
+        const res = await fetch('/api/appointments', { method: 'POST', body: formData });
+        const json = await res.json();
+        if (res.ok && json.success) {
+          form.reset();
+          status.style.color = '#127a2e';
+          status.textContent = "Thanks! We've received your request and will reach out to confirm the time.";
+        } else {
+          status.style.color = '#b00020';
+          status.textContent = json.error || 'Something went wrong. Please try again.';
+        }
+      } catch {
+        status.style.color = '#b00020';
+        status.textContent = 'Network error. Please try again or call us directly.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</BaseLayout>

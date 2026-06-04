@@ -13,3 +13,4 @@ _build/
 
 # Raw data exports (Screaming Frog, Ahrefs CSVs) — large files, no need to commit
 exports/
+.gstack/

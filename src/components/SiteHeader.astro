@@ -1,0 +1,43 @@
+---
+// src/components/SiteHeader.astro
+// Site-wide header + primary nav. Rendered by BaseLayout on every page.
+// Brand name + phone come from src/config/site.ts so they fill in on kickoff.
+// Restyle freely — these are inline styles to match the starter's convention.
+import { SITE } from '../config/site.ts';
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+];
+const phone = SITE.org.telephone; // e.g. +1-210-399-1172
+const telHref = `tel:${phone.replace(/[^\d+]/g, '')}`;
+---
+
+<header
+  style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 24px; border-bottom:1px solid #eee; position:sticky; top:0; background:#fff; z-index:10;"
+>
+  <a href="/" style="font-weight:700; font-size:1.1rem; color:#111; text-decoration:none;">
+    {SITE.name}
+  </a>
+
+  <nav style="display:flex; align-items:center; gap:20px;">
+    {navLinks.map((link) => (
+      <a href={link.href} style="color:#444; text-decoration:none; font-size:0.95rem;">
+        {link.label}
+      </a>
+    ))}
+
+    {phone && (
+      <a href={telHref} style="color:#444; text-decoration:none; font-size:0.95rem;">
+        {phone}
+      </a>
+    )}
+
+    <!-- Primary CTA → appointment request form -->
+    <a
+      href="/appointments"
+      style="display:inline-block; padding:10px 20px; background:#333; color:#fff; border-radius:6px; text-decoration:none; font-size:0.95rem; font-weight:600; white-space:nowrap;"
+    >
+      Book Appointment
+    </a>
+  </nav>
+</header>
