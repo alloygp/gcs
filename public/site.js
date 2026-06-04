@@ -1,0 +1,80 @@
+/* German Car Specialists — shared site runtime.
+   Loaded once via BaseLayout, after Lucide + image-slot.js. Handles:
+   star fills, mobile drawer, scroll-reveal, nav dropdowns (hover-intent),
+   and the persistent make-picker bar (localStorage 'gcs_make'). */
+(function () {
+  var star = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.6 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>';
+  ['d3-ts', 'd3-hp', 'd3-fr', 'tb-s', 'hero-s', 'rb-s'].forEach(function (id) {
+    var e = document.getElementById(id); if (e) e.innerHTML = star.repeat(5);
+  });
+  document.querySelectorAll('[data-stars]').forEach(function (e) { e.innerHTML = star.repeat(5); });
+
+  // Mobile drawer
+  var drawer = document.getElementById('drawer');
+  var burger = document.getElementById('burger');
+  var dx = document.getElementById('dx');
+  if (burger && drawer) burger.onclick = function () { drawer.classList.add('open'); };
+  if (dx && drawer) dx.onclick = function () { drawer.classList.remove('open'); };
+  if (drawer) drawer.querySelectorAll('a').forEach(function (a) { a.onclick = function () { drawer.classList.remove('open'); }; });
+
+  // Scroll-reveal (fail-safe: content must never stay invisible)
+  var reveals = document.querySelectorAll('.reveal');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+    reveals.forEach(function (e) { io.observe(e); });
+    // Safety net: nothing should remain hidden if the observer never fires for it.
+    setTimeout(function () { reveals.forEach(function (e) { if (!e.classList.contains('in')) e.classList.add('in'); }); }, 2500);
+  } else {
+    // No IntersectionObserver, or the user prefers reduced motion: show everything immediately.
+    reveals.forEach(function (e) { e.classList.add('in'); });
+  }
+
+  // Nav dropdowns (Makes mega + Why Us cards): identical hover-intent.
+  (function () {
+    var dds = [].slice.call(document.querySelectorAll('#makesMenu, .nav .has-menu'));
+    function closeAll(except) { dds.forEach(function (o) { if (o !== except) o.classList.remove('open'); }); }
+    dds.forEach(function (dd) {
+      var t;
+      dd.addEventListener('mouseenter', function () { clearTimeout(t); closeAll(dd); dd.classList.add('open'); });
+      dd.addEventListener('mouseleave', function () { clearTimeout(t); t = setTimeout(function () { dd.classList.remove('open'); }, 140); });
+      dd.querySelectorAll('a.mtile, a.ctile').forEach(function (a) { a.addEventListener('click', function () { dd.classList.remove('open'); }); });
+    });
+    document.querySelectorAll('.nav > a').forEach(function (el) { el.addEventListener('mouseenter', function () { closeAll(null); }); });
+  })();
+
+  // Make-picker bar. Persists choice in localStorage and personalizes soft copy only
+  // ([data-make-tpl] with {make}, and [data-make-word]). SEO-critical H1/title/meta stay static.
+  (function () {
+    var KEY = 'gcs_make';
+    var bar = document.getElementById('carbar');
+    if (!bar) return;
+    var chips = [].slice.call(bar.querySelectorAll('.cb-chip'));
+    var resetBtn = document.getElementById('cbReset');
+    var cbText = bar.querySelector('.cb-text');
+    var targets = [].slice.call(document.querySelectorAll('[data-make-tpl]'));
+    var words = [].slice.call(document.querySelectorAll('[data-make-word]'));
+    targets.forEach(function (el) { if (el.getAttribute('data-def') === null) el.setAttribute('data-def', el.textContent.trim()); });
+    words.forEach(function (el) { if (el.getAttribute('data-def') === null) el.setAttribute('data-def', el.textContent.trim()); });
+    var sel = document.getElementById('apptMake');
+    var pageDefault = bar.getAttribute('data-default-make') || null;
+    function render() {
+      var stored = localStorage.getItem(KEY);
+      var hi = stored || pageDefault;
+      chips.forEach(function (c) { c.classList.toggle('active', c.getAttribute('data-make') === hi); });
+      bar.classList.toggle('chosen', !!stored);
+      if (resetBtn) resetBtn.hidden = !stored;
+      if (cbText) cbText.textContent = stored ? ("You're set up for your " + stored) : 'Choose your make';
+      targets.forEach(function (el) { el.textContent = stored ? el.getAttribute('data-make-tpl').split('{make}').join(stored) : el.getAttribute('data-def'); });
+      words.forEach(function (el) { el.textContent = stored ? stored : el.getAttribute('data-def'); });
+      if (sel && stored) { for (var i = 0; i < sel.options.length; i++) { if (sel.options[i].value.indexOf(stored) === 0) { sel.selectedIndex = i; break; } } }
+    }
+    chips.forEach(function (c) { c.addEventListener('click', function () { localStorage.setItem(KEY, c.getAttribute('data-make')); render(); }); });
+    if (resetBtn) resetBtn.addEventListener('click', function () { localStorage.removeItem(KEY); render(); });
+    render();
+  })();
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+})();

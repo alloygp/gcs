@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `Beating the Texas Heat: A German Car Cooling-System Survival Guide | Shop Notes`;
+const DESC = `Why German car cooling systems fail first in San Antonio heat — water pumps, thermostats and plastic fittings — and how to catch it before you're stranded. From German Car Specialists.`;
+const CANON = `https://mygermancarsa.com/shop-notes/cooling-system-survival-guide`;
+const SCREEN = `Shop Notes — Single Post`;
+const BLOG = true;
+const DEFAULT_MAKE = undefined;
+const STYLE = ``;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="/shop-notes">Shop Notes</a><i data-lucide="chevron-right"></i><span class="cur">Cooling-System Survival Guide</span></div></div></div>
+
+<!-- ARTICLE -->
+<article class="sec" style="padding-top:clamp(40px,5vw,64px)">
+  <div class="container">
+
+    <div class="article-head reveal">
+      <span class="ptag">Maintenance</span>
+      <h1>Beating the Texas Heat: A German Car Cooling-System Survival Guide</h1>
+      <div class="article-meta">
+        <span class="au"><span class="av">GC</span><b>The GCS Team</b></span>
+        <span class="pmeta"><span>Mar 12, 2026</span><span class="dot"></span><span>6 min read</span></span>
+      </div>
+    </div>
+
+    <figure class="article-fig reveal">
+      <image-slot id="hero-fig" placeholder="Article hero image — e.g. a cooling system / engine bay shot" fit="cover"></image-slot>
+    </figure>
+
+    <div class="article">
+      <div class="prose reveal">
+        <p>San Antonio summers are brutal on German cars — and the cooling system is almost always the first thing to cry uncle. Triple-digit heat, stop-and-go traffic on the 410, and the plastic components manufacturers love to use add up to one of the most common repairs we see from May through September.</p>
+        <p>The good news: cooling failures are highly predictable. If you know what wears out and when, you can replace it on <strong>your</strong> schedule — in our shop, for a fair price — instead of on the shoulder of the highway waiting on a tow.</p>
+
+        <h2>Why German cooling systems fail first</h2>
+        <p>Modern Audi, BMW, Mercedes and Porsche engines run hot by design and rely on lightweight plastic and composite parts to save weight. Those materials get brittle with years of heat cycling. In a Texas climate, that aging happens faster than the maintenance schedule assumes.</p>
+        <ul>
+          <li><strong>Water pumps</strong> — many are now electric or composite-impeller units that fail without warning.</li>
+          <li><strong>Thermostats</strong> — plastic housings warp and crack, causing leaks and overheating.</li>
+          <li><strong>Expansion tanks &amp; caps</strong> — they go brittle and split along the seams.</li>
+          <li><strong>Coolant pipes &amp; flanges</strong> — especially the plastic V8 pipes on Cayenne and Panamera.</li>
+        </ul>
+
+        <blockquote>If your temperature gauge moves at a stoplight, treat it as an emergency — not a quirk.</blockquote>
+
+        <h2>The warning signs to watch</h2>
+        <p>Your car will almost always tell you before it strands you. Watch for a sweet smell (that's coolant), a low-coolant warning that keeps coming back, white residue around hoses and the expansion tank, or a temperature needle that climbs in traffic and drops on the highway. Any one of these is worth a quick inspection.</p>
+
+        <div class="takeaways">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Quick Takeaways</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Have the cooling system pressure-tested before summer, especially past 60k miles.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Replace water pump and thermostat together — the labor overlaps.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Never keep driving with the temp gauge in the red — it risks the head gasket.</li>
+          </ul>
+        </div>
+
+        <h2>What it costs (and how we keep it lower)</h2>
+        <p>A water pump and thermostat job at the dealer can run well into four figures once you add diagnostic fees and dealer labor rates. Because we use OEM or OE-supplier parts and don't carry dealer overhead, the same repair is typically a fraction of that — and it's covered by our 24-month / 24,000-mile warranty.</p>
+
+        <div class="inline-cta">
+          <div>
+            <b>Worried about your cooling system?</b>
+            <span>Book a pressure test before the next heat wave — we'll send photos of everything.</span>
+          </div>
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book a Check</a>
+        </div>
+
+        <h2>The bottom line</h2>
+        <p>Cooling-system parts are wear items, not surprises. A 30-minute inspection before summer is the cheapest insurance you can buy for a German car in San Antonio — and it keeps you off the shoulder of the highway when it's 104° outside.</p>
+      </div>
+
+      <!-- AUTHOR -->
+      <div class="author-box reveal">
+        <span class="av">GC</span>
+        <div>
+          <b>The GCS Team</b>
+          <p>Factory-trained Audi, BMW, Mercedes &amp; Porsche technicians at German Car Specialists in San Antonio — independent since 2010, Carfax Top-Rated.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- RELATED -->
+<section class="sec alt related">
+  <div class="container">
+    <div class="sec-head reveal" style="text-align:left;margin:0 0 40px">
+      <span class="eyebrow">Keep Reading</span>
+      <h2 class="h2">More from Shop Notes.</h2>
+    </div>
+    <div class="post-grid">
+      <a class="pcard reveal" href="/shop-notes/cooling-system-survival-guide">
+        <div class="thumb"><span class="ptag">Diagnostics</span><image-slot id="r1" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>BMW N20 Timing Chain: Symptoms, Risk &amp; What It Really Costs</h3>
+          <p>The rattle you don't want to ignore — spot a stretching chain before it fails.</p>
+          <div class="pmeta"><span>Mar 2026</span><span class="dot"></span><span>5 min</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="/shop-notes/cooling-system-survival-guide">
+        <div class="thumb"><span class="ptag">Model Guides</span><image-slot id="r2" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Audi Carbon Buildup, Explained — and Why Walnut Blasting Works</h3>
+          <p>Direct injection has a downside. Here's what carbon does to your TFSI.</p>
+          <div class="pmeta"><span>Feb 2026</span><span class="dot"></span><span>4 min</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="/shop-notes/cooling-system-survival-guide">
+        <div class="thumb"><span class="ptag">Dealer Alternative</span><image-slot id="r3" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Independent vs. Dealer: What German Car Service Actually Costs</h3>
+          <p>A real breakdown of where the dealer's price goes — and how to save.</p>
+          <div class="pmeta"><span>Feb 2026</span><span class="dot"></span><span>7 min</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BlogPosting",
+  "headline":"Beating the Texas Heat: A German Car Cooling-System Survival Guide",
+  "description":"Why German car cooling systems fail first in San Antonio heat — water pumps, thermostats and plastic fittings — and how to catch it before you're stranded.",
+  "author":{"@type":"Organization","name":"German Car Specialists"},
+  "publisher":{"@type":"Organization","name":"German Car Specialists","logo":{"@type":"ImageObject","url":"assets/logo-color.png"}},
+  "datePublished":"2026-03-12",
+  "articleSection":"Maintenance",
+  "mainEntityOfPage":"https://mygermancarsa.com/shop-notes/cooling-system-survival-guide"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"Shop Notes","item":"https://mygermancarsa.com/shop-notes"},
+    {"@type":"ListItem","position":3,"name":"Cooling-System Survival Guide","item":"https://mygermancarsa.com/shop-notes/cooling-system-survival-guide"}
+  ]
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `About My German Car SA | San Antonio German Auto Specialists`;
+const DESC = `Master technicians specializing in Audi, BMW, Mercedes &amp; Porsche. Why San Antonio drivers trust My German Car SA over the dealership.`;
+const CANON = `https://mygermancarsa.com/about`;
+const SCREEN = `About`;
+const BLOG = false;
+const DEFAULT_MAKE = undefined;
+const STYLE = `/* about-page specifics */
+.hero.art .container{grid-template-columns:1fr;}
+.hero.art .hero-copy{max-width:880px;}
+.hero.art .display{margin:14px auto 20px;}
+/* photographic banner — user can drag a background photo onto the slot */
+.hero.banner{position:relative;overflow:hidden;background:var(--navy);padding:clamp(72px,9vw,132px) 0;}
+.hero.banner .bg{position:absolute;inset:0;z-index:0;}
+.hero.banner .bg image-slot,.hero.banner .bg img{width:100%;height:100%;display:block;background:var(--navy);object-fit:cover;}
+.hero.banner::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(17,19,21,.55) 0%,rgba(17,19,21,.74) 100%);}
+.hero.banner .container{position:relative;z-index:2;pointer-events:none;}
+.hero.banner .container a{pointer-events:auto;}
+.hero.banner .display{color:#fff;}
+.hero.banner .lead{color:rgba(255,255,255,.86);}
+.hero.banner .eyebrow{color:var(--acc-mid);}
+.hero.banner .eyebrow::before{background:var(--acc-mid);}
+/* keep the image-slot drop affordance clickable above the scrim */
+.hero.banner .bg image-slot{position:relative;z-index:0;}
+.about-intro .container{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+.about-intro .av{border-radius:16px;overflow:hidden;box-shadow:0 24px 56px rgba(12,14,18,.16);}
+.about-intro .av image-slot,.about-intro .av img{width:100%;height:480px;display:block;background:var(--mist);object-fit:cover;}
+.about-intro .prose{max-width:none;margin:0;}
+.about-intro h2{font-family:var(--font-display);font-size:clamp(30px,3.6vw,46px);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;line-height:1.04;margin-bottom:20px;}
+@media(max-width:900px){.about-intro .container{grid-template-columns:1fr;}.about-intro .av{order:-1;}.about-intro .av image-slot,.about-intro .av img{height:320px;}}
+
+/* values */
+.val-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+.val{display:flex;gap:18px;background:#fff;border:1px solid var(--fog);border-radius:12px;padding:28px;transition:border-color .2s,box-shadow .2s;}
+.val:hover{border-color:var(--acc);box-shadow:0 14px 32px rgba(12,14,18,.07);}
+.val .vi{width:50px;height:50px;border-radius:12px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;flex:none;}
+.val .vi svg{width:25px;height:25px;}
+.val h3{font-size:19px;margin-bottom:7px;}
+.val p{font-size:15px;color:var(--steel-500);line-height:1.6;}
+@media(max-width:760px){.val-grid{grid-template-columns:1fr;}}
+
+/* marque band (reuse models look) */
+.mq-band{background:var(--navy);color:#fff;}
+.mq-band .container{display:flex;flex-direction:column;align-items:center;text-align:center;gap:30px;}
+.mq-band .h2{color:#fff;}
+.mq-band .eyebrow{color:var(--acc-mid);}
+.mq-band .eyebrow::before{background:var(--acc-mid);}
+.mq-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;width:100%;}
+.mq-link{display:flex;flex-direction:column;align-items:center;gap:12px;padding:28px 18px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.04);transition:background .18s,border-color .18s,transform .18s;color:#fff;}
+.mq-link:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.3);transform:translateY(-3px);}
+.mq-link img{height:40px;width:auto;filter:brightness(0) invert(1);opacity:.92;}
+.mq-link b{font-family:var(--font-display);font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;}
+@media(max-width:760px){.mq-row{grid-template-columns:1fr 1fr;}}
+
+/* gallery */
+.gwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.gwrap image-slot,.gwrap img{width:100%;height:280px;display:block;background:var(--mist);border-radius:12px;overflow:hidden;object-fit:cover;}
+@media(max-width:760px){.gwrap{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.gwrap{grid-template-columns:1fr;}}`;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><span class="cur">About</span></div></div></div>
+
+<!-- HERO -->
+<section class="hero art banner" style="text-align:center">
+  <div class="bg"><img src="/assets/about-banner-m5.jpeg" alt="Matte-red BMW M5 in the shop" width="1600" height="600" loading="eager"></div>
+  <div class="container" style="max-width:880px;">
+    <div class="hero-copy" style="margin:0 auto">
+      <span class="eyebrow" style="justify-content:center">San Antonio · Est. 2010</span>
+      <h1 class="display" style="margin:14px 0 20px">The German car specialists San Antonio drivers trust.</h1>
+      <p class="lead" style="margin:0 auto 30px">We're independent European mechanics who believe good service is in the details — dealer-level expertise on Audi, BMW, Mercedes and Porsche, run with the honesty an independent shop can finally offer.</p>
+      <div class="hero-cta" style="justify-content:center">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book Your Service</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>Factory-Trained</b><b>Master Technicians</b><b>OEM Parts Only</b><b>Carfax Top-Rated</b><b>Independent Since 2010</b></div>
+  <div class="seg"><b>Factory-Trained</b><b>Master Technicians</b><b>OEM Parts Only</b><b>Carfax Top-Rated</b><b>Independent Since 2010</b></div>
+</div></div>
+
+<!-- STORY -->
+<section class="sec about-intro">
+  <div class="container">
+    <div>
+      <div class="prose reveal">
+        <span class="eyebrow">Our story</span>
+        <h2 style="margin-top:14px">Built to exceed the dealer — not just undercut it.</h2>
+        <p>German Car Specialists opened its doors in San&nbsp;Antonio in <strong>2010</strong> with a simple frustration: owners of Audi, BMW, Mercedes and Porsche were stuck choosing between an expensive dealership and a general shop that didn't truly know their cars. We set out to be the third option — a focused independent that matches the dealer's training, tools and parts, then beats it on price, speed and straight talk.</p>
+        <p>Fifteen years later, that's exactly what we are: an independent shop devoted entirely to German marques, <strong>Carfax Top-Rated</strong>, with a 4.9-star average across 325 reviews. We didn't get there by cutting corners. We got there by treating every car — from a daily-driver 3-Series to an air-cooled 911 or an R8 V10 — like it's our own.</p>
+        <p>Our whole philosophy fits in one line: <strong>good service is in the details.</strong> The right torque spec. The OEM part, not the cheapest box. The photo that shows you exactly what we found. It's how we've earned a shop full of repeat customers who'll never set foot in a dealer service drive again.</p>
+      </div>
+    </div>
+    <div class="av reveal"><img src="/assets/shop-entrance.jpeg" alt="German Car Specialists shop entrance in San Antonio" loading="lazy" width="600" height="480"></div>
+  </div>
+</section>
+
+<!-- VALUES / CREDENTIALS -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Why drivers trust us</span>
+      <h2 class="h2">Dealer-grade work, independently honest.</h2>
+      <p class="lead">Everything that makes a dealership capable — without the markup, the wait, or the upsell.</p>
+    </div>
+    <div class="val-grid">
+      <div class="val reveal"><div class="vi"><i data-lucide="award"></i></div><div><h3>Factory-trained &amp; ASE-certified</h3><p>Master technicians trained on the exact platforms we service — EA888, N55, M276, the lot. German cars are the only thing we do.</p></div></div>
+      <div class="val reveal"><div class="vi"><i data-lucide="scan-line"></i></div><div><h3>Dealer-level equipment</h3><p>The same factory diagnostic and coding systems the franchises use, so module faults, retrofits and software updates stay in-house.</p></div></div>
+      <div class="val reveal"><div class="vi"><i data-lucide="package-check"></i></div><div><h3>OEM &amp; OE-supplier parts</h3><p>We fit genuine factory-quality parts with manufacturer warranties — never the cheapest aftermarket alternative. Every time.</p></div></div>
+      <div class="val reveal"><div class="vi"><i data-lucide="image"></i></div><div><h3>Honest, photo-backed inspections</h3><p>You see what we see. Every recommendation comes with photos and an upfront estimate you approve before any work begins.</p></div></div>
+      <div class="val reveal"><div class="vi"><i data-lucide="shield-check"></i></div><div><h3>24-month / 24,000-mile warranty</h3><p>We stand behind our work in writing — and your factory warranty stays fully intact under the Magnuson–Moss Act.</p></div></div>
+      <div class="val reveal"><div class="vi"><i data-lucide="car"></i></div><div><h3>Loaners &amp; fast turnaround</h3><p>Most jobs are same or next day, with a free loaner reserved at booking so your life doesn't stop while we work.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats"><div class="container">
+  <div class="statc"><b>2010</b><span>Independent Since</span></div>
+  <div class="statc"><b>4</b><span>German Marques</span></div>
+  <div class="statc"><b>325</b><span>5-Star Reviews</span></div>
+  <div class="statc"><b>OEM</b><span>Parts Only</span></div>
+</div></section>
+
+<!-- MARQUES -->
+<section class="sec mq-band">
+  <div class="container">
+    <span class="eyebrow">What we specialize in</span>
+    <h2 class="h2">Four marques. Total focus.</h2>
+    <div class="mq-row">
+      <a class="mq-link" href="/audi-repair-san-antonio"><img src="/assets/marques/audi.svg" alt="Audi"><b>Audi</b></a>
+      <a class="mq-link" href="/bmw-repair-san-antonio"><img src="/assets/marques/bmw.svg" alt="BMW"><b>BMW</b></a>
+      <a class="mq-link" href="/mercedes-repair-san-antonio"><img src="/assets/marques/mercedes.svg" alt="Mercedes-Benz"><b>Mercedes</b></a>
+      <a class="mq-link" href="/porsche-repair-san-antonio"><img src="/assets/marques/porsche.svg" alt="Porsche"><b>Porsche</b></a>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Inside the shop</span>
+      <h2 class="h2">A clean shop, serious work.</h2>
+      <p class="lead">From routine oil services to full engine builds — a look at what rolls through our San Antonio bays.</p>
+    </div>
+    <div class="gwrap reveal">
+      <img src="/assets/shop-interior-bays.jpeg" alt="Clean shop floor with German cars in the service bays" loading="lazy" width="600" height="280">
+      <img src="/assets/audi-r8-exhaust-service.jpeg" alt="Audi R8 on the lift with its full exhaust system laid out" loading="lazy" width="600" height="280">
+      <img src="/assets/audi-rs3-brake-service.jpeg" alt="Red Audi RS3 on the lift during a Brembo brake service" loading="lazy" width="600" height="280">
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">In their own words</span>
+      <h2 class="h2">San Antonio trusts us with the cars they love.</h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rcard feat reveal">
+        <div class="rs" data-stars></div>
+        <p>"Quoted me less than half what the BMW dealer wanted and finished the same day. They texted photos of everything before touching the car. I'm never going back to the dealer."</p>
+        <div class="who"><span class="av">MR</span><div><b>Marcus R.</b><span>BMW 540i &amp; X5</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"My Audi had an electrical issue three shops couldn't find — GCS diagnosed it in an afternoon. Honest, fast, and they truly know these cars."</p>
+        <div class="who"><span class="av">JL</span><div><b>Jenna L.</b><span>Audi Q5</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"They treat my Porsche better than the dealership ever did. Loaner ready, work done right, zero surprise charges. This is how a shop should run."</p>
+        <div class="who"><span class="av">DT</span><div><b>David T.</b><span>Porsche Cayenne</span></div></div>
+      </div>
+    </div>
+    <div class="sec-head" style="margin:44px auto 0"><a class="btn btn-ghost reveal" href="/reviews"><i data-lucide="star"></i>Read all 325 reviews</a></div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="sec book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Ready when you are</span>
+        <h2 class="h2" data-make-tpl="Give your {make} the shop it deserves." style="text-align:center">Give your German car the shop it deserves.</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:52ch">Book a service, ask for an estimate, or just send a question — a real technician reads every request and replies the same business day.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book Your Service</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"AboutPage",
+      "@id":"https://mygermancarsa.com/about",
+      "name":"About German Car Specialists",
+      "url":"https://mygermancarsa.com/about",
+      "about":{"@id":"https://mygermancarsa.com/#org"}
+    },
+    {
+      "@type":"Organization",
+      "@id":"https://mygermancarsa.com/#org",
+      "name":"German Car Specialists",
+      "alternateName":"My German Car SA",
+      "url":"https://mygermancarsa.com/",
+      "logo":"https://mygermancarsa.com/assets/logo-color.png",
+      "image":"https://mygermancarsa.com/assets/logo-color.png",
+      "telephone":"+1-210-399-1172",
+      "foundingDate":"2010",
+      "address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},
+      "sameAs":["https://www.instagram.com/mygermancarsa"],
+      "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325","bestRating":"5"}
+    }
+  ]
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

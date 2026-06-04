@@ -6,22 +6,22 @@
 
 export const SITE = {
   /** Canonical base URL — no trailing slash. Must match astro.config.mjs site: */
-  url: 'https://clientsite.com',
+  url: 'https://mygermancarsa.com',
 
   /** Display name — used in og:site_name, JSON-LD, email footer */
-  name: 'Client Name',
+  name: 'German Car Specialists',
 
   /** Twitter/X handle — include the @ */
-  twitterHandle: '@clienthandle',
+  twitterHandle: '@german_car_specialists',
 
   /** og:locale */
   locale: 'en_US',
 
   /** Fallback <title> if a page doesn't pass its own */
-  defaultTitle: 'Client Name — Short tagline here',
+  defaultTitle: 'German Car Specialists — Expert German auto service in San Antonio',
 
   /** Fallback meta description */
-  defaultDescription: 'One sentence describing what the business does and who it serves.',
+  defaultDescription: 'German Car Specialists in San Antonio, TX — expert service and repair for Audi, BMW, Porsche, Mercedes-Benz, and Volkswagen. Trusted independent German auto specialists.',
 
   /**
    * Default OG image — place the file at public/assets/og.png
@@ -34,13 +34,13 @@ export const SITE = {
   /** Organization JSON-LD — emitted on every page */
   org: {
     type: 'LocalBusiness',         // or 'ProfessionalService', 'Organization', etc.
-    telephone: '+1-XXX-XXX-XXXX',
-    email: 'contact@clientsite.com',
-    addressLocality: 'City',
+    telephone: '+1-210-399-1172',
+    email: 'contact@mygermancarsa.com',
+    addressLocality: 'San Antonio',
     addressRegion: 'TX',
     addressCountry: 'US',
     areaServed: 'United States',
     priceRange: '$$',
-    logo: 'https://clientsite.com/assets/logo.svg',
+    logo: 'https://mygermancarsa.com/assets/logo.svg',
   },
 } as const;

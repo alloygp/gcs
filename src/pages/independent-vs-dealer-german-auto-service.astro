@@ -1,0 +1,279 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `Dealer vs. Independent German Auto Service: What San Antonio Owners Should Know`;
+const DESC = `Same factory-level service, no dealer markup — and it won't void your warranty. How independent German specialists compare to the dealership.`;
+const CANON = `https://mygermancarsa.com/independent-vs-dealer-german-auto-service`;
+const SCREEN = `Independent vs Dealer`;
+const BLOG = false;
+const DEFAULT_MAKE = undefined;
+const STYLE = `/* article-specific layout on top of make-page.css */
+.artbody{max-width:760px;margin:0 auto;}
+.artbody h2{font-family:var(--font-display);font-size:clamp(28px,3.2vw,40px);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;line-height:1.04;margin:0 0 18px;}
+.artbody h3{font-size:21px;font-weight:800;color:var(--navy);margin:36px 0 12px;letter-spacing:-.01em;}
+.artbody p{font-size:17px;line-height:1.72;color:var(--steel-700);margin-bottom:18px;}
+.artbody p strong{color:var(--navy);font-weight:700;}
+.artbody a.inline{color:var(--acc);font-weight:600;border-bottom:1px solid var(--acc-soft);transition:border-color .15s;}
+.artbody a.inline:hover{border-color:var(--acc);}
+.artblock{margin-bottom:56px;}
+.artblock:last-child{margin-bottom:0;}
+.artblock .eyebrow{margin-bottom:14px;}
+
+/* myth-bust callout */
+.callout{background:var(--navy);color:#fff;border-radius:16px;padding:clamp(30px,4vw,48px);position:relative;overflow:hidden;margin:8px 0 8px;}
+.callout::before{content:"";position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--acc);}
+.callout .ttl{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.callout .ttl .ci{width:50px;height:50px;border-radius:12px;background:rgba(216,18,34,.16);color:var(--acc-mid);display:grid;place-items:center;flex:none;}
+.callout .ttl .ci svg{width:26px;height:26px;}
+.callout h2{font-family:var(--font-display);font-size:clamp(24px,3vw,34px);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;color:#fff;margin:0;line-height:1.05;}
+.callout p{font-size:17px;line-height:1.7;color:rgba(255,255,255,.82);margin-bottom:14px;}
+.callout p:last-child{margin-bottom:0;}
+.callout p strong{color:#fff;}
+.callout .law{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc-mid);display:inline-flex;align-items:center;gap:9px;margin-bottom:18px;}
+
+/* cost table */
+.ctable{border:1px solid var(--fog);border-radius:12px;overflow:hidden;margin:8px 0;}
+.ctable .crow{display:grid;grid-template-columns:1.4fr 1fr 1fr;align-items:center;}
+.ctable .crow+.crow{border-top:1px solid var(--fog);}
+.ctable .crow.head{background:var(--navy);}
+.ctable .crow.head div{color:#fff;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:16px 22px;}
+.ctable .crow.head div.gcs{color:var(--acc-mid);}
+.ctable .crow div{padding:16px 22px;font-size:15.5px;color:var(--steel-700);}
+.ctable .crow .lab{font-weight:600;color:var(--navy);}
+.ctable .crow .gcs{font-weight:700;color:var(--navy);}
+.ctable .crow:not(.head) .dlr{color:var(--steel-500);}
+@media(max-width:600px){.ctable .crow{grid-template-columns:1fr;}.ctable .crow div{padding:11px 18px;}.ctable .crow.head{display:none;}
+  .ctable .crow .lab{background:var(--mist);font-size:13px;}
+  .ctable .crow .gcs::before{content:"GCS · ";font-family:var(--mono);font-size:11px;color:var(--acc);}
+  .ctable .crow .dlr::before{content:"Dealer · ";font-family:var(--mono);font-size:11px;color:var(--steel-400);}}
+
+/* route-to-brand cards */
+.routes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.routecard{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:28px 24px 22px;display:flex;flex-direction:column;text-align:center;align-items:center;position:relative;overflow:hidden;color:var(--navy);transition:transform .2s var(--ease),border-color .2s,box-shadow .2s;}
+.routecard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transition:transform .22s var(--ease);}
+.routecard:hover{transform:translateY(-4px);border-color:var(--acc);box-shadow:0 18px 40px rgba(12,14,18,.1);}
+.routecard:hover::before{transform:scaleX(1);}
+.routecard .rl{height:46px;display:grid;place-items:center;margin-bottom:14px;}
+.routecard .rl img{max-height:38px;max-width:60px;object-fit:contain;}
+.routecard h3{font-family:var(--font-display);font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin:0 0 4px;}
+.routecard .rsub{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--steel-400);margin-bottom:16px;}
+.routecard .rcta{margin-top:auto;display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);padding-top:14px;border-top:1px solid var(--fog);width:100%;justify-content:center;}
+.routecard .rcta svg{width:14px;height:14px;}
+@media(max-width:900px){.routes-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:460px){.routes-grid{grid-template-columns:1fr;}}
+
+/* hero — single column, article-style */
+.hero.art .container{grid-template-columns:1fr;max-width:880px;}
+.hero.art .lead{max-width:60ch;}`;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="/#why">Why Us</a><i data-lucide="chevron-right"></i><span class="cur">Dealer vs. Independent</span></div></div></div>
+
+<!-- HERO -->
+<section class="hero art">
+  <div class="container">
+    <div class="hero-copy">
+      <span class="eyebrow">Dealer vs. Independent</span>
+      <h1 class="display" style="margin:14px 0 20px">Independent vs. the dealer: what every German car owner should know.</h1>
+      <p class="lead">Audi, BMW, Mercedes and Porsche owners in San Antonio face the same question at every service interval — go back to the dealership, or trust an independent specialist? Here's an honest comparison: the real cost, the wait, the quality of the work, and the warranty question almost everyone worries about.</p>
+      <div class="hero-cta" style="margin-top:30px">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book Your Service</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>Same OEM Parts</b><b>Factory-Level Tools</b><b>No Dealer Markup</b><b>Warranty-Safe</b><b>Carfax Top-Rated</b></div>
+  <div class="seg"><b>Same OEM Parts</b><b>Factory-Level Tools</b><b>No Dealer Markup</b><b>Warranty-Safe</b><b>Carfax Top-Rated</b></div>
+</div></div>
+
+<!-- ARTICLE BODY -->
+<section class="sec">
+  <div class="container artbody">
+
+    <div class="artblock">
+      <span class="eyebrow">The problem</span>
+      <h2>Why dealer service stopped making sense</h2>
+      <p>If you own a German car, you already know the feeling: the dealer service drive is spotless, the coffee is free, and the invoice is brutal. A routine visit that should cost a couple hundred dollars somehow becomes four figures, padded with line items you didn't ask for and a few you don't understand. For a lot of San Antonio owners, the math simply stopped working.</p>
+      <p>It isn't only the money. Dealer service departments run on volume. Your car joins a queue behind dozens of others, your advisor changes every visit, and the person actually turning the wrenches is someone you'll never meet or talk to. Need it back same-day? Hope you booked weeks ago. Want a loaner? Get on the list. The premium price buys you a polished waiting room — not a faster, more personal, or more honest repair.</p>
+      <p>So the real question for most owners isn't "dealer or not." It's <strong>whether an independent German specialist can match the dealer's quality without the markup, the wait, and the upsell</strong> — and whether doing so puts your warranty at risk. The short answer: a good one matches it, and no, it doesn't.</p>
+    </div>
+
+    <div class="artblock">
+      <div class="callout">
+        <span class="law"><i data-lucide="scale"></i>Magnuson–Moss Warranty Act · 1975</span>
+        <div class="ttl">
+          <span class="ci"><i data-lucide="shield-check"></i></span>
+          <h2>No, independent service won't void your warranty</h2>
+        </div>
+        <p>This is the single biggest myth in German car ownership. Federal law — the <strong>Magnuson–Moss Warranty Act</strong> — makes it illegal for a manufacturer to void your factory warranty simply because an independent shop performed the maintenance or used quality aftermarket or OEM parts. A dealer cannot require you to service the car with them to keep your coverage.</p>
+        <p>The one thing that protects you is <strong>documentation</strong>: keep itemized records of every service, the parts used, and the mileage. We provide exactly that on every visit — a digital, photo-backed record you can hand to any dealer if a warranty claim ever comes up. The only time a manufacturer can deny a claim is if it proves a specific repair or part directly caused the failure — and that's true of dealer work too.</p>
+      </div>
+    </div>
+
+    <div class="artblock">
+      <span class="eyebrow">Side by side</span>
+      <h2>Independent specialist vs. the franchise dealer</h2>
+      <p>A capable independent isn't a budget compromise — it's the same factory-level expertise without the dealership's overhead baked into your bill. Here's how the two actually compare for the work your Audi, BMW, Mercedes or Porsche needs.</p>
+      <div class="deal" style="margin-top:32px">
+        <div class="dcard win reveal">
+          <h3>Independent Specialist</h3>
+          <div class="sub">The Dealer Alternative</div>
+          <ul>
+            <li><i data-lucide="check"></i><span>Typically <b>25–40% lower</b> on parts &amp; labor</span></li>
+            <li><i data-lucide="check"></i><span><b>OEM &amp; OE-supplier parts</b> with manufacturer warranties</span></li>
+            <li><i data-lucide="check"></i><span>Factory-level diagnostics &amp; coding in-house</span></li>
+            <li><i data-lucide="check"></i><span>Honest, photo-backed inspections you approve</span></li>
+            <li><i data-lucide="check"></i><span>Talk directly to the tech working your car</span></li>
+            <li><i data-lucide="check"></i><span>Same or next-day turnaround + free loaner</span></li>
+          </ul>
+        </div>
+        <div class="dcard lose reveal">
+          <h3>The Franchise Dealer</h3>
+          <div class="sub">The Old Way</div>
+          <ul>
+            <li><i data-lucide="x"></i><span>Premium dealer rates on everything</span></li>
+            <li><i data-lucide="minus"></i><span>OEM parts — at full dealer pricing</span></li>
+            <li><i data-lucide="check"></i><span>Factory diagnostics &amp; coding</span></li>
+            <li><i data-lucide="x"></i><span>Pressure to add services you don't need</span></li>
+            <li><i data-lucide="x"></i><span>Rotating advisors; a call center in between</span></li>
+            <li><i data-lucide="x"></i><span>Days-long backlog, loaner if you're lucky</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="artblock">
+      <span class="eyebrow">The cost reality</span>
+      <h2>What you actually save</h2>
+      <p>Dealers price labor at a premium hourly rate and mark parts up well above what an independent pays for the very same OEM component. On common German services the gap is real and consistent — here's a representative comparison for jobs we handle every week.</p>
+      <div class="ctable" style="margin-top:26px">
+        <div class="crow head"><div>Typical service</div><div class="gcs">Independent</div><div>Dealer</div></div>
+        <div class="crow"><div class="lab">Major oil service (German synthetic)</div><div class="gcs">$140–$190</div><div class="dlr">$230–$320</div></div>
+        <div class="crow"><div class="lab">Front brakes — OEM pads &amp; rotors</div><div class="gcs">$420–$580</div><div class="dlr">$700–$950</div></div>
+        <div class="crow"><div class="lab">Mercedes Service B (full)</div><div class="gcs">$320–$480</div><div class="dlr">$550–$800</div></div>
+        <div class="crow"><div class="lab">Check-engine diagnosis</div><div class="gcs">$120–$160</div><div class="dlr">$200–$260</div></div>
+      </div>
+      <p style="margin-top:20px">Numbers vary by model and condition — these are typical San Antonio ranges, not quotes. The point holds across the board: same parts, same factory procedures, materially lower cost. If you're weighing a specific job like <a class="inline" href="/mercedes-service-a-vs-b">Mercedes Service A vs. Service B</a>, we'll tell you exactly what your car is due for and what it costs before any work starts.</p>
+    </div>
+
+    <div class="artblock">
+      <span class="eyebrow">No corners cut</span>
+      <h2>"Independent" doesn't mean amateur</h2>
+      <p>The word "independent" makes some owners nervous, as if it means a generalist with a code reader. It shouldn't. At <strong>German Car Specialists</strong>, German marques are the only thing we do — and have since 2010. That focus means our technicians are factory-trained on the exact platforms we service, we run the same dealer-level diagnostic and coding equipment the franchises use, and we fit <strong>genuine OEM and OE-supplier parts</strong> — never the cheapest box on the shelf.</p>
+      <p>We're <strong>Carfax Top-Rated</strong>, back our repairs with a 24-month / 24,000-mile warranty, and document every job with photos so you can see exactly what your car needed and why. It's dealer-grade work, run with the honesty and speed only an independent shop can offer — the genuine <strong>dealer alternative for German vehicles</strong> in San Antonio.</p>
+      <p>That focus also means a smaller, accountable team. You'll often speak with the same technician across visits, so they get to know your specific car — its history, its quirks, what was deferred last time. That continuity is something a high-turnover dealer service drive structurally can't offer, and it's a big part of why owners stay with us for years rather than dreading the next appointment.</p>
+    </div>
+
+    <div class="artblock">
+      <span class="eyebrow">Find your make</span>
+      <h2>Service built around your car</h2>
+      <p>Every German marque has its own known issues, intervals and quirks. Pick yours for model-specific service details and real San Antonio pricing — then book online whenever you're ready.</p>
+      <div class="routes-grid" style="margin-top:30px">
+        <a class="routecard" href="/audi-repair-san-antonio">
+          <span class="rl"><img src="/assets/marques/audi.svg" alt="Audi"></span>
+          <h3>Audi</h3><div class="rsub">A · S · RS · R8</div>
+          <span class="rcta">Audi Repair <i data-lucide="arrow-right"></i></span>
+        </a>
+        <a class="routecard" href="/bmw-repair-san-antonio">
+          <span class="rl"><img src="/assets/marques/bmw.svg" alt="BMW"></span>
+          <h3>BMW</h3><div class="rsub">3 · 5 · X · M</div>
+          <span class="rcta">BMW Repair <i data-lucide="arrow-right"></i></span>
+        </a>
+        <a class="routecard" href="/mercedes-repair-san-antonio">
+          <span class="rl"><img src="/assets/marques/mercedes.svg" alt="Mercedes-Benz"></span>
+          <h3>Mercedes</h3><div class="rsub">C · E · S · AMG</div>
+          <span class="rcta">Mercedes Repair <i data-lucide="arrow-right"></i></span>
+        </a>
+        <a class="routecard" href="/porsche-repair-san-antonio">
+          <span class="rl"><img src="/assets/marques/porsche.svg" alt="Porsche"></span>
+          <h3>Porsche</h3><div class="rsub">911 · Cayenne · Macan</div>
+          <span class="rcta">Porsche Repair <i data-lucide="arrow-right"></i></span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Dealer vs. Independent FAQ</span>
+      <h2 class="h2">The questions owners ask us most.</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>Does taking my car to an independent shop void my factory warranty?<span class="pl"></span></summary><div class="fa">No. Under the federal Magnuson–Moss Warranty Act, a manufacturer cannot void your factory warranty just because an independent shop performed your maintenance or used quality OEM/OE-supplier parts. Keep itemized service records — which we provide on every visit — and your coverage stays fully intact.</div></details>
+      <details><summary>Is independent German service really cheaper than the dealer?<span class="pl"></span></summary><div class="fa">Yes — typically 25–40% less on the same parts and labor. Dealers charge premium labor rates and mark up parts well above cost. We use the same OEM components and factory procedures without the dealership overhead, so the savings are real and consistent across most jobs.</div></details>
+      <details><summary>Do independent specialists use OEM parts?<span class="pl"></span></summary><div class="fa">We do. We fit genuine OEM or OE-supplier parts — the same components the manufacturer uses — never the cheapest aftermarket alternative. Every part carries its manufacturer warranty, and our labor is backed by a 24-month / 24,000-mile guarantee.</div></details>
+      <details><summary>What's the difference between Mercedes Service A and Service B?<span class="pl"></span></summary><div class="fa">Service A is the lighter, earlier interval (oil &amp; filter, fluid checks, inspection); Service B is the more comprehensive one (everything in A plus cabin filter, brake-fluid flush and a deeper inspection). We perform both to Mercedes' factory schedule — see our <a class="inline" href="/mercedes-service-a-vs-b">Mercedes Service A vs. B</a> breakdown for the full detail.</div></details>
+      <details><summary>Will the dealer still honor recalls and warranty repairs?<span class="pl"></span></summary><div class="fa">Always. Manufacturer recalls and genuine warranty-covered repairs are performed by the dealer at no charge regardless of where you do your routine maintenance. Servicing with us has no effect on your eligibility for either.</div></details>
+      <details><summary>Can an independent shop reset service reminders and do software updates?<span class="pl"></span></summary><div class="fa">Yes. We run factory-level diagnostic and coding equipment, so we can reset service indicators, perform module coding and retrofits, and apply the software updates most owners assume only the dealer can do.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="sec book" id="book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Book · Estimate · Ask</span>
+        <h2 class="h2" data-make-tpl="Let's get your {make} taken care of." style="text-align:center">Ready to skip the dealer?</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:54ch">Book a service, ask for an estimate, or just send a question — one quick form, answered the same business day by a real technician at the shop.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book / Contact</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"Dealer vs. Independent German Auto Service: What San Antonio Owners Should Know",
+  "description":"Same factory-level service, no dealer markup — and it won't void your warranty. How independent German specialists compare to the dealership.",
+  "image":"https://mygermancarsa.com/assets/logo-color.png",
+  "datePublished":"2026-06-04",
+  "dateModified":"2026-06-04",
+  "author":{"@type":"Organization","name":"German Car Specialists"},
+  "publisher":{"@type":"Organization","name":"German Car Specialists","logo":{"@type":"ImageObject","url":"https://mygermancarsa.com/assets/logo-color.png"}},
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://mygermancarsa.com/independent-vs-dealer-german-auto-service"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"Does taking my car to an independent shop void my factory warranty?","acceptedAnswer":{"@type":"Answer","text":"No. Under the federal Magnuson-Moss Warranty Act, a manufacturer cannot void your factory warranty just because an independent shop performed your maintenance or used quality OEM/OE-supplier parts. Keep itemized service records and your coverage stays fully intact."}},
+    {"@type":"Question","name":"Is independent German service really cheaper than the dealer?","acceptedAnswer":{"@type":"Answer","text":"Yes — typically 25 to 40 percent less on the same parts and labor. Dealers charge premium labor rates and mark up parts well above cost. Independents use the same OEM components and factory procedures without the dealership overhead."}},
+    {"@type":"Question","name":"Do independent specialists use OEM parts?","acceptedAnswer":{"@type":"Answer","text":"Yes. German Car Specialists fits genuine OEM or OE-supplier parts — the same components the manufacturer uses — never the cheapest aftermarket alternative. Every part carries its manufacturer warranty and labor is backed by a 24-month / 24,000-mile guarantee."}},
+    {"@type":"Question","name":"What's the difference between Mercedes Service A and Service B?","acceptedAnswer":{"@type":"Answer","text":"Service A is the lighter, earlier interval (oil and filter, fluid checks, inspection). Service B is more comprehensive (everything in A plus cabin filter, brake-fluid flush and a deeper inspection). Both are performed to Mercedes' factory schedule."}},
+    {"@type":"Question","name":"Will the dealer still honor recalls and warranty repairs?","acceptedAnswer":{"@type":"Answer","text":"Always. Manufacturer recalls and genuine warranty-covered repairs are performed by the dealer at no charge regardless of where you do routine maintenance. Independent service has no effect on your eligibility."}},
+    {"@type":"Question","name":"Can an independent shop reset service reminders and do software updates?","acceptedAnswer":{"@type":"Answer","text":"Yes. German Car Specialists runs factory-level diagnostic and coding equipment, so we can reset service indicators, perform module coding and retrofits, and apply software updates owners often assume only the dealer can do."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"Why Us","item":"https://mygermancarsa.com/why-us"},
+    {"@type":"ListItem","position":3,"name":"Dealer vs. Independent German Auto Service","item":"https://mygermancarsa.com/independent-vs-dealer-german-auto-service"}
+  ]
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

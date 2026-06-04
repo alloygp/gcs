@@ -1,0 +1,277 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `BMW Repair San Antonio | Independent BMW Service — My German Car SA`;
+const DESC = `Expert BMW repair &amp; service in San Antonio without dealer prices. Factory-level diagnostics, master techs, Carfax Top-Rated. Book your BMW today.`;
+const CANON = `https://mygermancarsa.com/bmw-repair-san-antonio`;
+const SCREEN = `BMW Repair San Antonio`;
+const BLOG = false;
+const DEFAULT_MAKE = 'BMW';
+const STYLE = ``;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="#">Makes</a><i data-lucide="chevron-right"></i><span class="cur">BMW</span></div></div></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <div class="hero-make"><img src="/assets/marques/bmw.svg" alt="BMW"><span>Specialist Service</span></div>
+      <h1 class="display">BMW Repair in <em>San Antonio.</em></h1>
+      <p class="lead">Dealer-level BMW service without the dealer markup. Factory-trained technicians, BMW diagnostic equipment, and OEM parts — from routine oil service to timing chains and turbos.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book BMW Service</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+      <div class="hero-mini">
+        <div class="hm"><i data-lucide="shield-check"></i><span>24-month / 24k warranty</span></div>
+        <div class="hm"><i data-lucide="cpu"></i><span>BMW diagnostics</span></div>
+        <div class="hm"><i data-lucide="package-check"></i><span>OEM parts only</span></div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="frame"><image-slot id="bmw-hero" placeholder="Drop a BMW photo — a customer car or one on the lift" fit="cover"></image-slot></div>
+      <div class="float">
+        <div class="big">4.9</div>
+        <div>
+          <div class="grow"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg><b>Google Rating</b></div>
+          <div class="gs" id="hero-s"></div><small>325 verified reviews</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>3 Series</b><b>5 Series</b><b>X3 / X5</b><b>M3 / M5</b><b>Factory-Trained</b><b>OEM Parts Only</b></div>
+  <div class="seg"><b>3 Series</b><b>5 Series</b><b>X3 / X5</b><b>M3 / M5</b><b>Factory-Trained</b><b>OEM Parts Only</b></div>
+</div></div>
+
+<!-- STAT BAND -->
+<section class="stats"><div class="container">
+  <div class="statc"><b><svg viewBox="0 0 24 24" width="50" height="50" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="m9 12 2 2 4-4"/><path d="M12 3l2.3 1.7 2.8-.2 1 2.7 2.3 1.6-.7 2.7.7 2.7-2.3 1.6-1 2.7-2.8-.2L12 21l-2.3-1.7-2.8.2-1-2.7L3.6 15l.7-2.7L3.6 9.6l2.3-1.6 1-2.7 2.8.2z"/></svg></b><span>Carfax Top-Rated</span></div>
+  <div class="statc"><b>325</b><span>5-Star Reviews</span></div>
+  <div class="statc"><b>2010</b><span>Independent Since</span></div>
+  <div class="statc"><b>OEM</b><span>BMW Parts Only</span></div>
+</div></section>
+
+<!-- INTRO -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">San Antonio's BMW Specialists</span>
+      <h2 class="h2">The honest alternative to the BMW dealer.</h2>
+    </div>
+    <div class="prose reveal">
+      <p>Searching for <strong>BMW repair near me</strong> in San&nbsp;Antonio? The dealership isn't your only option that does it right. At <strong>German Car Specialists</strong>, BMW is one of the four marques we've focused on since 2010 — so your car is handled by master technicians who know these platforms inside out, using the same factory-level diagnostic equipment and <strong>genuine OEM and OE-supplier parts</strong> the dealer uses. We're <strong>Carfax Top-Rated</strong>, and a go-to BMW mechanic in San&nbsp;Antonio for owners who want dealer-quality work without dealer prices.</p>
+      <p>The difference is everything around the work: <strong>honest, photo-documented inspections</strong>, estimates you approve before we lift a wrench, faster turnaround, and pricing that typically runs well below dealer rates. From routine BMW service in San&nbsp;Antonio — an oil service on a 330i — to a timing chain on an N20 or a cooling-system overhaul before a Texas summer, we keep your BMW running like it should, and back every repair with a <strong>24-month / 24,000-mile warranty</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">BMW Services</span>
+      <h2 class="h2">Complete BMW repair &amp; maintenance.</h2>
+      <p class="lead">Everything your BMW needs, under one roof — no dealer trip required.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc reveal"><div class="ico"><i data-lucide="activity"></i></div><h3>Diagnostics &amp; Check Engine Light</h3><p>BMW-specific scan tools read every module to pinpoint the real fault — fast, accurate, no guesswork.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="calendar-clock"></i></div><h3>Oil Service &amp; Maintenance</h3><p>Factory-interval Inspection I &amp; II with OEM filters and the correct LL-rated synthetic oil.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="thermometer-snowflake"></i></div><h3>Cooling System</h3><p>Water pumps, thermostats, expansion tanks and radiators — critical in San&nbsp;Antonio heat.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="droplet"></i></div><h3>Oil Leak Repair</h3><p>Valve cover and oil filter housing gaskets, oil pan seals — the leaks these engines are known for.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="cog"></i></div><h3>Engine &amp; Timing Chain</h3><p>Timing chains and guides, VANOS, turbochargers, and HPFP — major work done to spec.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="zap"></i></div><h3>Electrical &amp; Coding</h3><p>Modules, sensors, battery registration and coding/retrofits most shops send back to the dealer.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="disc-3"></i></div><h3>Brakes &amp; Suspension</h3><p>OEM-spec pads and rotors, control arms, shocks and alignment, dialed to factory feel.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="git-commit-horizontal"></i></div><h3>Transmission Service</h3><p>ZF automatic fluid &amp; filter service and mechatronics work — including "lifetime" fluid changes.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="clipboard-check"></i></div><h3>Pre-Purchase Inspection</h3><p>Buying a used BMW? A documented, bumper-to-bumper report before you sign anything.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMON PROBLEMS -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Common BMW Issues We Fix</span>
+      <h2 class="h2">We know where these cars need help.</h2>
+      <p class="lead">Years of BMW-only experience means we diagnose the known failure points quickly — and fix them right.</p>
+    </div>
+    <div class="prob-grid">
+      <div class="prob reveal"><div class="pi"><i data-lucide="link-2"></i></div><div><span class="eng">N20 · N26</span><h3>Timing Chain &amp; Guides</h3><p>Stretched chains and worn guides on 4-cylinder turbo engines — caught early, repaired before they fail.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="droplets"></i></div><div><span class="eng">N52 · N55</span><h3>Valve Cover &amp; OFH Gasket Leaks</h3><p>The oil leaks these engines are famous for, including the oil filter housing gasket. Sealed up properly.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="thermometer"></i></div><div><span class="eng">E90 · F30</span><h3>Cooling System Failures</h3><p>Electric water pumps and plastic thermostats fail with age and heat — a common San&nbsp;Antonio repair.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="fuel"></i></div><div><span class="eng">N54 · N55</span><h3>HPFP, Injectors &amp; Charge Pipe</h3><p>Rough starts, drivetrain-malfunction warnings and boost leaks on the turbo inline-sixes.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="settings-2"></i></div><div><span class="eng">VANOS</span><h3>VANOS &amp; Valvetronic</h3><p>Solenoid faults, rattle on startup and rough idle — restored to smooth, correct timing.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="droplet"></i></div><div><span class="eng">N63 · S63</span><h3>Twin-Turbo V8 Oil Consumption</h3><p>Valve stem seals and gasket service on the V8s — addressed before it becomes a bigger bill.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section class="sec models">
+  <div class="container">
+    <span class="eyebrow">Models We Service</span>
+    <h2 class="h2">Every BMW we get our hands on.</h2>
+    <div class="chips reveal">
+      <span>1 &amp; 2 Series</span><span>3 Series</span><span>4 Series</span><span>5 Series</span><span>7 Series</span>
+      <span>X1 · X2</span><span>X3 · X4</span><span>X5 · X6 · X7</span><span>Z4</span>
+      <span>M2 · M3 · M4</span><span>M5 · M8</span><span>i4 · iX</span>
+    </div>
+  </div>
+</section>
+
+<!-- DEALER COMPARE -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">GCS vs. The BMW Dealer</span>
+      <h2 class="h2">Same expertise. Better experience.</h2>
+    </div>
+    <div class="deal">
+      <div class="dcard win reveal">
+        <h3>German Car Specialists</h3>
+        <div class="sub">The Independent BMW Specialist</div>
+        <ul>
+          <li><i data-lucide="check"></i><span><b>Typically well below</b> dealer parts &amp; labor rates</span></li>
+          <li><i data-lucide="check"></i><span><b>OEM &amp; OE-supplier parts</b> with manufacturer warranties</span></li>
+          <li><i data-lucide="check"></i><span><b>Factory-level BMW diagnostics</b> &amp; coding in-house</span></li>
+          <li><i data-lucide="check"></i><span><b>Honest, photo-backed</b> inspections you approve</span></li>
+          <li><i data-lucide="check"></i><span>Talk directly to the tech working your BMW</span></li>
+          <li><i data-lucide="check"></i><span><b>24-month / 24,000-mile</b> repair warranty</span></li>
+        </ul>
+      </div>
+      <div class="dcard lose reveal">
+        <h3>The Franchise Dealer</h3>
+        <div class="sub">The Old Way</div>
+        <ul>
+          <li><i data-lucide="x"></i><span>Premium dealer rates on everything</span></li>
+          <li><i data-lucide="x"></i><span>Pressure to add services you don't need</span></li>
+          <li><i data-lucide="minus"></i><span>Rotating advisors who don't know your car</span></li>
+          <li><i data-lucide="x"></i><span>A call center between you and the shop</span></li>
+          <li><i data-lucide="x"></i><span>Days-long backlog and shuttle waitlists</span></li>
+          <li><i data-lucide="minus"></i><span>Warranty terms buried in the fine print</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">BMW Owners Trust Us</span>
+      <h2 class="h2">4.9 stars from San Antonio drivers.</h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rcard feat reveal">
+        <div class="rs" data-stars></div>
+        <p>"Quoted me less than half what the BMW dealer wanted on my 540i and finished the same day. They texted photos of everything before touching the car. I'm never going back to the dealer."</p>
+        <div class="who"><span class="av">MR</span><div><b>Marcus R.</b><span>BMW 540i &amp; X5</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"My F30 threw a cooling-system warning the week it hit 100°. They had the water pump and thermostat done in a day, OEM parts, fair price. Lifesavers in this heat."</p>
+        <div class="who"><span class="av">PT</span><div><b>Priya T.</b><span>BMW 328i</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"They diagnosed an N20 timing-chain issue two other shops missed and walked me through it with photos. Honest, knowledgeable, and they clearly know BMWs."</p>
+        <div class="who"><span class="av">DK</span><div><b>Derek K.</b><span>BMW 428i</span></div></div>
+      </div>
+    </div>
+    <div class="sec-head" style="margin:44px auto 0"><a class="btn btn-ghost reveal" href="/#reviews"><i data-lucide="star"></i>Read all 325 reviews</a></div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="sec book" id="book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Book · Estimate · Ask</span>
+        <h2 class="h2" style="text-align:center">Ready to skip the dealer?</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:54ch">Book a service, ask for an estimate, or just send a question — one quick form, answered the same business day by a real technician at the shop.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book / Contact</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">BMW Repair FAQ</span>
+      <h2 class="h2">Questions, answered.</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>How much does BMW repair cost in San Antonio?<span class="pl"></span></summary><div class="fa">It depends on the job, but independent BMW repair typically runs well below dealership rates for the same work — often 25–40% less on parts and labor — because we don't carry dealer overhead. You'll always get an upfront, itemized estimate to approve before any work begins.</div></details>
+      <details><summary>Do you use genuine BMW (OEM) parts?<span class="pl"></span></summary><div class="fa">Yes. We fit OEM or OE-supplier parts — the same components BMW uses — never the cheapest aftermarket box. Every part carries its manufacturer warranty, and our work is backed by a 24-month / 24,000-mile guarantee.</div></details>
+      <details><summary>Will servicing my BMW here void my warranty?<span class="pl"></span></summary><div class="fa">No. Under the federal Magnuson-Moss Warranty Act, an independent shop using quality parts can perform your scheduled maintenance and repairs without voiding your factory or extended warranty. We document everything for your records.</div></details>
+      <details><summary>Do you work on M cars and older BMWs?<span class="pl"></span></summary><div class="fa">Absolutely — from a daily-driver 3 Series to M2/M3/M4/M5 performance cars and older E-chassis BMWs. Our technicians are trained across the lineup and we have the factory-level tools to support it.</div></details>
+      <details><summary>Can you diagnose a check engine or warning light?<span class="pl"></span></summary><div class="fa">Yes. We use BMW-specific diagnostic equipment that reads every control module — not just generic codes — so we identify the actual fault instead of throwing parts at it. You'll see the findings, with photos, before approving repairs.</div></details>
+      <details><summary>Where are you located and do you offer loaners?<span class="pl"></span></summary><div class="fa">We're at 15555 Tradesman Dr, Ste 500, San Antonio, TX 78249, open Mon–Fri 8:00a–5:30p. Loaner cars and a local shuttle are available — just let us know when you book so we can reserve one.</div></details>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"AutoRepair",
+  "name":"German Car Specialists",
+  "image":"assets/logo-color.png",
+  "telephone":"+1-210-399-1172",
+  "priceRange":"$$",
+  "address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},
+  "areaServed":"San Antonio, TX",
+  "makesOffered":["BMW"],
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325"},
+  "openingHours":"Mo-Fr 08:00-17:30"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"How much does BMW repair cost in San Antonio?","acceptedAnswer":{"@type":"Answer","text":"Independent BMW repair typically runs well below dealership rates for the same work — often 25–40% less on parts and labor. You always get an upfront, itemized estimate before any work begins."}},
+    {"@type":"Question","name":"Do you use genuine BMW (OEM) parts?","acceptedAnswer":{"@type":"Answer","text":"Yes. We fit OEM or OE-supplier parts — the same components BMW uses — and back our work with a 24-month / 24,000-mile warranty."}},
+    {"@type":"Question","name":"Will servicing my BMW at an independent shop void my warranty?","acceptedAnswer":{"@type":"Answer","text":"No. Under the Magnuson-Moss Warranty Act, an independent shop using quality parts can perform maintenance and repairs without voiding your factory or extended warranty."}},
+    {"@type":"Question","name":"Do you work on M cars and older BMWs?","acceptedAnswer":{"@type":"Answer","text":"Yes — from daily-driver 3 Series to M2/M3/M4/M5 performance cars and older E-chassis BMWs."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"Makes","item":"https://mygermancarsa.com/makes"},
+    {"@type":"ListItem","position":3,"name":"BMW Repair San Antonio","item":"https://mygermancarsa.com/bmw-repair-san-antonio"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "serviceType":"BMW Repair &amp; Service",
+  "provider":{"@type":"AutoRepair","name":"German Car Specialists","telephone":"+1-210-399-1172"},
+  "areaServed":{"@type":"City","name":"San Antonio, TX"},
+  "audience":{"@type":"Audience","audienceType":"BMW owners"}
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

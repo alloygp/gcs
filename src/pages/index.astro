@@ -1,18 +1,645 @@
 ---
-import BaseLayout from '~/layouts/BaseLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `German &amp; European Auto Repair in San Antonio | My German Car SA`;
+const DESC = `Independent Audi, BMW, Mercedes &amp; Porsche repair in San Antonio — dealer-level service without dealer prices. Carfax Top-Rated. Book online today.`;
+const CANON = `https://mygermancarsa.com/`;
+const SCREEN = `GCS Homepage`;
+const BLOG = false;
+const DEFAULT_MAKE = undefined;
+const STYLE = `@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800;900&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+/* ============ DESIGN 3 · CLEAN / TRUST-FIRST ============ */
+:root{
+  --acc:#AF0D19;          /* GCS crimson */
+  --acc-d:#850A13;        /* red pressed */
+  --acc-soft:#fbe7e9;     /* faint red tint */
+  --acc-mid:#D81222;      /* red bright (on dark) */
+  --navy:#15181d;         /* near-black charcoal */
+  --font-display:'Saira Condensed','Arial Narrow',sans-serif;
+  --font-body:'Archivo','Gotham','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+body{background:var(--white);color:var(--steel-900);font-size:17px;line-height:1.6;font-family:var(--font-body);}
+.wrap{overflow-x:clip;}
+section{position:relative;}
+.container{max-width:1220px;}
+
+h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--navy);}
+.brand img{height:42px;width:auto;display:block;}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);
+  display:inline-flex;align-items:center;gap:11px;}
+.eyebrow::before{content:"";width:26px;height:2px;background:var(--acc);}
+.display{font-family:var(--font-display);font-size:clamp(38px,4.8vw,66px);font-weight:900;letter-spacing:-.015em;line-height:1.0;text-transform:uppercase;text-wrap:balance;}
+.h2{font-family:var(--font-display);font-size:clamp(34px,4.4vw,58px);font-weight:800;letter-spacing:-.01em;}
+.lead{font-size:clamp(18px,1.4vw,21px);color:var(--steel-500);font-weight:400;line-height:1.62;}
+
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  padding:16px 26px;border-radius:6px;transition:transform .15s var(--ease),background .15s,box-shadow .15s;border:2px solid transparent;}
+.btn svg{width:18px;height:18px;}
+.btn-primary{background:var(--acc);color:#fff;box-shadow:0 10px 26px rgba(175,13,25,.24);}
+.btn-primary:hover{background:var(--acc-d);transform:translateY(-2px);}
+.btn-ghost{background:#fff;color:var(--navy);border-color:var(--fog);}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc);}
+.btn-light{background:#fff;color:var(--acc);}
+.btn-light:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.16);}
+
+/* topbar */
+.topbar{background:var(--navy);color:rgba(255,255,255,.8);font-size:13px;}
+.topbar .container{display:flex;justify-content:space-between;align-items:center;height:40px;gap:18px;}
+.topbar .tl{display:flex;gap:24px;}
+.topbar .tl span{display:inline-flex;align-items:center;gap:7px;}
+.topbar .tl svg{width:14px;height:14px;color:var(--acc-mid);}
+.topbar .tr{display:inline-flex;align-items:center;gap:8px;font-weight:600;}
+.topbar .tr .gs{color:var(--star);display:inline-flex;gap:1px;}
+.topbar .tr .gs svg{width:13px;height:13px;fill:var(--star);stroke:none;}
+@media(max-width:820px){.topbar .tl span:not(:first-child){display:none;}}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--fog);}
+.hdr .container{display:flex;align-items:center;gap:34px;height:78px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand .mk{width:44px;height:44px;border-radius:12px;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:19px;letter-spacing:-.03em;box-shadow:0 6px 16px rgba(175,13,25,.25);}
+.brand b{font-weight:800;font-size:17px;color:var(--navy);letter-spacing:-.01em;line-height:1;}
+.brand small{display:block;font-size:11px;letter-spacing:.1em;color:var(--steel-400);text-transform:uppercase;margin-top:3px;}
+.nav{display:flex;gap:30px;margin-left:6px;}
+.nav a{font-size:15px;font-weight:500;color:var(--steel-700);transition:color .15s;}
+.nav a:hover{color:var(--acc);}
+.nav .has-menu{position:relative;display:flex;align-items:center;}
+.nav .has-menu>a{display:inline-flex;align-items:center;gap:5px;cursor:pointer;}
+.nav .has-menu>a svg{width:14px;height:14px;transition:transform .18s var(--ease);}
+.nav .has-menu:hover>a svg{transform:rotate(180deg);}
+.nav .menu{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px);min-width:242px;background:#fff;border:1px solid var(--fog);border-radius:12px;box-shadow:0 18px 44px rgba(12,14,18,.16);padding:8px;opacity:0;visibility:hidden;transition:opacity .18s var(--ease),transform .18s var(--ease);z-index:60;}
+.nav .menu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px;}
+.nav .has-menu:hover .menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(12px);}
+.nav .menu a{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:8px;font-size:14px;font-weight:600;color:var(--navy);}
+.nav .menu a:hover{background:var(--acc-soft);color:var(--acc);}
+.nav .menu a span{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel-400);}
+.nav .menu a .mq{display:flex;align-items:center;gap:10px;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:normal;text-transform:none;color:var(--navy);}
+.nav .has-menu .menu{min-width:268px;}
+.nav .menu .mqi{width:30px;height:24px;display:grid;place-items:center;flex:none;}
+.nav .menu .mqi img{max-width:26px;max-height:22px;object-fit:contain;display:block;}
+.nav .menu.wide{min-width:286px;}
+/* Makes mega-menu — full-width dark panel flush under the header border */
+.nav .has-mega{position:static;display:flex;align-items:center;}
+.nav .has-mega>a{display:inline-flex;align-items:center;gap:5px;cursor:pointer;}
+.nav .has-mega>a svg{width:14px;height:14px;transition:transform .18s var(--ease);}
+.nav .has-mega.open>a svg{transform:rotate(180deg);}
+.nav .menu.mega{left:0;right:0;width:100%;min-width:0;padding:0;background:#fff;
+  border:none;border-radius:0;border-top:1px solid var(--fog);
+  box-shadow:0 28px 48px rgba(12,14,18,.14);transform:translateY(8px);}
+.nav .has-mega.open .menu.mega{opacity:1;visibility:visible;transform:translateY(0);}
+.nav .menu.mega::before{display:none;}
+.mega-inner{max-width:1220px;margin:0 auto;padding:26px 28px 30px;}
+.mega-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.mtile{background:#fff;border:1px solid var(--fog);border-radius:10px;
+  padding:24px 22px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;
+  position:relative;overflow:hidden;color:var(--navy);text-decoration:none;transition:transform .18s var(--ease),border-color .18s,box-shadow .18s;}
+.mtile::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transition:transform .22s var(--ease);}
+.mtile:hover{transform:translateY(-3px);border-color:var(--acc);box-shadow:0 12px 28px rgba(12,14,18,.1);}
+.mtile:hover::before{transform:scaleX(1);}
+.mtile .mtile-logo{height:48px;display:grid;place-items:center;margin-bottom:14px;}
+.mtile .mtile-logo img{max-height:40px;max-width:62px;object-fit:contain;}
+.mtile h3{font-family:'Saira Condensed','Arial Narrow',sans-serif;font-size:23px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:6px;color:var(--navy);}
+.mtile .mtile-sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:var(--steel-400);margin-bottom:16px;}
+.mtile .mtile-cta{margin-top:auto;display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--acc);padding-top:14px;border-top:1px solid var(--fog);width:100%;justify-content:center;}
+.mtile .mtile-cta svg{width:14px;height:14px;}
+.hdr-r{margin-left:auto;display:flex;align-items:center;gap:18px;}
+.hdr-phone{font-weight:700;color:var(--navy);display:inline-flex;align-items:center;gap:8px;font-size:15px;}
+.hdr-phone svg{width:16px;height:16px;color:var(--acc);}
+.burger{display:none;background:#fff;border:1px solid var(--fog);border-radius:10px;width:46px;height:46px;color:var(--navy);place-items:center;}
+@media(max-width:980px){.nav,.hdr-phone{display:none;}.burger{display:grid;}}
+
+/* hero */
+.hero{background:linear-gradient(180deg,#f4f6f9 0%,#fff 82%);padding:clamp(48px,6vw,88px) 0 clamp(44px,5vw,72px);overflow:hidden;}
+.hero .container{display:grid;grid-template-columns:1.04fr .96fr;gap:56px;align-items:center;}
+.hero-copy .pill{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--fog);border-radius:99px;
+  padding:7px 16px 7px 8px;margin-bottom:24px;box-shadow:var(--shadow-sm,0 2px 6px rgba(0,0,0,.05));}
+.hero-copy .pill .gs{display:inline-flex;gap:1px;color:var(--star);}
+.hero-copy .pill .gs svg{width:15px;height:15px;fill:var(--star);stroke:none;}
+.hero-copy .pill b{font-size:13px;font-weight:700;color:var(--navy);}
+.hero-copy .pill span{font-size:13px;color:var(--steel-500);}
+.hero-copy .display{margin:0 0 22px;}
+.hero-copy .display em{color:var(--acc);font-style:normal;}
+.hero-copy .display .slash{display:inline-block;width:64px;height:8px;background:var(--acc);vertical-align:middle;margin:0 0 14px;}
+.hero-copy .lead{max-width:40ch;margin-bottom:32px;}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-mini{display:flex;gap:26px;margin-top:34px;flex-wrap:wrap;}
+.hero-mini .hm{display:flex;align-items:center;gap:11px;}
+.hero-mini .hm svg{width:20px;height:20px;color:var(--acc);flex:none;}
+.hero-mini .hm span{font-size:14px;font-weight:600;color:var(--steel-700);}
+/* hero visual */
+.hero-vis{position:relative;}
+.hero-vis .frame{border-radius:16px;overflow:hidden;box-shadow:0 30px 70px rgba(12,14,18,.22);}
+.hero-vis image-slot{width:100%;height:460px;display:block;}
+.hero-vis .float{position:absolute;background:#fff;border-radius:16px;box-shadow:0 18px 44px rgba(12,14,18,.16);padding:18px 20px;}
+.hero-vis .f-rev{left:-22px;bottom:42px;display:flex;align-items:center;gap:14px;}
+.hero-vis .f-rev .big{font-size:34px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1;}
+.hero-vis .f-rev .gs{display:flex;gap:2px;color:var(--star);}
+.hero-vis .f-rev .gs svg{width:14px;height:14px;fill:var(--star);stroke:none;}
+.hero-vis .f-rev small{font-size:12px;color:var(--steel-500);display:block;margin-top:3px;}
+.hero-vis .f-rev .grow{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.hero-vis .f-rev .grow b{font-size:12px;font-weight:700;color:var(--navy);letter-spacing:.01em;}
+.hero-vis .f-warr{right:-24px;top:26px;left:auto;bottom:auto;padding:0;overflow:hidden;width:256px;display:block;}
+.hero-vis .f-warr .map{display:block;width:100%;height:186px;border:0;}
+@media(max-width:920px){.hero .container{grid-template-columns:1fr;}.hero-vis{margin-top:10px;}.hero-vis image-slot{height:340px;}.hero-vis .f-rev{left:8px;}.hero-vis .f-warr{right:8px;}}
+
+/* trust band */
+.tband{border-bottom:1px solid var(--fog);background:#fff;}
+.tband .container{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px 28px;flex-wrap:wrap;}
+.tband .tg{display:flex;align-items:center;gap:14px;}
+.tband .tg .gicon{width:42px;height:42px;border-radius:50%;border:1px solid var(--fog);display:grid;place-items:center;font-weight:800;font-size:20px;color:#4285F4;}
+.tband .tg .gs{display:flex;gap:2px;color:var(--star);}
+.tband .tg .gs svg{width:16px;height:16px;fill:var(--star);stroke:none;}
+.tband .tg b{font-size:18px;font-weight:800;color:var(--navy);}
+.tband .tg small{font-size:13px;color:var(--steel-500);display:block;}
+.tband .marqs{display:flex;gap:clamp(16px,2.6vw,40px);align-items:center;flex-wrap:wrap;}
+.tband .marqs b{font-weight:800;font-size:clamp(14px,1.4vw,18px);color:var(--steel-400);transition:color .2s;}
+.tband .marqs b:hover{color:var(--navy);}
+@media(max-width:760px){.tband .marqs{display:none;}}
+
+/* marquee (bold) */
+.marquee{background:var(--acc);color:#fff;overflow:hidden;padding:13px 0;}
+.marquee .track{display:flex;width:max-content;animation:gcsscroll 32s linear infinite;}
+.marquee .seg{display:flex;align-items:center;}
+.marquee b{font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.03em;padding:0 28px;display:inline-flex;align-items:center;gap:28px;}
+.marquee b::after{content:"";width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.65);}
+@keyframes gcsscroll{to{transform:translateX(-50%);}}
+
+/* stat band (bold dark) */
+.stats{background:var(--navy);}
+.stats .container{display:grid;grid-template-columns:repeat(3,1fr);}
+.statc{padding:46px 22px;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
+.statc:last-child{border-right:none;}
+.statc b{display:block;font-weight:900;font-size:clamp(38px,4.4vw,58px);line-height:1;color:#fff;letter-spacing:-.02em;}
+.statc b .r{color:var(--acc-mid);}
+.statc span{display:block;margin-top:11px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55);}
+@media(max-width:600px){.stats .container{grid-template-columns:1fr;}.statc{border-right:none;border-bottom:1px solid rgba(255,255,255,.1);}.statc:last-child{border-bottom:none;}}
+
+/* section */
+.sec{padding:clamp(64px,8vw,116px) 0;}
+.sec-head{text-align:center;max-width:760px;margin:0 auto 58px;}
+.sec-head .h2{margin:16px 0 18px;}
+.sec-head .lead{margin:0 auto;}
+.sec.alt{background:var(--paper);}
+
+/* reviews (trust-first, high up) */
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.rcard{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:30px;display:flex;flex-direction:column;gap:16px;
+  transition:transform .2s var(--ease),box-shadow .2s;}
+.rcard:hover{transform:translateY(-4px);box-shadow:0 20px 44px rgba(12,14,18,.1);}
+.rcard.feat{background:var(--navy);color:#fff;border-color:var(--navy);position:relative;overflow:hidden;}
+.rcard.feat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--acc);}
+.rcard .rs{display:flex;gap:3px;color:var(--star);}
+.rcard .rs svg{width:18px;height:18px;fill:var(--star);stroke:none;}
+.rcard p{font-size:16px;color:var(--steel-700);font-weight:400;line-height:1.62;flex:1;}
+.rcard.feat p{color:rgba(255,255,255,.94);font-size:18px;font-weight:500;}
+.rcard .who{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--fog);}
+.rcard.feat .who{border-color:rgba(255,255,255,.2);}
+.rcard .av{width:42px;height:42px;border-radius:50%;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;font-weight:800;font-size:15px;}
+.rcard.feat .av{background:rgba(255,255,255,.16);color:#fff;}
+.rcard .who b{font-size:15px;font-weight:700;color:var(--navy);display:block;}
+.rcard.feat .who b{color:#fff;}
+.rcard .who span{font-size:13px;color:var(--steel-400);}
+.rcard.feat .who span{color:rgba(255,255,255,.7);}
+.rev-cta{text-align:center;margin-top:44px;}
+@media(max-width:920px){.rev-grid{grid-template-columns:1fr;}}
+
+/* dealer compare */
+.deal{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.dcard{border-radius:12px;padding:40px 36px;border:1px solid var(--fog);}
+.dcard.win{background:linear-gradient(155deg,rgba(17,19,21,.90) 0%,rgba(17,19,21,.95) 55%,rgba(17,19,21,.98) 100%),url('/assets/photo-r8-engine.jpeg') center/cover no-repeat;color:#fff;border-color:var(--navy);box-shadow:0 24px 56px rgba(12,14,18,.24);position:relative;overflow:hidden;}
+.dcard h3{font-size:24px;margin-bottom:6px;}
+.dcard.win h3{color:#fff;}
+.dcard .sub{font-size:14px;color:var(--steel-400);margin-bottom:26px;}
+.dcard.win .sub{color:var(--acc-mid);font-weight:700;}
+.dcard ul{display:flex;flex-direction:column;gap:16px;}
+.dcard li{display:flex;gap:13px;align-items:flex-start;font-size:16px;line-height:1.45;}
+.dcard li svg{width:22px;height:22px;flex:none;margin-top:1px;}
+.dcard.win li svg{color:var(--acc-mid);}
+.dcard.win li{color:rgba(255,255,255,.92);}
+.dcard.lose li{color:var(--steel-500);}
+.dcard.lose li svg{color:var(--steel-300);}
+@media(max-width:720px){.deal{grid-template-columns:1fr;}}
+
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.svc{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:32px;transition:transform .2s var(--ease),box-shadow .2s;}
+.svc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(12,14,18,.1);}
+.svc .ico{width:54px;height:54px;border-radius:14px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;margin-bottom:22px;}
+.svc .ico svg{width:27px;height:27px;}
+.svc h3{font-size:21px;margin-bottom:10px;}
+.svc p{font-size:15px;color:var(--steel-500);font-weight:400;line-height:1.6;}
+@media(max-width:920px){.svc-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.svc-grid{grid-template-columns:1fr;}}
+
+/* by-make selector */
+.makes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.makecard{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:30px 26px 24px;display:flex;flex-direction:column;text-align:center;align-items:center;position:relative;overflow:hidden;color:var(--navy);transition:transform .2s var(--ease),border-color .2s,box-shadow .2s;}
+.makecard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transition:transform .22s var(--ease);}
+.makecard:hover{transform:translateY(-4px);border-color:var(--acc);box-shadow:0 18px 40px rgba(12,14,18,.1);}
+.makecard:hover::before{transform:scaleX(1);}
+.makecard .ml{height:50px;display:grid;place-items:center;margin-bottom:16px;}
+.makecard .ml img{max-height:42px;max-width:64px;object-fit:contain;}
+.makecard h3{font-family:var(--font-display);font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:5px;}
+.makecard .mline{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--steel-400);margin-bottom:14px;}
+.makecard p{font-size:14px;color:var(--steel-500);font-weight:400;line-height:1.55;margin-bottom:18px;}
+.makecard .mcta{margin-top:auto;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);padding-top:16px;border-top:1px solid var(--fog);width:100%;justify-content:center;}
+.makecard .mcta svg{width:15px;height:15px;}
+@media(max-width:900px){.makes-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.makes-grid{grid-template-columns:1fr;}}
+
+/* work gallery strip */
+.gallery{padding:clamp(60px,7vw,104px) 0 0;}
+.gallery .gallery-head{margin-bottom:40px;}
+.gallery .gallery-head .h2{margin:14px 0 14px;}
+.gallery .gwrap{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+.gallery image-slot,.gallery img{width:100%;height:300px;display:block;background:var(--mist);object-fit:cover;}
+@media(max-width:900px){.gallery .gwrap{grid-template-columns:repeat(2,1fr);}.gallery image-slot,.gallery img{height:230px;}}
+@media(max-width:520px){.gallery .gwrap{grid-template-columns:1fr;}}
+
+/* why band w/ photo */
+.why{background:var(--paper);}
+.why .container{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+.why-vis{border-radius:16px;overflow:hidden;box-shadow:0 24px 56px rgba(12,14,18,.16);}
+.why-vis image-slot,.why-vis img{width:100%;height:480px;display:block;object-fit:cover;}
+.why-list{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px;}
+.wl{display:flex;flex-direction:column;gap:8px;}
+.wl .ico{width:44px;height:44px;border-radius:12px;background:#fff;border:1px solid var(--fog);display:grid;place-items:center;color:var(--acc);}
+.wl .ico svg{width:22px;height:22px;}
+.wl b{font-size:16px;font-weight:800;color:var(--navy);}
+.wl span{font-size:14px;color:var(--steel-500);font-weight:400;line-height:1.5;}
+@media(max-width:900px){.why .container{grid-template-columns:1fr;}.why-vis{order:-1;}.why-vis image-slot,.why-vis img{height:320px;}}
+@media(max-width:480px){.why-list{grid-template-columns:1fr;}}
+
+/* booking */
+.book{background:var(--navy);color:#fff;}
+.book-shell{display:grid;grid-template-columns:.92fr 1.08fr;gap:50px;align-items:start;}
+.book-copy .eyebrow{color:var(--acc-mid);}
+.book-copy .eyebrow::before{background:var(--acc-mid);}
+.book-copy h2{color:#fff;margin:16px 0 18px;}
+.book-copy .lead{color:rgba(255,255,255,.74);}
+.book-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;}
+.book-list li{display:flex;gap:13px;align-items:center;font-size:16px;color:rgba(255,255,255,.9);font-weight:500;}
+.book-list svg{width:22px;height:22px;color:var(--acc-mid);flex:none;}
+.embed{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.4);color:var(--navy);}
+.embed .eb-bar{display:flex;align-items:center;gap:12px;padding:18px 24px;border-bottom:1px solid var(--fog);}
+.embed .eb-bar .sm{width:30px;height:30px;border-radius:8px;background:var(--acc);color:#fff;display:grid;place-items:center;}
+.embed .eb-bar .sm svg{width:17px;height:17px;}
+.embed .eb-bar b{font-size:15px;font-weight:800;}
+.embed .eb-bar .sec-lk{margin-left:auto;font-size:12px;color:var(--steel-400);display:inline-flex;align-items:center;gap:5px;}
+.embed .eb-bar .sec-lk svg{width:13px;height:13px;}
+.embed .eb-body{padding:32px;}
+.sm-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.sm-form .full{grid-column:1/-1;}
+.sm-field{display:flex;flex-direction:column;gap:7px;}
+.sm-field label{font-size:12px;font-weight:700;color:var(--steel-700);letter-spacing:.02em;}
+.sm-field input,.sm-field select{border:1.5px solid var(--fog);border-radius:10px;padding:14px;font-family:var(--font);font-size:15px;font-weight:500;color:var(--navy);transition:border-color .15s,box-shadow .15s;}
+.sm-field input:focus,.sm-field select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft);}
+.sm-form .btn{width:100%;justify-content:center;}
+.embed .note{text-align:center;font-size:12px;color:var(--steel-400);padding:0 0 22px;}
+@media(max-width:860px){.book-shell{grid-template-columns:1fr;}.sm-form{grid-template-columns:1fr;}}
+
+/* footer */
+.ftr{background:var(--navy);color:rgba(255,255,255,.72);padding:72px 0 0;}
+.ftr-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:40px;padding-bottom:54px;border-bottom:1px solid rgba(255,255,255,.1);}
+.ftr .brand b{color:#fff;}
+.ftr p{font-size:14px;line-height:1.7;color:rgba(255,255,255,.6);font-weight:400;max-width:32ch;margin-top:16px;}
+.ftr h4{font-size:13px;font-weight:800;letter-spacing:.04em;color:#fff;margin-bottom:18px;}
+.ftr ul{display:flex;flex-direction:column;gap:11px;}
+.ftr ul a{font-size:14px;color:rgba(255,255,255,.66);transition:color .15s;}
+.ftr ul a:hover{color:var(--acc-mid);}
+.ftr .ct{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin-bottom:12px;color:rgba(255,255,255,.78);}
+.ftr .ct svg{width:16px;height:16px;color:var(--acc-mid);flex:none;margin-top:2px;}
+.ftr-bottom{display:flex;justify-content:space-between;padding:22px 0;font-size:12px;color:rgba(255,255,255,.5);flex-wrap:wrap;gap:8px;}
+@media(max-width:860px){.ftr-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:520px){.ftr-grid{grid-template-columns:1fr;}}
+
+/* drawer */
+.drawer{position:fixed;inset:0;z-index:90;background:rgba(255,255,255,.98);backdrop-filter:blur(8px);display:flex;flex-direction:column;padding:26px;transform:translateX(100%);transition:transform .3s var(--ease);}
+.drawer.open{transform:none;}
+.drawer .dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;}
+.drawer .dx{background:#fff;border:1px solid var(--fog);border-radius:10px;width:46px;height:46px;color:var(--navy);display:grid;place-items:center;}
+.drawer a{color:var(--navy);font-size:24px;font-weight:800;letter-spacing:-.01em;padding:16px 0;border-bottom:1px solid var(--fog);}
+.drawer .btn{margin-top:24px;justify-content:center;}
+
+/* car-picker bar (persists choice site-wide, personalizes soft copy only) */
+.carbar{background:var(--paper);border-bottom:1px solid var(--fog);}
+.carbar .container{display:flex;align-items:center;gap:18px;padding:11px 0;flex-wrap:wrap;}
+.carbar .cb-label{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:700;color:var(--navy);}
+.carbar .cb-label svg{width:17px;height:17px;color:var(--acc);}
+.carbar .cb-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.carbar .cb-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--fog);border-radius:999px;background:#fff;font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;}
+.carbar .cb-chip img{height:15px;width:auto;}
+.carbar .cb-chip:hover{border-color:var(--acc);}
+.carbar .cb-chip.active{border-color:var(--acc);background:var(--acc-soft);box-shadow:0 0 0 2px rgba(175,13,25,.12);}
+.carbar .cb-reset{margin-left:0;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;border:1px solid var(--fog);background:#fff;color:var(--steel-500);cursor:pointer;transition:border-color .15s,color .15s;}
+.carbar .cb-reset svg{width:14px;height:14px;}
+.carbar .cb-reset:hover{color:var(--acc);border-color:var(--acc);}
+.carbar .cb-reset[hidden]{display:none!important;}
+.carbar.chosen .cb-chip:not(.active){display:none;}
+@media(max-width:600px){.carbar .cb-label{width:100%;}.carbar .cb-reset{margin-left:0;}}
+
+
+/* Why Us card dropdown (compact, mtile-style) */
+.nav .menu.cards{left:50%;min-width:440px;padding:18px 20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px;transform:translateX(-50%) translateY(8px);border:none;border-top:1px solid var(--fog);border-radius:0 0 14px 14px;box-shadow:0 28px 48px rgba(12,14,18,.14);}
+.nav .has-menu:hover .menu.cards,.nav .has-menu.open .menu.cards{opacity:1;visibility:visible;transform:translateX(-50%) translateY(27px);}
+.nav .has-menu.open>a svg{transform:rotate(180deg);}
+.nav .menu.cards .ctile{background:#fff;border:1px solid var(--fog);border-radius:10px;padding:24px 22px 20px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;position:relative;overflow:hidden;color:var(--navy);text-decoration:none;transition:transform .18s var(--ease),border-color .18s,box-shadow .18s;}
+.nav .menu.cards .ctile:hover{background:#fff;transform:translateY(-3px);border-color:var(--acc);box-shadow:0 12px 28px rgba(12,14,18,.1);}
+.nav .menu.cards .ctile::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transition:transform .22s var(--ease);}
+.nav .menu.cards .ctile:hover::before{transform:scaleX(1);}
+.nav .menu.cards .ctile .ctile-ic{width:40px;height:40px;border-radius:10px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;margin-bottom:11px;}
+.nav .menu.cards .ctile .ctile-ic svg{width:21px;height:21px;}
+.nav .menu.cards .ctile h3{font-family:var(--font-display);font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:4px;color:var(--navy);}
+.nav .menu.cards .ctile .ctile-sub{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel-400);margin-bottom:13px;}
+.nav .menu.cards .ctile .ctile-cta{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);padding-top:11px;border-top:1px solid var(--fog);width:100%;justify-content:center;}
+.nav .menu.cards .ctile .ctile-cta svg{width:13px;height:13px;}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease-emph),transform .6s var(--ease-emph);}
+.reveal.in{opacity:1;transform:none;}`;
+const CONTENT = `<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <div class="pill"><span class="gs" id="d3-hp"></span><b>4.9/5</b><span>· 325 reviews · Carfax Top-Rated</span></div>
+      <h1 class="display">German car repair in San Antonio that beats the <em>dealer.</em></h1>
+      <p class="lead">Independent Audi, BMW, Mercedes &amp; Porsche specialists serving San Antonio since 2010 — factory-trained technicians, dealer-level diagnostics, and OEM parts at honest, dealer-alternative prices. The European &amp; foreign car repair shop locals actually trust.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book Your Service</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+      <div class="hero-mini">
+        <div class="hm"><i data-lucide="shield-check"></i><span>24-month warranty</span></div>
+        <div class="hm"><i data-lucide="car-front"></i><span>Free Uber to &amp; from</span></div>
+        <div class="hm"><i data-lucide="image"></i><span>Photo inspections</span></div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="frame"><img src="/assets/photo-audi-r8-shop.jpeg" alt="German car on the lift in the shop bay" width="800" height="460" style="width:100%;height:460px;object-fit:cover;display:block;" loading="eager"></div>
+      <div class="float f-rev">
+        <div class="big">4.9</div>
+        <div>
+          <div class="grow"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg><b>Google Rating</b></div>
+          <div class="gs" id="d3-fr"></div><small>325 verified reviews</small>
+        </div>
+      </div>
+      <div class="float f-warr">
+        <iframe class="map" src="https://maps.google.com/maps?q=15555+Tradesman+Dr+Ste+500,+San+Antonio,+TX+78249&z=15&output=embed" title="German Car Specialists location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>Audi</b><b>BMW</b><b>Mercedes-Benz</b><b>Porsche</b><b>Factory-Trained</b><b>OEM Parts Only</b></div>
+  <div class="seg"><b>Audi</b><b>BMW</b><b>Mercedes-Benz</b><b>Porsche</b><b>Factory-Trained</b><b>OEM Parts Only</b></div>
+</div></div>
+
+<!-- STAT BAND -->
+<section class="stats"><div class="container">
+  <div class="statc"><b>325</b><span>5-Star Reviews</span></div>
+  <div class="statc"><b>2010</b><span>Independent Since</span></div>
+  <div class="statc"><b>OEM</b><span>Parts Only</span></div>
+</div></section>
+
+<!-- REVIEWS (trust-first, up top) -->
+<section class="sec" id="reviews">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What 325 drivers say</span>
+      <h2 class="h2">San Antonio trusts us with the cars they love.</h2>
+      <p class="lead">A 4.9-star average across 325 reviews — because we treat your German car (and you) better than the dealer ever did.</p>
+    </div>
+    <div class="rev-grid">
+      <div class="rcard feat reveal">
+        <div class="rs" data-stars></div>
+        <p>"Quoted me less than half what the BMW dealer wanted and finished the same day. They texted photos of everything before touching the car. I'm never going back to the dealer."</p>
+        <div class="who"><span class="av">MR</span><div><b>Marcus R.</b><span>BMW 540i &amp; X5</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Honest, fast, and they truly know these cars. My Audi had an electrical issue three shops couldn't find — GCS diagnosed it in an afternoon."</p>
+        <div class="who"><span class="av">JL</span><div><b>Jenna L.</b><span>Audi Q5</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Loaner ready, work done right, zero surprise charges. This is how a shop should run. They treat my Porsche better than the dealership ever did."</p>
+        <div class="who"><span class="av">DT</span><div><b>David T.</b><span>Porsche Cayenne</span></div></div>
+      </div>
+    </div>
+    <div class="rev-cta reveal"><a class="btn btn-ghost" href="#"><i data-lucide="star"></i>Read all 325 reviews on Google</a></div>
+  </div>
+</section>
+
+<!-- DEAL -->
+<section class="sec alt" id="deal">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">GCS vs. The Dealership</span>
+      <h2 class="h2">Better care. Better price. Real people.</h2>
+      <p class="lead">You get everything the dealer offers — without the markup, the wait, or the upsell.</p>
+    </div>
+    <div class="deal">
+      <div class="dcard win reveal">
+        <h3>German Car Specialists</h3>
+        <div class="sub">THE INDEPENDENT ADVANTAGE</div>
+        <ul>
+          <li><i data-lucide="check-circle-2"></i><span>Up to <b>32% lower</b> on parts &amp; labor</span></li>
+          <li><i data-lucide="check-circle-2"></i><span>Honest photo inspections — approve every line</span></li>
+          <li><i data-lucide="check-circle-2"></i><span>Factory-trained techs, German makes only</span></li>
+          <li><i data-lucide="check-circle-2"></i><span>Talk directly to the person fixing your car</span></li>
+          <li><i data-lucide="check-circle-2"></i><span>Most jobs same or next day + free loaner</span></li>
+        </ul>
+      </div>
+      <div class="dcard lose reveal">
+        <h3>The Franchise Dealer</h3>
+        <div class="sub">THE OLD WAY</div>
+        <ul>
+          <li><i data-lucide="x-circle"></i><span>Premium dealer rates on everything</span></li>
+          <li><i data-lucide="x-circle"></i><span>Pressure to add services you don't need</span></li>
+          <li><i data-lucide="x-circle"></i><span>Rotating advisors who don't know you</span></li>
+          <li><i data-lucide="x-circle"></i><span>A call center between you and the shop</span></li>
+          <li><i data-lucide="x-circle"></i><span>Days-long backlog, loaner if you're lucky</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec" id="services">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What we do</span>
+      <h2 class="h2">The complete dealer alternative.</h2>
+      <p class="lead">From routine maintenance to deep diagnostics — your German car never needs to see the dealer again.</p>
+    </div>
+    <div class="svc-grid">
+      <a class="svc reveal" href="/german-car-oil-leak-repair-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="droplet"></i></div><h3>Oil Leak Repair</h3><p>Spots or a burning smell? Valve-cover, oil-pan &amp; gasket leak diagnosis and repair — independent pricing.</p></a>
+      <a class="svc reveal" href="/german-car-coolant-leak-repair-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="droplets"></i></div><h3>Coolant Leak Repair</h3><p>Leak or overheating? Cooling-system diagnosis &amp; repair — water pumps, hoses, thermostats &amp; more.</p></a>
+      <a class="svc reveal" href="/german-car-key-replacement-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="key-round"></i></div><h3>Key &amp; Fob Replacement</h3><p>Lost or broken fob? Replacement, programming &amp; battery service for your German car — without dealer prices.</p></a>
+      <div class="svc reveal"><div class="ico"><i data-lucide="activity"></i></div><h3>Computer Diagnostics</h3><p>Dealer-level scan tools read every module to find the real fault — not a guess.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="calendar-clock"></i></div><h3>Scheduled Maintenance</h3><p>Factory-interval service with OEM fluids that protects your warranty and resale.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="cog"></i></div><h3>Engine &amp; Transmission</h3><p>Timing chains, turbos, mechatronics and rebuilds — major work done right.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="zap"></i></div><h3>Electrical &amp; Coding</h3><p>Modules, retrofits and software coding most shops send back to the dealer.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="disc-3"></i></div><h3>Brakes &amp; Suspension</h3><p>OEM-spec pads, rotors, air suspension and alignment tuned to spec.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="clipboard-check"></i></div><h3>Pre-Purchase Inspection</h3><p>Buying used? A documented bumper-to-bumper report before you sign.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BY MAKE -->
+<section class="sec alt" id="makes">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Choose your make</span>
+      <h2 class="h2">German car specialists for all four marques.</h2>
+      <p class="lead">We focus on what we know best. Pick your make for model-specific German car service near you — common repairs, maintenance schedules, and real San Antonio pricing.</p>
+    </div>
+    <div class="makes-grid">
+      <a class="makecard reveal" href="/audi-repair-san-antonio">
+        <span class="ml"><img src="/assets/marques/audi.svg" alt="Audi"></span>
+        <h3>Audi</h3>
+        <div class="mline">A4 · Q5 · S/RS · R8</div>
+        <p>Carbon cleaning, timing service, quattro driveline and the electronics other shops won't touch.</p>
+        <span class="mcta">Audi Repair San Antonio <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="makecard reveal" href="/bmw-repair-san-antonio">
+        <span class="ml"><img src="/assets/marques/bmw.svg" alt="BMW"></span>
+        <h3>BMW</h3>
+        <div class="mline">3 · 5 · X · M</div>
+        <p>Oil leaks, cooling systems, VANOS and M-car maintenance done to factory spec.</p>
+        <span class="mcta">BMW Repair San Antonio <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="makecard reveal" href="/mercedes-repair-san-antonio">
+        <span class="ml"><img src="/assets/marques/mercedes.svg" alt="Mercedes-Benz"></span>
+        <h3>Mercedes</h3>
+        <div class="mline">C · E · S · AMG</div>
+        <p>Service A &amp; B, air suspension, and the full diagnostic suite for every Mercedes platform.</p>
+        <span class="mcta">Mercedes Repair San Antonio <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="makecard reveal" href="/porsche-repair-san-antonio">
+        <span class="ml"><img src="/assets/marques/porsche.svg" alt="Porsche"></span>
+        <h3>Porsche</h3>
+        <div class="mline">911 · Cayenne · Macan</div>
+        <p>From air-cooled classics to modern turbos — major service, IMS and performance work.</p>
+        <span class="mcta">Porsche Repair San Antonio <i data-lucide="arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WORK GALLERY -->
+<section class="gallery" id="work">
+  <div class="container gallery-head reveal">
+    <span class="eyebrow">Inside the shop</span>
+    <h2 class="h2">A look at the work.</h2>
+    <p class="lead">From routine oil services to full engine builds — a glimpse at what rolls through our bays every week.</p>
+  </div>
+  <div class="gwrap">
+    <img src="/assets/bmw-x5-service.jpeg" alt="BMW X5 with the hood up for service in the shop bay" loading="lazy" width="600" height="300">
+    <img src="/assets/bmw-engine-bay-service.jpeg" alt="Clean BMW engine bay during diagnostics" loading="lazy" width="600" height="300">
+    <img src="/assets/bmw-coupe-on-lift.jpeg" alt="White BMW coupe raised on the shop lift" loading="lazy" width="600" height="300">
+    <img src="/assets/bmw-intake-detail.jpeg" alt="BMW intake manifold removed with tools laid out for detailed engine work" loading="lazy" width="600" height="300">
+    <img src="/assets/bmw-engine-diagnostics.jpeg" alt="BMW engine bay open on the shop floor during diagnostics" loading="lazy" width="600" height="300">
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="sec why" id="why">
+  <div class="container">
+    <div class="why-copy reveal">
+      <span class="eyebrow">Why you can trust us</span>
+      <h2 class="h2" style="margin:16px 0 16px">Dealer-grade work, neighborhood care.</h2>
+      <p class="lead">Searching for a German car specialist near you? We've built a dealership-level operation — the training, the tools, the parts — and run it with the honesty and speed only an independent foreign &amp; European car repair shop in San Antonio can offer.</p>
+      <div class="why-list">
+        <div class="wl"><div class="ico"><i data-lucide="award"></i></div><b>ASE &amp; Factory Trained</b><span>Master-certified on the exact platforms we service.</span></div>
+        <div class="wl"><div class="ico"><i data-lucide="scan-line"></i></div><b>Dealer Equipment</b><span>The same diagnostic systems the franchises use.</span></div>
+        <div class="wl"><div class="ico"><i data-lucide="package-check"></i></div><b>OEM &amp; Genuine Parts</b><span>Factory-quality parts, never the cheapest box.</span></div>
+        <div class="wl"><div class="ico"><i data-lucide="car"></i></div><b>Loaners &amp; Shuttle</b><span>Stay on schedule while we handle the work.</span></div>
+      </div>
+    </div>
+    <div class="why-vis reveal"><img src="/assets/technician-at-work.jpeg" alt="Technician in gloves working on the front end of a BMW" loading="lazy" width="600" height="480"></div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="sec book" id="book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Book · Estimate · Ask</span>
+        <h2 class="h2" data-make-tpl="Let's get your {make} taken care of." style="text-align:center">Ready to skip the dealer?</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:54ch">Book a service, ask for an estimate, or just send a question — one quick form, answered the same business day by a real technician at the shop.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book / Contact</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AutoRepair",
+      "@id": "https://mygermancarsa.com/#shop",
+      "name": "German Car Specialists",
+      "description": "Independent German and European auto repair in San Antonio specializing in Audi, BMW, Mercedes-Benz and Porsche — dealer-level service without dealer prices.",
+      "url": "https://mygermancarsa.com/",
+      "telephone": "+1-210-399-1172",
+      "priceRange": "$$",
+      "image": "https://mygermancarsa.com/assets/logo-color.png",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "15555 Tradesman Dr, Ste 500",
+        "addressLocality": "San Antonio",
+        "addressRegion": "TX",
+        "postalCode": "78249",
+        "addressCountry": "US"
+      },
+      "geo": { "@type": "GeoCoordinates", "latitude": 29.5712, "longitude": -98.6097 },
+      "areaServed": { "@type": "City", "name": "San Antonio" },
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "08:00", "closes": "17:30"
+      }],
+      "makesOffered": ["Audi","BMW","Mercedes-Benz","Porsche"],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "325",
+        "bestRating": "5"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://mygermancarsa.com/#org",
+      "name": "German Car Specialists",
+      "url": "https://mygermancarsa.com/",
+      "logo": "https://mygermancarsa.com/assets/logo-color.png",
+      "telephone": "+1-210-399-1172",
+      "foundingDate": "2010",
+      "sameAs": ["https://www.instagram.com/mygermancarsa"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://mygermancarsa.com/#website",
+      "url": "https://mygermancarsa.com/",
+      "name": "My German Car SA",
+      "publisher": { "@id": "https://mygermancarsa.com/#org" }
+    }
+  ]
+}
+</script>`;
 ---
-<BaseLayout
-  title="Client Name — Short tagline here"
-  description="One sentence describing what the business does and who it serves."
->
-  <section style="padding: 120px 32px; max-width: 960px; margin: 0 auto; text-align: center;">
-    <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">Welcome to Your New Site</h1>
-    <p style="font-size: 1.125rem; color: #555; margin-bottom: 2rem;">
-      Replace this with your homepage content. Build page components in
-      <code>src/components/pages/</code> and import them here.
-    </p>
-    <a href="/contact" style="display: inline-block; padding: 12px 28px; background: #333; color: #fff; border-radius: 6px; text-decoration: none;">
-      Get in Touch
-    </a>
-  </section>
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
 </BaseLayout>

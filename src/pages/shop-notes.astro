@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `Shop Notes | German Car Specialists — San Antonio Audi, BMW, Mercedes &amp; Porsche`;
+const DESC = `Shop Notes from German Car Specialists in San Antonio — straight-talk guides on German car maintenance, common problems, repair costs, and dealer alternatives.`;
+const CANON = `https://mygermancarsa.com/shop-notes`;
+const SCREEN = `Shop Notes — Hub`;
+const BLOG = true;
+const DEFAULT_MAKE = undefined;
+const STYLE = ``;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><span class="cur">Shop Notes</span></div></div></div>
+
+<!-- HERO -->
+<section class="bhero">
+  <div class="container">
+    <span class="eyebrow">Shop Notes</span>
+    <h1 class="h2">German car know-how, straight from our bays.</h1>
+    <p class="lead">Honest guides on maintenance, common problems, repair costs and dealer alternatives — written by the technicians who actually turn the wrenches on your Audi, BMW, Mercedes &amp; Porsche.</p>
+    <div class="cat-chips">
+      <a href="#" class="on">All</a>
+      <a href="#">Maintenance</a>
+      <a href="#">Diagnostics</a>
+      <a href="#">Model Guides</a>
+      <a href="#">Dealer Alternative</a>
+      <a href="#">Buying</a>
+    </div>
+  </div>
+</section>
+
+<!-- POSTS -->
+<section class="sec" style="padding-top:48px">
+  <div class="container">
+
+    <!-- FEATURED -->
+    <a class="featpost reveal" href="/bmw-maintenance-cost-san-antonio">
+      <div class="thumb">
+        <span class="badge">Featured</span>
+        <image-slot id="feat-thumb" placeholder="Featured post image" fit="cover"></image-slot>
+      </div>
+      <div class="fp-body">
+        <span class="ptag">Maintenance</span>
+        <h2>BMW Oil Change &amp; Maintenance Cost in San Antonio</h2>
+        <p>What an oil change and scheduled service really cost on a BMW — by model, versus the dealer, and how to save without cutting corners.</p>
+        <div class="pmeta"><span>Mar 2026</span><span class="dot"></span><span>6 min read</span></div>
+      </div>
+    </a>
+
+    <!-- GRID -->
+    <div class="post-grid">
+      <a class="pcard reveal" href="/blog/long-term-car-storage">
+        <div class="thumb"><span class="ptag">Ownership</span><image-slot id="pn1" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Long-Term Car Storage: A German Car Owner's Guide</h3>
+          <p>How to store a BMW, Porsche or Audi for months without a dead battery, flat spots or pests.</p>
+          <div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>8 min</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="/blog/are-german-cars-worth-it">
+        <div class="thumb"><span class="ptag">Ownership</span><image-slot id="pn2" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Are German Cars Worth It? The Real Cost of Ownership</h3>
+          <p>What Audi, BMW, Mercedes &amp; Porsche really cost to own — and how to keep them affordable.</p>
+          <div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>6 min</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="/blog/summer-car-maintenance">
+        <div class="thumb"><span class="ptag">Maintenance</span><image-slot id="pn3" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Summer Car Maintenance for German Cars in Texas Heat</h3>
+          <p>The cooling, A/C, battery and tire checks to do before the San Antonio heat hits.</p>
+          <div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>5 min</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="/mercedes-service-a-vs-b">
+        <div class="thumb"><span class="ptag">Maintenance</span><image-slot id="p1" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Mercedes Service A vs B — Explained</h3>
+          <p>What each service includes, when it’s due, and what San Antonio drivers should actually pay.</p>
+          <div class="pmeta"><span>Feb 2026</span><span class="dot"></span><span>5 min</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="/audi-maintenance-cost-san-antonio">
+        <div class="thumb"><span class="ptag">Maintenance</span><image-slot id="p2" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Audi Maintenance Cost &amp; Service Schedule</h3>
+          <p>The factory schedule and real-world costs by mileage — minor to major service.</p>
+          <div class="pmeta"><span>Feb 2026</span><span class="dot"></span><span>5 min</span></div>
+        </div>
+      </a>
+      <a class="pcard reveal" href="/porsche-maintenance-cost-san-antonio">
+        <div class="thumb"><span class="ptag">Maintenance</span><image-slot id="p3" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body">
+          <h3>Porsche Maintenance Cost: 911, Cayenne &amp; Macan</h3>
+          <p>What Porsche service really costs by model — and what drives the price.</p>
+          <div class="pmeta"><span>Dec 2025</span><span class="dot"></span><span>5 min</span></div>
+        </div>
+      </a>
+    </div>
+
+    <div class="rev-cta" style="text-align:center;margin-top:48px"><a class="btn btn-ghost reveal" href="#"><i data-lucide="rotate-cw"></i>Load more articles</a></div>
+  </div>
+</section>
+
+<!-- BOOKING CTA -->
+<section class="sec book" style="padding:clamp(56px,7vw,90px) 0">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:680px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Stop reading, start driving</span>
+        <h2 class="h2">Got a problem we just described?</h2>
+        <p class="lead" style="margin:16px auto 28px">Book it with the San Antonio shop that fixes German cars right — for less than the dealer.</p>
+        <a class="btn btn-primary" href="/appointments" style="margin:0 auto"><i data-lucide="calendar-check"></i>Book Your Service</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE GUIDES -->
+<section class="sec alt" id="service-guides">
+  <div class="container">
+    <div class="sec-head reveal" style="text-align:left;margin:0 0 40px">
+      <span class="eyebrow">Service Guides</span>
+      <h2 class="h2">Common German car repairs.</h2>
+      <p class="lead" style="margin:0">In-depth guides on the repairs we see most — symptoms, real costs, and how we fix them right.</p>
+    </div>
+    <div class="svc-grid">
+      <a class="svc reveal" href="/german-car-key-replacement-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="key-round"></i></div><h3>Key &amp; Fob Replacement</h3><p>Lost or broken fob? Cutting, programming &amp; battery service — without dealer prices.</p></a>
+      <a class="svc reveal" href="/german-car-coolant-leak-repair-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="droplets"></i></div><h3>Coolant Leak Repair</h3><p>Leaks &amp; overheating — water pumps, thermostats, hoses and radiators.</p></a>
+      <a class="svc reveal" href="/german-car-oil-leak-repair-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="droplet"></i></div><h3>Oil Leak Repair</h3><p>Valve-cover, oil-pan &amp; gasket leaks traced to the real source and sealed.</p></a>
+      <a class="svc reveal" href="/bmw-carbon-buildup-cleaning-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="wind"></i></div><h3>BMW Carbon Cleaning</h3><p>Walnut blasting for direct-injection BMW &amp; Audi — restore power and MPG.</p></a>
+      <a class="svc reveal" href="/porsche-ims-bearing-repair-san-antonio" style="text-decoration:none;color:inherit"><div class="ico"><i data-lucide="cog"></i></div><h3>Porsche IMS Bearing</h3><p>IMS bearing &amp; coolant-pipe repair for M96/M97 Porsche engines.</p></a>
+    </div>
+  </div>
+</section>`;
+const JSONLD = ``;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

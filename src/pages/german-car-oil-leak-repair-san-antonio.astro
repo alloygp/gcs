@@ -1,0 +1,320 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `German Car Oil Leak Repair in San Antonio | My German Car SA`;
+const DESC = `Oil leak in your BMW, Audi, Mercedes or Porsche? Valve cover, oil pan &amp; gasket leak diagnosis and repair in San Antonio — dealer-level work, independent pricing.`;
+const CANON = `https://mygermancarsa.com/german-car-oil-leak-repair-san-antonio`;
+const SCREEN = `Oil Leak Repair`;
+const BLOG = false;
+const DEFAULT_MAKE = undefined;
+const STYLE = `.hero-make .keychip{width:46px;height:46px;border-radius:12px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;}
+.hero-make .keychip svg{width:24px;height:24px;}
+.prose .kw{color:var(--navy);font-weight:700;}
+.km-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.kmcard{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:26px 22px 20px;display:flex;flex-direction:column;text-align:center;align-items:center;position:relative;overflow:hidden;color:var(--navy);transition:transform .2s var(--ease),border-color .2s,box-shadow .2s;}
+.kmcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transition:transform .22s var(--ease);}
+.kmcard:hover{transform:translateY(-4px);border-color:var(--acc);box-shadow:0 16px 36px rgba(12,14,18,.1);}
+.kmcard:hover::before{transform:scaleX(1);}
+.kmcard .kl{height:44px;display:grid;place-items:center;margin-bottom:13px;}
+.kmcard .kl img{max-height:36px;max-width:58px;object-fit:contain;}
+.kmcard h3{font-family:var(--font-display);font-size:21px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:5px;}
+.kmcard p{font-size:13.5px;color:var(--steel-500);line-height:1.5;margin-bottom:14px;}
+.kmcard .kcta{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);padding-top:13px;border-top:1px solid var(--fog);width:100%;justify-content:center;}
+.kmcard .kcta svg{width:14px;height:14px;}
+@media(max-width:900px){.km-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:460px){.km-grid{grid-template-columns:1fr;}}
+.n54{background:var(--navy);color:#fff;border-radius:16px;padding:clamp(30px,4vw,48px);position:relative;overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;}
+.n54::before{content:"";position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--acc);}
+.n54 .eyebrow{color:var(--acc-mid);margin-bottom:14px;}
+.n54 .eyebrow::before{background:var(--acc-mid);}
+.n54 h2{font-family:var(--font-display);font-size:clamp(26px,3vw,38px);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;color:#fff;margin:0 0 14px;line-height:1.04;}
+.n54 p{font-size:16px;line-height:1.65;color:rgba(255,255,255,.82);margin:0 0 14px;}
+.n54 p:last-child{margin:0;}
+.n54 .fail{display:flex;flex-direction:column;gap:12px;}
+.n54 .fail li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:rgba(255,255,255,.9);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:14px 16px;}
+.n54 .fail li svg{width:20px;height:20px;color:var(--acc-mid);flex:none;margin-top:1px;}
+.n54 .fail li b{color:#fff;font-weight:700;}
+.n54 a.inline{color:var(--acc-mid);font-weight:700;border-bottom:1px solid rgba(216,18,34,.4);}
+@media(max-width:820px){.n54{grid-template-columns:1fr;gap:26px;}}`;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="/#services">Services</a><i data-lucide="chevron-right"></i><span class="cur">Oil Leak Repair</span></div></div></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <div class="hero-make"><span class="keychip"><i data-lucide="droplet"></i></span><span>Oil Leak Service</span></div>
+      <h1 class="display">German Car Oil Leak Repair in <em>San Antonio.</em></h1>
+      <p class="lead">Spots on the garage floor, a burning-oil smell, or low-oil warnings? We diagnose and fix oil leaks on BMW, Audi, Mercedes, VW and Porsche — valve-cover gaskets, oil-pan gaskets, filter-housing seals and rear main seals — at independent pricing, dealer-level work.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Get a Repair Quote</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+      <div class="hero-mini">
+        <div class="hm"><i data-lucide="search"></i><span>We trace the real source</span></div>
+        <div class="hm"><i data-lucide="package-check"></i><span>OEM gaskets &amp; seals</span></div>
+        <div class="hm"><i data-lucide="shield-check"></i><span>24-month warranty</span></div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="frame"><image-slot id="oil-hero" placeholder="Drop a photo — an oil leak, valve cover, or engine bay" fit="cover"></image-slot></div>
+      <div class="float">
+        <div class="big">4.9</div>
+        <div>
+          <div class="grow"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg><b>Google Rating</b></div>
+          <div class="gs" id="hero-s"></div><small>325 verified reviews</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>Valve-Cover Gaskets</b><b>Oil-Pan Gaskets</b><b>Filter-Housing Seals</b><b>Rear Main Seals</b><b>Leak Diagnosis</b></div>
+  <div class="seg"><b>Valve-Cover Gaskets</b><b>Oil-Pan Gaskets</b><b>Filter-Housing Seals</b><b>Rear Main Seals</b><b>Leak Diagnosis</b></div>
+</div></div>
+
+<!-- STAT BAND -->
+<section class="stats"><div class="container">
+  <div class="statc"><b>#1</b><span>German Repair We See</span></div>
+  <div class="statc"><b>4</b><span>German Marques</span></div>
+  <div class="statc"><b>OEM</b><span>Gaskets &amp; Seals</span></div>
+  <div class="statc"><b>2010</b><span>Independent Since</span></div>
+</div></section>
+
+<!-- INTRO -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Oil leak repair, done right</span>
+      <h2 class="h2">Find the leak. Fix it once.</h2>
+    </div>
+    <div class="prose reveal">
+      <p>Searching for <span class="kw">oil leak repair near me</span> in San&nbsp;Antonio? Oil leaks are the single most common thing we see on German cars — and almost always a failed gasket or seal, not the engine itself. As the rubber and cork in <span class="kw">valve-cover gaskets</span>, oil-pan gaskets and filter-housing seals ages and bakes in Texas heat, it shrinks and cracks, and oil starts to weep. Left alone, it drips onto hot exhaust (that burning smell), fouls sensors, and slowly runs you low.</p>
+      <p>At <span class="kw">German Car Specialists</span>, we don't throw parts at it. We clean the area, run the engine, and trace the leak to its true origin — because oil travels, and the wet spot is rarely the source. Then we replace the failed gasket or seal with OEM-quality parts and back it with our 24-month / 24,000-mile warranty. Whether it's a quick valve-cover job or a deeper oil-pan or rear-main-seal repair, you get an honest, upfront <span class="kw">oil pan leak repair cost</span> before we start.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What we do</span>
+      <h2 class="h2">Every oil leak, traced &amp; sealed.</h2>
+      <p class="lead">From a weeping valve cover to a rear main seal — the full range of German oil-leak repair.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc reveal"><div class="ico"><i data-lucide="search"></i></div><h3>Oil Leak Diagnosis</h3><p>Degrease, run and trace with UV dye to find the real source — not the wet spot.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="layers"></i></div><h3>Valve-Cover Gasket</h3><p>The most common German oil leak — gasket and grommets renewed to spec.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="container"></i></div><h3>Oil-Pan Gasket</h3><p>Pan reseal with the correct OEM gasket and torque sequence, done right the first time.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="filter"></i></div><h3>Oil Filter Housing Gasket</h3><p>A classic BMW &amp; Audi leak that drips onto the belt and exhaust — sealed properly.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="circle-dot"></i></div><h3>Rear Main &amp; Cam Seals</h3><p>Deeper crankshaft and camshaft seal leaks handled by techs who do them often.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="gauge"></i></div><h3>Turbo &amp; Oil-Line Seals</h3><p>Turbo feed/return lines and fittings that seep under boost — inspected and resealed.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BMW HOOK -->
+<section class="sec">
+  <div class="container">
+    <div class="n54 reveal">
+      <div>
+        <span class="eyebrow">BMW Oil Leaks</span>
+        <h2>The BMW oil leaks we fix every week.</h2>
+        <p>If you own a BMW, an oil leak isn't a question of if — it's when. The valve-cover gasket and the oil filter housing gasket are near-universal leaks as these engines age, and they drip straight onto the belt and exhaust. We've sealed enough of them to do it efficiently and correctly.</p>
+        <p>For BMW-specific work and known failure points, see our <a class="inline" href="/bmw-repair-san-antonio">BMW repair page</a> — or just book below and we'll trace it.</p>
+      </div>
+      <ul class="fail">
+        <li><i data-lucide="layers"></i><span><b>Valve-cover gasket</b> — cracks with heat and weeps down the block</span></li>
+        <li><i data-lucide="filter"></i><span><b>Oil filter housing gasket</b> — leaks onto the belt; a classic N-series job</span></li>
+        <li><i data-lucide="container"></i><span><b>Oil-pan gasket</b> — seeps with age; resealed to factory torque</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BY MAKE -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Oil-leak repair by marque</span>
+      <h2 class="h2">We know where each one leaks.</h2>
+      <p class="lead">Every German engine has its signature oil leak — pick yours for model-specific service.</p>
+    </div>
+    <div class="km-grid">
+      <a class="kmcard reveal" href="/bmw-repair-san-antonio">
+        <span class="kl"><img src="/assets/marques/bmw.svg" alt="BMW"></span>
+        <h3>BMW</h3><p>Valve-cover &amp; oil filter housing gaskets, oil-pan reseals across the range.</p>
+        <span class="kcta">BMW Oil Leaks <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="kmcard reveal" href="/audi-repair-san-antonio">
+        <span class="kl"><img src="/assets/marques/audi.svg" alt="Audi"></span>
+        <h3>Audi</h3><p>EA888 valve-cover and cam-chain cover seeps and PCV-related leaks.</p>
+        <span class="kcta">Audi Oil Leaks <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="kmcard reveal" href="/mercedes-repair-san-antonio">
+        <span class="kl"><img src="/assets/marques/mercedes.svg" alt="Mercedes-Benz"></span>
+        <h3>Mercedes</h3><p>Valve-cover, oil-cooler and oil-pan gasket leaks common to many engines.</p>
+        <span class="kcta">Mercedes Oil Leaks <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="kmcard reveal" href="/porsche-repair-san-antonio">
+        <span class="kl"><img src="/assets/marques/porsche.svg" alt="Porsche"></span>
+        <h3>Porsche</h3><p>RMS, IMS-area seeps and cam-cover leaks handled with proper care.</p>
+        <span class="kcta">Porsche Oil Leaks <i data-lucide="arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DEALER COMPARE -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">GCS vs. The Dealer</span>
+      <h2 class="h2">Same repair. Smaller bill.</h2>
+    </div>
+    <div class="deal">
+      <div class="dcard win reveal">
+        <h3>German Car Specialists</h3>
+        <div class="sub">The Independent Oil-Leak Specialist</div>
+        <ul>
+          <li><i data-lucide="check"></i><span><b>Well below</b> dealer parts &amp; labor rates</span></li>
+          <li><i data-lucide="check"></i><span><b>Dye-traced diagnosis</b> — we find the true source</span></li>
+          <li><i data-lucide="check"></i><span><b>OEM gaskets &amp; seals</b>, correct torque specs</span></li>
+          <li><i data-lucide="check"></i><span>Honest, photo-backed estimate before work</span></li>
+          <li><i data-lucide="check"></i><span><b>24-month / 24,000-mile</b> warranty</span></li>
+        </ul>
+      </div>
+      <div class="dcard lose reveal">
+        <h3>The Franchise Dealer</h3>
+        <div class="sub">The Old Way</div>
+        <ul>
+          <li><i data-lucide="x"></i><span>Premium dealer rates on everything</span></li>
+          <li><i data-lucide="minus"></i><span>Often quotes the biggest job first</span></li>
+          <li><i data-lucide="x"></i><span>Pressure to add services you don't need</span></li>
+          <li><i data-lucide="x"></i><span>A call center between you and the tech</span></li>
+          <li><i data-lucide="x"></i><span>Days-long backlog and shuttle waitlists</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">San Antonio drivers trust us</span>
+      <h2 class="h2">4.9 stars, leaks sealed.</h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rcard feat reveal">
+        <div class="rs" data-stars></div>
+        <p>"Burning-oil smell on my BMW turned out to be the valve-cover and filter-housing gaskets. GCS traced both, sealed them, and it's bone dry now — for way less than the dealer quoted."</p>
+        <div class="who"><span class="av">CV</span><div><b>Carlos V.</b><span>BMW X3</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Had oil spots in the driveway from my Audi. They dye-traced it to the cam cover instead of guessing, fixed it once, and showed me the old gasket. Honest shop."</p>
+        <div class="who"><span class="av">RB</span><div><b>Rafael B.</b><span>Audi S4</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Oil-pan gasket on my Mercedes was seeping. Fair quote, done next day, no surprises. They treat the car like it's their own."</p>
+        <div class="who"><span class="av">SP</span><div><b>Sandra P.</b><span>Mercedes E350</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Oil Leak FAQ</span>
+      <h2 class="h2">Questions, answered.</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>How much does oil leak repair cost?<span class="pl"></span></summary><div class="fa">It depends entirely on the source. A valve-cover gasket is a relatively quick job; an oil-pan gasket or rear main seal takes more labor. Independent repair runs well below dealer pricing for the same OEM parts, and we always diagnose and quote before any work so there are no surprises.</div></details>
+      <details><summary>What does an oil pan leak repair cost?<span class="pl"></span></summary><div class="fa">An oil-pan gasket reseal is more involved than a valve cover because the pan often sits behind a subframe or covers. We give an exact, upfront oil pan leak repair cost after confirming it's actually the pan — oil travels, so we verify the source first rather than assuming.</div></details>
+      <details><summary>Is it safe to drive with an oil leak?<span class="pl"></span></summary><div class="fa">A small weep can be monitored briefly, but don't ignore it. Oil dripping on a hot exhaust is a fire and smoke risk, leaks tend to worsen, and running low on oil can damage the engine. If you're seeing spots or low-oil warnings, get it diagnosed soon.</div></details>
+      <details><summary>What are the signs of a valve cover gasket leak?<span class="pl"></span></summary><div class="fa">A burning-oil smell after driving, oil pooling in the spark-plug valley, smoke from the engine bay, and oil residue down the side of the engine. It's the most common German oil leak and usually a straightforward fix when caught early.</div></details>
+      <details><summary>Can you find a leak if you're not sure where it's coming from?<span class="pl"></span></summary><div class="fa">Yes — that's the point of a proper diagnosis. We degrease the engine, add UV dye, run it, and pinpoint the true origin with a black light. Oil migrates, so guessing wastes your money; tracing finds it.</div></details>
+      <details><summary>Do you repair oil leaks on all German makes?<span class="pl"></span></summary><div class="fa">Yes — BMW, Audi, VW, Mercedes-Benz and Porsche. Gasket and seal leaks are universal across German engines, and we stock OEM parts and know each platform's signature leak points.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="sec book" id="book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Book · Estimate · Ask</span>
+        <h2 class="h2" data-make-tpl="Let's get your {make}'s leak sealed." style="text-align:center">Got an oil leak?</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:54ch">Tell us your make and what you're seeing — spots, a smell, or low-oil warnings — and we'll quote a diagnosis the same business day. We find the real source, then fix it once.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Get a Repair Quote</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "serviceType":"German Car Oil Leak Repair",
+  "name":"Oil Leak Diagnosis & Repair for German Cars",
+  "provider":{"@type":"AutoRepair","name":"German Car Specialists","telephone":"+1-210-399-1172","image":"https://mygermancarsa.com/assets/logo-color.png","address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325"}},
+  "areaServed":{"@type":"City","name":"San Antonio, TX"},
+  "audience":{"@type":"Audience","audienceType":"BMW, Audi, VW, Mercedes-Benz and Porsche owners"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"AutoRepair",
+  "name":"German Car Specialists",
+  "image":"https://mygermancarsa.com/assets/logo-color.png",
+  "telephone":"+1-210-399-1172",
+  "priceRange":"$$",
+  "address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},
+  "areaServed":"San Antonio, TX",
+  "openingHours":"Mo-Fr 08:00-17:30",
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"How much does oil leak repair cost?","acceptedAnswer":{"@type":"Answer","text":"It depends on the source. A valve-cover gasket is a relatively quick job; an oil-pan gasket or rear main seal takes more labor. Independent repair runs well below dealer pricing for the same OEM parts, and we diagnose and quote before any work."}},
+    {"@type":"Question","name":"What does an oil pan leak repair cost?","acceptedAnswer":{"@type":"Answer","text":"An oil-pan gasket reseal is more involved than a valve cover because the pan often sits behind a subframe or covers. We give an exact, upfront cost after confirming it's actually the pan, since oil travels and we verify the source first."}},
+    {"@type":"Question","name":"Is it safe to drive with an oil leak?","acceptedAnswer":{"@type":"Answer","text":"A small weep can be monitored briefly, but don't ignore it. Oil on a hot exhaust is a fire and smoke risk, leaks worsen, and running low on oil can damage the engine. If you see spots or low-oil warnings, get it diagnosed soon."}},
+    {"@type":"Question","name":"What are the signs of a valve cover gasket leak?","acceptedAnswer":{"@type":"Answer","text":"A burning-oil smell after driving, oil pooling in the spark-plug valley, smoke from the engine bay, and oil residue down the side of the engine. It's the most common German oil leak and usually a straightforward fix when caught early."}},
+    {"@type":"Question","name":"Can you find a leak if you're not sure where it's coming from?","acceptedAnswer":{"@type":"Answer","text":"Yes. We degrease the engine, add UV dye, run it, and pinpoint the true origin with a black light. Oil migrates, so guessing wastes money; tracing finds it."}},
+    {"@type":"Question","name":"Do you repair oil leaks on all German makes?","acceptedAnswer":{"@type":"Answer","text":"Yes — BMW, Audi, VW, Mercedes-Benz and Porsche. Gasket and seal leaks are universal across German engines, and we stock OEM parts and know each platform's signature leak points."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"Oil Leak Repair","item":"https://mygermancarsa.com/german-car-oil-leak-repair-san-antonio"}
+  ]
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

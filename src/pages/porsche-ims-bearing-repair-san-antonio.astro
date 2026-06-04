@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `Porsche IMS Bearing &amp; Coolant Pipe Repair in San Antonio | My German Car SA`;
+const DESC = `Worried about your Porsche's IMS bearing or coolant pipe? Expert M96/M97 inspection &amp; repair in San Antonio by independent Porsche specialists.`;
+const CANON = `https://mygermancarsa.com/porsche-ims-bearing-repair-san-antonio`;
+const SCREEN = `Porsche IMS Bearing Repair`;
+const BLOG = false;
+const DEFAULT_MAKE = 'Porsche';
+const STYLE = `.hero-make .keychip{width:46px;height:46px;border-radius:12px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;}
+.hero-make .keychip svg{width:24px;height:24px;}
+.prose .kw{color:var(--navy);font-weight:700;}
+.km-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.kmcard{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:26px 22px 20px;display:flex;flex-direction:column;text-align:center;align-items:center;position:relative;overflow:hidden;color:var(--navy);transition:transform .2s var(--ease),border-color .2s,box-shadow .2s;}
+.kmcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transition:transform .22s var(--ease);}
+.kmcard:hover{transform:translateY(-4px);border-color:var(--acc);box-shadow:0 16px 36px rgba(12,14,18,.1);}
+.kmcard:hover::before{transform:scaleX(1);}
+.kmcard .kl{height:44px;display:grid;place-items:center;margin-bottom:13px;}
+.kmcard .kl img{max-height:36px;max-width:58px;object-fit:contain;}
+.kmcard h3{font-family:var(--font-display);font-size:21px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:5px;}
+.kmcard p{font-size:13.5px;color:var(--steel-500);line-height:1.5;margin-bottom:14px;}
+.kmcard .kcta{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);padding-top:13px;border-top:1px solid var(--fog);width:100%;justify-content:center;}
+.kmcard .kcta svg{width:14px;height:14px;}
+@media(max-width:900px){.km-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:460px){.km-grid{grid-template-columns:1fr;}}
+.n54{background:var(--navy);color:#fff;border-radius:16px;padding:clamp(30px,4vw,48px);position:relative;overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;}
+.n54::before{content:"";position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--acc);}
+.n54 .eyebrow{color:var(--acc-mid);margin-bottom:14px;}
+.n54 .eyebrow::before{background:var(--acc-mid);}
+.n54 h2{font-family:var(--font-display);font-size:clamp(26px,3vw,38px);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;color:#fff;margin:0 0 14px;line-height:1.04;}
+.n54 p{font-size:16px;line-height:1.65;color:rgba(255,255,255,.82);margin:0 0 14px;}
+.n54 p:last-child{margin:0;}
+.n54 .fail{display:flex;flex-direction:column;gap:12px;}
+.n54 .fail li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:rgba(255,255,255,.9);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:14px 16px;}
+.n54 .fail li svg{width:20px;height:20px;color:var(--acc-mid);flex:none;margin-top:1px;}
+.n54 .fail li b{color:#fff;font-weight:700;}
+.n54 a.inline{color:var(--acc-mid);font-weight:700;border-bottom:1px solid rgba(216,18,34,.4);}
+@media(max-width:820px){.n54{grid-template-columns:1fr;gap:26px;}}`;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="/porsche-repair-san-antonio">Porsche</a><i data-lucide="chevron-right"></i><span class="cur">IMS Bearing &amp; Coolant Pipe</span></div></div></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <div class="hero-make"><span class="keychip"><i data-lucide="cog"></i></span><span>Porsche Engine Specialist</span></div>
+      <h1 class="display">Porsche IMS Bearing &amp; Coolant Pipe Repair in <em>San Antonio.</em></h1>
+      <p class="lead">The two repairs every M96/M97 Porsche owner worries about — the IMS bearing and the coolant pipes — handled by independent specialists who actually know these engines. Inspection, IMS retrofit and coolant-pipe repair, done right and warrantied, without dealer prices.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Get a Quote</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+      <div class="hero-mini">
+        <div class="hm"><i data-lucide="shield-check"></i><span>IMS retrofit &amp; inspection</span></div>
+        <div class="hm"><i data-lucide="droplets"></i><span>Coolant-pipe repair</span></div>
+        <div class="hm"><i data-lucide="award"></i><span>M96 / M97 experts</span></div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="frame"><img src="/assets/porsche-911-flat-six-oil-service.jpeg" alt="Air-cooled Porsche 911 flat-six engine bay during an oil service" width="800" height="470" loading="eager"></div>
+      <div class="float">
+        <div class="big">4.9</div>
+        <div>
+          <div class="grow"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg><b>Google Rating</b></div>
+          <div class="gs" id="hero-s"></div><small>325 verified reviews</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>IMS Bearing</b><b>Coolant Pipes</b><b>M96 · M97</b><b>Rear Main Seal</b><b>Pre-Purchase Inspection</b></div>
+  <div class="seg"><b>IMS Bearing</b><b>Coolant Pipes</b><b>M96 · M97</b><b>Rear Main Seal</b><b>Pre-Purchase Inspection</b></div>
+</div></div>
+
+<!-- STAT BAND -->
+<section class="stats"><div class="container">
+  <div class="statc"><b>M96·M97</b><span>Engine Specialists</span></div>
+  <div class="statc"><b>IMS</b><span>Retrofit &amp; Inspection</span></div>
+  <div class="statc"><b>OEM</b><span>&amp; Upgraded Parts</span></div>
+  <div class="statc"><b>2010</b><span>Independent Since</span></div>
+</div></section>
+
+<!-- INTRO -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">The two big Porsche fears</span>
+      <h2 class="h2">IMS bearing and coolant pipes, explained.</h2>
+    </div>
+    <div class="prose reveal">
+      <p>If you own — or are shopping for — a Porsche with the M96 or M97 engine (the 1997–2008 <span class="kw">911 (996/997), Boxster and Cayman</span>), two repairs dominate the conversation. The first is the <span class="kw">IMS bearing</span>: the intermediate-shaft bearing can fail with age and low use, and in a worst case it can take the engine with it. The good news is that it's a known, solvable problem — an <span class="kw">IMS retrofit</span> replaces the original sealed bearing with an upgraded, serviceable unit and effectively ends the worry.</p>
+      <p>The second is coolant pipes and fittings. On the V8 Porsches (Cayenne and Panamera), the factory glued plastic coolant pipes in the engine valley that crack and leak with heat and age; the proper fix is to re-pipe them with anodized aluminum. On the water-cooled flat-six, plastic coolant fittings and the <span class="kw">Porsche coolant pipe</span> joints get brittle and weep. We inspect, pressure-test and repair both — and we'll always tell you honestly what your specific car needs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What we do</span>
+      <h2 class="h2">Complete M96/M97 engine service.</h2>
+      <p class="lead">The high-stakes Porsche repairs, done by people who specialize in them.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc reveal"><div class="ico"><i data-lucide="search"></i></div><h3>IMS Inspection</h3><p>We assess IMS condition and oil analysis so you know where your bearing stands before deciding.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="shield-check"></i></div><h3>IMS Bearing Retrofit</h3><p>Replace the original bearing with an upgraded serviceable unit — the permanent peace-of-mind fix.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="droplets"></i></div><h3>Coolant Pipe Repair</h3><p>Cracked plastic coolant pipes re-piped in aluminum; brittle fittings and joints renewed.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="circle-dot"></i></div><h3>Rear Main Seal &amp; Clutch</h3><p>RMS leaks and clutch/flywheel done while the transmission is out — the smart time to do it.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="clipboard-check"></i></div><h3>Pre-Purchase Inspection</h3><p>Buying a 996/997 or Boxster/Cayman? A documented inspection that checks IMS, bore scoring and leaks.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="activity"></i></div><h3>Bore-Scoring Check</h3><p>We borescope the cylinders to rule out the other M96/M97 concern before you commit to a car.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOOK -->
+<section class="sec">
+  <div class="container">
+    <div class="n54 reveal">
+      <div>
+        <span class="eyebrow">M96 / M97 Ownership</span>
+        <h2>Know your engine's weak points.</h2>
+        <p>These flat-sixes are wonderful to drive and genuinely durable when maintained — but a few known issues define ownership. Understanding them (and addressing the IMS proactively) turns a nervous purchase into a confident one.</p>
+        <p>For full Porsche service and model coverage, see our <a class="inline" href="/porsche-repair-san-antonio">Porsche repair page</a>.</p>
+      </div>
+      <ul class="fail">
+        <li><i data-lucide="shield-check"></i><span><b>IMS bearing</b> — retrofit it proactively and the worry is gone</span></li>
+        <li><i data-lucide="droplets"></i><span><b>Coolant pipes &amp; fittings</b> — crack with heat; re-piped in aluminum</span></li>
+        <li><i data-lucide="circle-dot"></i><span><b>RMS &amp; bore scoring</b> — checked and addressed by specialists</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BY MAKE -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Independent Porsche specialists</span>
+      <h2 class="h2">Dealer-level Porsche work, without the markup.</h2>
+      <p class="lead">From air-cooled classics to modern turbos — the full Porsche lineup, expertly served.</p>
+    </div>
+    <div class="km-grid" style="grid-template-columns:1fr;max-width:340px;margin:0 auto;">
+      <a class="kmcard reveal" href="/porsche-repair-san-antonio">
+        <span class="kl"><img src="/assets/marques/porsche.svg" alt="Porsche"></span>
+        <h3>Porsche</h3><p>911 · Boxster · Cayman · Cayenne · Macan — service, repair &amp; pre-purchase inspections.</p>
+        <span class="kcta">Porsche Service <i data-lucide="arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DEALER COMPARE -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">GCS vs. The Dealer</span>
+      <h2 class="h2">Same expertise. Smaller bill.</h2>
+    </div>
+    <div class="deal">
+      <div class="dcard win reveal">
+        <h3>German Car Specialists</h3>
+        <div class="sub">The Independent Porsche Specialist</div>
+        <ul>
+          <li><i data-lucide="check"></i><span><b>Well below</b> dealer parts &amp; labor rates</span></li>
+          <li><i data-lucide="check"></i><span><b>IMS retrofit</b> with upgraded serviceable bearings</span></li>
+          <li><i data-lucide="check"></i><span>Coolant pipes <b>re-piped in aluminum</b>, not glued plastic</span></li>
+          <li><i data-lucide="check"></i><span>Honest inspection — we won't sell work you don't need</span></li>
+          <li><i data-lucide="check"></i><span><b>24-month / 24,000-mile</b> warranty</span></li>
+        </ul>
+      </div>
+      <div class="dcard lose reveal">
+        <h3>The Franchise Dealer</h3>
+        <div class="sub">The Old Way</div>
+        <ul>
+          <li><i data-lucide="x"></i><span>Premium dealer rates on everything</span></li>
+          <li><i data-lucide="minus"></i><span>Often quotes a full engine before inspecting</span></li>
+          <li><i data-lucide="x"></i><span>May reinstall the same plastic coolant pipes</span></li>
+          <li><i data-lucide="x"></i><span>A call center between you and the tech</span></li>
+          <li><i data-lucide="x"></i><span>Days-long backlog and waitlists</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Porsche owners trust us</span>
+      <h2 class="h2">4.9 stars from people who love these cars.</h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rcard feat reveal">
+        <div class="rs" data-stars></div>
+        <p>"Did the IMS retrofit on my 997 along with the clutch and RMS while they were in there. Clear explanation, fair price, and now I drive it without the nagging worry. These guys know M97 engines."</p>
+        <div class="who"><span class="av">MS</span><div><b>Mark S.</b><span>Porsche 911 (997)</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Coolant pipes on my Cayenne were the original plastic. They re-piped it in aluminum so it's a one-and-done fix. No more ticking time bomb in the valley."</p>
+        <div class="who"><span class="av">DT</span><div><b>David T.</b><span>Porsche Cayenne</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Had them do a pre-purchase inspection on a Boxster — they checked the IMS and bore scoring and talked me through it honestly. Saved me from a bad buy."</p>
+        <div class="who"><span class="av">JL</span><div><b>Jenna L.</b><span>Porsche Boxster</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">IMS &amp; Coolant Pipe FAQ</span>
+      <h2 class="h2">Questions, answered.</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>What is the Porsche IMS bearing and why does it fail?<span class="pl"></span></summary><div class="fa">The IMS (intermediate shaft) bearing supports a shaft that drives the camshafts on M96/M97 engines. The factory sealed bearing can lose its grease and fail with age and low mileage; if it lets go, debris can destroy the engine. A retrofit to a serviceable bearing removes the risk.</div></details>
+      <details><summary>Should I replace my IMS bearing proactively?<span class="pl"></span></summary><div class="fa">For most affected 1997–2008 cars, yes — especially if the clutch or RMS is being done anyway, since the labor overlaps. A proactive retrofit is far cheaper than an engine, and it ends the worry for good.</div></details>
+      <details><summary>Which Porsche engines are affected?<span class="pl"></span></summary><div class="fa">The M96 and M97 flat-sixes in the 996 and early 997 911, and the 986/987 Boxster and Cayman, roughly 1997–2008. Not all variants use the same bearing; we identify yours during inspection.</div></details>
+      <details><summary>Why do Porsche coolant pipes fail?<span class="pl"></span></summary><div class="fa">On the V8 Cayenne and Panamera, the factory used glued plastic coolant pipes in the engine valley that crack with heat cycling and leak. The permanent fix is re-piping them in anodized aluminum. Plastic coolant fittings on the flat-six get brittle and weep similarly.</div></details>
+      <details><summary>How much does IMS or coolant-pipe work cost?<span class="pl"></span></summary><div class="fa">It depends on the model and what's bundled (clutch, RMS, water pump). Independent pricing is well below the dealer, and we give an upfront, itemized quote after inspection so there are no surprises.</div></details>
+      <details><summary>Can you inspect a Porsche before I buy it?<span class="pl"></span></summary><div class="fa">Yes — a pre-purchase inspection on a 996/997, Boxster or Cayman checks IMS condition, bore scoring, coolant leaks and more, with a documented report so you buy with confidence.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="sec book" id="book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Book · Estimate · Ask</span>
+        <h2 class="h2" data-make-tpl="Let's protect your {make}." style="text-align:center">Worried about your Porsche?</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:54ch">Tell us your model and year and we'll quote an IMS inspection, retrofit or coolant-pipe repair the same business day — and give you a straight answer on what it actually needs.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Get a Quote</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "serviceType":"Porsche IMS Bearing & Coolant Pipe Repair",
+  "name":"Porsche IMS Bearing Retrofit & Coolant Pipe Repair (M96/M97)",
+  "provider":{"@type":"AutoRepair","name":"German Car Specialists","telephone":"+1-210-399-1172","image":"https://mygermancarsa.com/assets/logo-color.png","address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325"}},
+  "areaServed":{"@type":"City","name":"San Antonio, TX"},
+  "audience":{"@type":"Audience","audienceType":"Porsche owners"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"What is the Porsche IMS bearing and why does it fail?","acceptedAnswer":{"@type":"Answer","text":"The intermediate shaft bearing supports a shaft that drives the camshafts on M96/M97 engines. The factory sealed bearing can lose grease and fail with age and low mileage, and if it fails it can destroy the engine. A retrofit to a serviceable bearing removes the risk."}},
+    {"@type":"Question","name":"Should I replace my IMS bearing proactively?","acceptedAnswer":{"@type":"Answer","text":"For most affected 1997 to 2008 cars, yes, especially when the clutch or rear main seal is being done since the labor overlaps. A proactive retrofit is far cheaper than an engine."}},
+    {"@type":"Question","name":"Which Porsche engines are affected?","acceptedAnswer":{"@type":"Answer","text":"The M96 and M97 flat-sixes in the 996 and early 997 911 and the 986/987 Boxster and Cayman, roughly 1997 to 2008. We identify the specific bearing during inspection."}},
+    {"@type":"Question","name":"Why do Porsche coolant pipes fail?","acceptedAnswer":{"@type":"Answer","text":"On the V8 Cayenne and Panamera the factory used glued plastic coolant pipes that crack with heat and leak; the permanent fix is re-piping in anodized aluminum. Plastic coolant fittings on the flat-six get brittle and weep similarly."}},
+    {"@type":"Question","name":"How much does IMS or coolant-pipe work cost?","acceptedAnswer":{"@type":"Answer","text":"It depends on the model and what's bundled, such as clutch, RMS or water pump. Independent pricing is well below the dealer and we give an upfront itemized quote after inspection."}},
+    {"@type":"Question","name":"Can you inspect a Porsche before I buy it?","acceptedAnswer":{"@type":"Answer","text":"Yes. A pre-purchase inspection on a 996/997, Boxster or Cayman checks IMS condition, bore scoring and coolant leaks with a documented report."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"Porsche","item":"https://mygermancarsa.com/porsche-repair-san-antonio"},
+    {"@type":"ListItem","position":3,"name":"IMS Bearing & Coolant Pipe Repair","item":"https://mygermancarsa.com/porsche-ims-bearing-repair-san-antonio"}
+  ]
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

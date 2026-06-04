@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `Porsche Repair San Antonio | Independent Porsche Service — My German Car SA`;
+const DESC = `Expert Porsche repair &amp; service in San Antonio without dealer prices. Factory-level diagnostics, master techs, Carfax Top-Rated. Book your Porsche today.`;
+const CANON = `https://mygermancarsa.com/porsche-repair-san-antonio`;
+const SCREEN = `Porsche Repair San Antonio`;
+const BLOG = false;
+const DEFAULT_MAKE = 'Porsche';
+const STYLE = ``;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="#">Makes</a><i data-lucide="chevron-right"></i><span class="cur">Porsche</span></div></div></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <div class="hero-make"><img src="/assets/marques/porsche.svg" alt="Porsche"><span>Specialist Service</span></div>
+      <h1 class="display">Porsche Repair in <em>San Antonio.</em></h1>
+      <p class="lead">Dealer-level Porsche service without the dealer markup. Factory-trained technicians, PIWIS diagnostics, and OEM parts — from a modern Cayenne to an air-cooled 911. We treat every Porsche like our own.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book Porsche Service</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+      <div class="hero-mini">
+        <div class="hm"><i data-lucide="shield-check"></i><span>24-month / 24k warranty</span></div>
+        <div class="hm"><i data-lucide="cpu"></i><span>PIWIS diagnostics</span></div>
+        <div class="hm"><i data-lucide="package-check"></i><span>OEM parts only</span></div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="frame"><img src="/assets/porsche-718-on-lift.jpeg" alt="Porsche 718 raised on the shop lift" width="800" height="470" loading="eager"></div>
+      <div class="float">
+        <div class="big">4.9</div>
+        <div>
+          <div class="grow"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg><b>Google Rating</b></div>
+          <div class="gs" id="hero-s"></div><small>325 verified reviews</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>911</b><b>718 Cayman</b><b>Cayenne</b><b>Macan</b><b>Air-Cooled</b><b>OEM Parts Only</b></div>
+  <div class="seg"><b>911</b><b>718 Cayman</b><b>Cayenne</b><b>Macan</b><b>Air-Cooled</b><b>OEM Parts Only</b></div>
+</div></div>
+
+<!-- STAT BAND -->
+<section class="stats"><div class="container">
+  <div class="statc"><b><svg viewBox="0 0 24 24" width="50" height="50" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="m9 12 2 2 4-4"/><path d="M12 3l2.3 1.7 2.8-.2 1 2.7 2.3 1.6-.7 2.7.7 2.7-2.3 1.6-1 2.7-2.8-.2L12 21l-2.3-1.7-2.8.2-1-2.7L3.6 15l.7-2.7L3.6 9.6l2.3-1.6 1-2.7 2.8.2z"/></svg></b><span>Carfax Top-Rated</span></div>
+  <div class="statc"><b>325</b><span>5-Star Reviews</span></div>
+  <div class="statc"><b>2010</b><span>Independent Since</span></div>
+  <div class="statc"><b>OEM</b><span>Porsche Parts Only</span></div>
+</div></section>
+
+<!-- INTRO -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">San Antonio's Porsche Specialists</span>
+      <h2 class="h2">The honest alternative to the Porsche dealer.</h2>
+    </div>
+    <div class="prose reveal">
+      <p>Searching for <strong>Porsche repair near me</strong> in San&nbsp;Antonio? The dealership isn't your only option that does it right. At <strong>German Car Specialists</strong>, Porsche is one of the four marques we've focused on since 2010 — from a daily-driver Macan to a weekend 911 and air-cooled classics, handled by master technicians using PIWIS diagnostics and <strong>genuine OEM and OE-supplier parts</strong>. We're <strong>Carfax Top-Rated</strong> and a trusted Porsche mechanic in San&nbsp;Antonio for owners who want dealer-quality work without dealer prices.</p>
+      <p>The difference is everything around the work: <strong>honest, photo-documented inspections</strong>, estimates you approve before we lift a wrench, faster turnaround, and pricing that typically runs well below dealer rates. From routine Porsche service in San&nbsp;Antonio to an IMS bearing, an RMS reseal, Cayenne coolant pipes or PDK service, we keep your Porsche running like it should, and back every repair with a <strong>24-month / 24,000-mile warranty</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Porsche Services</span>
+      <h2 class="h2">Complete Porsche repair &amp; maintenance.</h2>
+      <p class="lead">Everything your Porsche needs, under one roof — no dealer trip required.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc reveal"><div class="ico"><i data-lucide="activity"></i></div><h3>Diagnostics &amp; Check Engine Light</h3><p>PIWIS-level diagnostics read every module to pinpoint the real fault — fast, accurate, no guesswork.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="calendar-clock"></i></div><h3>Scheduled Maintenance</h3><p>Factory-interval minor &amp; major service with OEM filters and the correct Porsche-spec oil.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="circle-dot"></i></div><h3>IMS Bearing &amp; RMS</h3><p>IMS bearing upgrades and rear-main-seal reseals on M96/M97 engines — the work these cars need.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="git-commit-horizontal"></i></div><h3>PDK &amp; Transmission</h3><p>PDK fluid &amp; filter service and Tiptronic work, done to factory spec for crisp shifts.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="thermometer-snowflake"></i></div><h3>Cooling &amp; Coolant Pipes</h3><p>Cayenne/Panamera V8 coolant pipes, water pumps and radiators — critical in Texas heat.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="wind"></i></div><h3>Air-Cooled 911 Service</h3><p>Classic 911 specialists — valve adjustments, top-end work and Motul Classic oil service.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="disc-3"></i></div><h3>Brakes &amp; Suspension</h3><p>OEM-spec brakes, PASM/air suspension and the Cayenne control arms ("coffin arms").</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="gauge"></i></div><h3>Performance &amp; Track Prep</h3><p>Fluids, brakes, alignment and corner-balancing to get your Porsche ready for track days.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="clipboard-check"></i></div><h3>Pre-Purchase Inspection</h3><p>Buying a used Porsche? A documented, bumper-to-bumper report — including IMS assessment.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMON PROBLEMS -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Common Porsche Issues We Fix</span>
+      <h2 class="h2">We know where these cars need help.</h2>
+      <p class="lead">Years of Porsche-focused experience means we diagnose the known failure points quickly — and fix them right.</p>
+    </div>
+    <div class="prob-grid">
+      <div class="prob reveal"><div class="pi"><i data-lucide="circle-dot"></i></div><div><span class="eng">986 · 996 · 997</span><h3>IMS Bearing Failure</h3><p>The intermediate-shaft bearing is the known M96/M97 risk — we inspect and upgrade it before it fails.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="droplet"></i></div><div><span class="eng">M96 · M97</span><h3>RMS &amp; Oil Leaks</h3><p>Rear-main-seal weeping and case leaks — resealed properly, often alongside a clutch or IMS job.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="alert-triangle"></i></div><div><span class="eng">M96 · M97</span><h3>Bore Scoring</h3><p>We scope cylinders during inspection to catch bore scoring early — before it becomes an engine.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="thermometer"></i></div><div><span class="eng">Cayenne · Panamera</span><h3>Coolant Pipe Failure</h3><p>Plastic V8 coolant pipes crack with heat — we replace them with upgraded metal/OEM fittings.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="wind"></i></div><div><span class="eng">911 · Boxster</span><h3>Air-Oil Separator (AOS)</h3><p>A failing AOS causes smoke and rough running — diagnosed and replaced to clear it up.</p></div></div>
+      <div class="prob reveal"><div class="pi"><i data-lucide="git-fork"></i></div><div><span class="eng">Cayenne</span><h3>Suspension "Coffin" Arms</h3><p>Worn front control arms cause clunks and alignment drift — replaced to restore the ride.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section class="sec models">
+  <div class="container">
+    <span class="eyebrow">Models We Service</span>
+    <h2 class="h2">Every Porsche we get our hands on.</h2>
+    <div class="chips reveal">
+      <span>911 (Modern)</span><span>911 (Air-Cooled)</span><span>718 Cayman</span><span>718 Boxster</span>
+      <span>Cayenne</span><span>Macan</span><span>Panamera</span><span>Taycan</span><span>Classic &amp; 944/928</span>
+    </div>
+  </div>
+</section>
+
+<!-- DEALER COMPARE -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">GCS vs. The Porsche Dealer</span>
+      <h2 class="h2">Same expertise. Better experience.</h2>
+    </div>
+    <div class="deal">
+      <div class="dcard win reveal">
+        <h3>German Car Specialists</h3>
+        <div class="sub">The Independent Porsche Specialist</div>
+        <ul>
+          <li><i data-lucide="check"></i><span><b>Typically well below</b> dealer parts &amp; labor rates</span></li>
+          <li><i data-lucide="check"></i><span><b>OEM &amp; OE-supplier parts</b> with manufacturer warranties</span></li>
+          <li><i data-lucide="check"></i><span><b>PIWIS-level diagnostics</b> &amp; coding in-house</span></li>
+          <li><i data-lucide="check"></i><span><b>Honest, photo-backed</b> inspections you approve</span></li>
+          <li><i data-lucide="check"></i><span>Air-cooled to modern — we know every era</span></li>
+          <li><i data-lucide="check"></i><span><b>24-month / 24,000-mile</b> repair warranty</span></li>
+        </ul>
+      </div>
+      <div class="dcard lose reveal">
+        <h3>The Franchise Dealer</h3>
+        <div class="sub">The Old Way</div>
+        <ul>
+          <li><i data-lucide="x"></i><span>Premium dealer rates on everything</span></li>
+          <li><i data-lucide="x"></i><span>Pressure to add services you don't need</span></li>
+          <li><i data-lucide="minus"></i><span>Rotating advisors who don't know your car</span></li>
+          <li><i data-lucide="x"></i><span>Often won't touch older / air-cooled cars</span></li>
+          <li><i data-lucide="x"></i><span>Days-long backlog and shuttle waitlists</span></li>
+          <li><i data-lucide="minus"></i><span>Warranty terms buried in the fine print</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Porsche Owners Trust Us</span>
+      <h2 class="h2">4.9 stars from San Antonio drivers.</h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rcard feat reveal">
+        <div class="rs" data-stars></div>
+        <p>"They service my air-cooled 911 like it's their own — Motul Classic oil, correct torque specs, clear communication every step. Finding this outside a dealer in San Antonio is rare."</p>
+        <div class="who"><span class="av">DT</span><div><b>David T.</b><span>Porsche 911 (993)</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Did the IMS bearing and RMS on my 997 with a full pre-purchase scope first. Honest about what it needed and what it didn't. Fair price, dealer-level work."</p>
+        <div class="who"><span class="av">EM</span><div><b>Elena M.</b><span>Porsche 911 Carrera</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"My Cayenne's coolant pipes failed and they replaced them with the upgraded parts, not the plastic that breaks again. Loaner ready, done next day."</p>
+        <div class="who"><span class="av">JR</span><div><b>Jason R.</b><span>Porsche Cayenne S</span></div></div>
+      </div>
+    </div>
+    <div class="sec-head" style="margin:44px auto 0"><a class="btn btn-ghost reveal" href="/#reviews"><i data-lucide="star"></i>Read all 325 reviews</a></div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="sec book" id="book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Book · Estimate · Ask</span>
+        <h2 class="h2" style="text-align:center">Ready to skip the dealer?</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:54ch">Book a service, ask for an estimate, or just send a question — one quick form, answered the same business day by a real technician at the shop.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book / Contact</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Porsche Repair FAQ</span>
+      <h2 class="h2">Questions, answered.</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>How much does Porsche repair cost in San Antonio?<span class="pl"></span></summary><div class="fa">It depends on the job, but independent Porsche repair typically runs well below dealership rates for the same work — often 25–40% less on parts and labor. You'll always get an upfront, itemized estimate to approve before any work begins.</div></details>
+      <details><summary>Do you service air-cooled and classic Porsches?<span class="pl"></span></summary><div class="fa">Yes — air-cooled 911s are a specialty. Valve adjustments, top-end work, and Motul Classic oil service are all done in-house by technicians who understand these cars, where many dealers no longer will.</div></details>
+      <details><summary>Can you do an IMS bearing upgrade?<span class="pl"></span></summary><div class="fa">Absolutely. We assess the IMS bearing on M96/M97 engines (often during a pre-purchase inspection or clutch job) and perform upgrades and RMS reseals with quality components.</div></details>
+      <details><summary>Do you use genuine Porsche (OEM) parts?<span class="pl"></span></summary><div class="fa">Yes. We fit OEM or OE-supplier parts — the same components Porsche uses — and back our work with a 24-month / 24,000-mile warranty. Every part carries its manufacturer warranty.</div></details>
+      <details><summary>Will servicing my Porsche here void my warranty?<span class="pl"></span></summary><div class="fa">No. Under the federal Magnuson-Moss Warranty Act, an independent shop using quality parts can perform your maintenance and repairs without voiding your factory or extended warranty. We document everything.</div></details>
+      <details><summary>Where are you located and do you offer loaners?<span class="pl"></span></summary><div class="fa">We're at 15555 Tradesman Dr, Ste 500, San Antonio, TX 78249, open Mon–Fri 8:00a–5:30p. Loaner cars and a local shuttle are available — just let us know when you book so we can reserve one.</div></details>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"AutoRepair",
+  "name":"German Car Specialists",
+  "image":"assets/logo-color.png",
+  "telephone":"+1-210-399-1172",
+  "priceRange":"$$",
+  "address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},
+  "areaServed":"San Antonio, TX",
+  "makesOffered":["Porsche"],
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325"},
+  "openingHours":"Mo-Fr 08:00-17:30"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"Makes","item":"https://mygermancarsa.com/makes"},
+    {"@type":"ListItem","position":3,"name":"Porsche Repair San Antonio","item":"https://mygermancarsa.com/porsche-repair-san-antonio"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "serviceType":"Porsche Repair &amp; Service",
+  "provider":{"@type":"AutoRepair","name":"German Car Specialists","telephone":"+1-210-399-1172"},
+  "areaServed":{"@type":"City","name":"San Antonio, TX"},
+  "audience":{"@type":"Audience","audienceType":"Porsche owners"}
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

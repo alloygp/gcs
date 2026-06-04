@@ -1,0 +1,297 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `BMW Carbon Build-Up Cleaning (Walnut Blasting) in San Antonio | My German Car SA`;
+const DESC = `Rough idle, misfires or lost power? BMW carbon build-up cleaning / walnut blasting in San Antonio, done the right way by German specialists.`;
+const CANON = `https://mygermancarsa.com/bmw-carbon-buildup-cleaning-san-antonio`;
+const SCREEN = `BMW Carbon Cleaning`;
+const BLOG = false;
+const DEFAULT_MAKE = 'BMW';
+const STYLE = `.hero-make .keychip{width:46px;height:46px;border-radius:12px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;}
+.hero-make .keychip svg{width:24px;height:24px;}
+.prose .kw{color:var(--navy);font-weight:700;}
+.km-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.kmcard{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:26px 22px 20px;display:flex;flex-direction:column;text-align:center;align-items:center;position:relative;overflow:hidden;color:var(--navy);transition:transform .2s var(--ease),border-color .2s,box-shadow .2s;}
+.kmcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transition:transform .22s var(--ease);}
+.kmcard:hover{transform:translateY(-4px);border-color:var(--acc);box-shadow:0 16px 36px rgba(12,14,18,.1);}
+.kmcard:hover::before{transform:scaleX(1);}
+.kmcard .kl{height:44px;display:grid;place-items:center;margin-bottom:13px;}
+.kmcard .kl img{max-height:36px;max-width:58px;object-fit:contain;}
+.kmcard h3{font-family:var(--font-display);font-size:21px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:5px;}
+.kmcard p{font-size:13.5px;color:var(--steel-500);line-height:1.5;margin-bottom:14px;}
+.kmcard .kcta{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);padding-top:13px;border-top:1px solid var(--fog);width:100%;justify-content:center;}
+.kmcard .kcta svg{width:14px;height:14px;}
+@media(max-width:900px){.km-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:460px){.km-grid{grid-template-columns:1fr;}}
+.n54{background:var(--navy);color:#fff;border-radius:16px;padding:clamp(30px,4vw,48px);position:relative;overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;}
+.n54::before{content:"";position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--acc);}
+.n54 .eyebrow{color:var(--acc-mid);margin-bottom:14px;}
+.n54 .eyebrow::before{background:var(--acc-mid);}
+.n54 h2{font-family:var(--font-display);font-size:clamp(26px,3vw,38px);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;color:#fff;margin:0 0 14px;line-height:1.04;}
+.n54 p{font-size:16px;line-height:1.65;color:rgba(255,255,255,.82);margin:0 0 14px;}
+.n54 p:last-child{margin:0;}
+.n54 .fail{display:flex;flex-direction:column;gap:12px;}
+.n54 .fail li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:rgba(255,255,255,.9);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:14px 16px;}
+.n54 .fail li svg{width:20px;height:20px;color:var(--acc-mid);flex:none;margin-top:1px;}
+.n54 .fail li b{color:#fff;font-weight:700;}
+.n54 a.inline{color:var(--acc-mid);font-weight:700;border-bottom:1px solid rgba(216,18,34,.4);}
+@media(max-width:820px){.n54{grid-template-columns:1fr;gap:26px;}}`;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="/bmw-repair-san-antonio">BMW</a><i data-lucide="chevron-right"></i><span class="cur">Carbon Cleaning</span></div></div></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <div class="hero-make"><span class="keychip"><i data-lucide="wind"></i></span><span>Carbon Cleaning Service</span></div>
+      <h1 class="display">BMW Carbon Build-Up Cleaning in <em>San Antonio.</em></h1>
+      <p class="lead">Rough cold idle, misfires, hesitation or a drop in power and MPG? On a direct-injection BMW that's almost always carbon caked onto the intake valves. We walnut-blast it back to clean metal — restoring smooth power and economy — done the right way, for a fraction of dealer pricing.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Get a Quote</a>
+        <a class="btn btn-ghost" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+      </div>
+      <div class="hero-mini">
+        <div class="hm"><i data-lucide="sparkles"></i><span>Media-blasted clean</span></div>
+        <div class="hm"><i data-lucide="gauge"></i><span>Restores power &amp; MPG</span></div>
+        <div class="hm"><i data-lucide="package-check"></i><span>OEM gaskets on reassembly</span></div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="frame"><image-slot id="carbon-hero" placeholder="Drop a photo — intake valves, walnut blasting, or an engine bay" fit="cover"></image-slot></div>
+      <div class="float">
+        <div class="big">4.9</div>
+        <div>
+          <div class="grow"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg><b>Google Rating</b></div>
+          <div class="gs" id="hero-s"></div><small>325 verified reviews</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="track">
+  <div class="seg"><b>Walnut Blasting</b><b>Intake Valve Cleaning</b><b>Direct Injection</b><b>Restored Power</b><b>No Dealer Markup</b></div>
+  <div class="seg"><b>Walnut Blasting</b><b>Intake Valve Cleaning</b><b>Direct Injection</b><b>Restored Power</b><b>No Dealer Markup</b></div>
+</div></div>
+
+<!-- STAT BAND -->
+<section class="stats"><div class="container">
+  <div class="statc"><b>Walnut</b><span>Blasting Media</span></div>
+  <div class="statc"><b>BMW &amp; Audi</b><span>Direct Injection</span></div>
+  <div class="statc"><b>OEM</b><span>Gaskets &amp; Seals</span></div>
+  <div class="statc"><b>2010</b><span>Independent Since</span></div>
+</div></section>
+
+<!-- INTRO -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Carbon cleaning, done right</span>
+      <h2 class="h2">Why direct-injection BMWs choke on carbon.</h2>
+    </div>
+    <div class="prose reveal">
+      <p>Searching for <span class="kw">BMW carbon buildup cleaning</span> in San&nbsp;Antonio? Here's the why: modern BMW (and Audi) engines use direct injection, which sprays fuel straight into the cylinder instead of over the intake valves. That's great for power and efficiency — but it means the valves never get washed by fuel, so oil vapor from the crankcase bakes onto them as hard carbon over tens of thousands of miles. Eventually that crust chokes airflow and the engine runs rough.</p>
+      <p>The only proper fix is mechanical: <span class="kw">walnut blasting</span>. We remove the intake manifold, seal off each port, and blast the valves with crushed walnut shell media — abrasive enough to strip carbon, soft enough to leave the valves unharmed. Chemical sprays and "fuel additives" can't touch baked-on intake-valve carbon; only media blasting truly cleans it. We reassemble with fresh OEM gaskets and verify the result.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What's included</span>
+      <h2 class="h2">Complete walnut-blasting service.</h2>
+      <p class="lead">A thorough job — not a can of spray cleaner down the intake.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc reveal"><div class="ico"><i data-lucide="search"></i></div><h3>Carbon Diagnosis</h3><p>We confirm carbon is the cause — borescope the valves and read fault codes — before any work.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="wind"></i></div><h3>Walnut Blasting</h3><p>Intake removed, ports sealed, valves media-blasted back to clean metal — the correct method.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="layers"></i></div><h3>Intake &amp; Gaskets</h3><p>Intake manifold cleaned and refitted with fresh OEM gaskets and seals on reassembly.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="git-commit-horizontal"></i></div><h3>Combine With Other Work</h3><p>Spark plugs, coils or a valve-cover gasket due? Doing it together saves labor since the top end is open.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="gauge"></i></div><h3>Before/After Check</h3><p>We verify smooth idle and clean running so you feel the restored power and economy.</p></div>
+      <div class="svc reveal"><div class="ico"><i data-lucide="shield-check"></i></div><h3>Warrantied Work</h3><p>Backed by our 24-month / 24,000-mile guarantee, with OEM-quality parts throughout.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SYMPTOMS HOOK -->
+<section class="sec">
+  <div class="container">
+    <div class="n54 reveal">
+      <div>
+        <span class="eyebrow">BMW Carbon Symptoms</span>
+        <h2>Does your BMW have carbon build-up?</h2>
+        <p>Carbon comes on gradually, so owners often don't notice how much power they've lost until after a cleaning. If you drive a direct-injection N54, N55, N20, N63 or B58 BMW past roughly 60,000–80,000 miles, these are the tell-tale signs.</p>
+        <p>Not sure? We'll borescope the valves and show you. For full BMW service, see our <a class="inline" href="/bmw-repair-san-antonio">BMW repair page</a>.</p>
+      </div>
+      <ul class="fail">
+        <li><i data-lucide="activity"></i><span><b>Rough or shaky cold idle</b> and the occasional stall</span></li>
+        <li><i data-lucide="alert-triangle"></i><span><b>Misfire codes</b> and hesitation under acceleration</span></li>
+        <li><i data-lucide="gauge"></i><span><b>Lost power &amp; worse MPG</b> that crept in over time</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BY MAKE -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Direct-injection specialists</span>
+      <h2 class="h2">BMW &amp; Audi carbon cleaning.</h2>
+      <p class="lead">Both brands' direct-injection engines build carbon the same way — and we walnut-blast both.</p>
+    </div>
+    <div class="km-grid" style="grid-template-columns:repeat(2,1fr);max-width:640px;margin:0 auto;">
+      <a class="kmcard reveal" href="/bmw-repair-san-antonio">
+        <span class="kl"><img src="/assets/marques/bmw.svg" alt="BMW"></span>
+        <h3>BMW</h3><p>N54, N55, N20, N63 &amp; B58 intake-valve walnut blasting.</p>
+        <span class="kcta">BMW Service <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="kmcard reveal" href="/audi-repair-san-antonio">
+        <span class="kl"><img src="/assets/marques/audi.svg" alt="Audi"></span>
+        <h3>Audi</h3><p>2.0T &amp; 3.0T TFSI carbon cleaning and intake service.</p>
+        <span class="kcta">Audi Service <i data-lucide="arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DEALER COMPARE -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">GCS vs. The Dealer</span>
+      <h2 class="h2">Same clean. Smaller bill.</h2>
+    </div>
+    <div class="deal">
+      <div class="dcard win reveal">
+        <h3>German Car Specialists</h3>
+        <div class="sub">The Independent Carbon Specialist</div>
+        <ul>
+          <li><i data-lucide="check"></i><span><b>Well below</b> dealer labor rates</span></li>
+          <li><i data-lucide="check"></i><span><b>Proper walnut blasting</b> — not a chemical shortcut</span></li>
+          <li><i data-lucide="check"></i><span>Valves borescoped <b>before &amp; after</b></span></li>
+          <li><i data-lucide="check"></i><span>Bundle with plugs/coils to save labor</span></li>
+          <li><i data-lucide="check"></i><span><b>24-month / 24,000-mile</b> warranty</span></li>
+        </ul>
+      </div>
+      <div class="dcard lose reveal">
+        <h3>The Franchise Dealer</h3>
+        <div class="sub">The Old Way</div>
+        <ul>
+          <li><i data-lucide="x"></i><span>Premium dealer rates on everything</span></li>
+          <li><i data-lucide="minus"></i><span>May push a full intake replacement</span></li>
+          <li><i data-lucide="x"></i><span>Days-long backlog and waitlists</span></li>
+          <li><i data-lucide="x"></i><span>A call center between you and the tech</span></li>
+          <li><i data-lucide="x"></i><span>Upsells at the service desk</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">San Antonio drivers trust us</span>
+      <h2 class="h2">4.9 stars, power restored.</h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rcard feat reveal">
+        <div class="rs" data-stars></div>
+        <p>"My 335i had a rough idle and misfire codes for months. GCS walnut-blasted the valves and it runs like new again — smooth idle, power's back. Way less than the dealer wanted."</p>
+        <div class="who"><span class="av">CV</span><div><b>Carlos V.</b><span>BMW 335i (N54)</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"They showed me before-and-after photos of the intake valves — night and day. My X5 pulls harder and the MPG came back. Done right."</p>
+        <div class="who"><span class="av">MS</span><div><b>Mark S.</b><span>BMW X5</span></div></div>
+      </div>
+      <div class="rcard reveal">
+        <div class="rs" data-stars></div>
+        <p>"Did the carbon cleaning on my Audi S4 along with plugs and coils in one visit. Saved on labor and it feels brand new. Knowledgeable crew."</p>
+        <div class="who"><span class="av">RB</span><div><b>Rafael B.</b><span>Audi S4</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Carbon Cleaning FAQ</span>
+      <h2 class="h2">Questions, answered.</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>What is BMW carbon build-up?<span class="pl"></span></summary><div class="fa">On direct-injection engines, fuel no longer washes the intake valves, so oil vapor bakes into hard carbon deposits on them over time. Those deposits restrict airflow and cause rough running, misfires and lost power. It's a normal byproduct of the design, not a defect.</div></details>
+      <details><summary>What are the symptoms of carbon build-up?<span class="pl"></span></summary><div class="fa">A rough or shaky cold idle, misfire codes, hesitation under acceleration, reduced power and worse fuel economy that creeps in gradually. Many owners don't realize how much they've lost until after a cleaning.</div></details>
+      <details><summary>Does walnut blasting really work — or can a spray clean it?<span class="pl"></span></summary><div class="fa">Walnut blasting is the only method that fully removes baked-on intake-valve carbon. Chemical sprays and fuel additives can help upstream but can't strip hardened deposits off the valves. Media blasting cleans them back to bare metal without damage.</div></details>
+      <details><summary>How often does a BMW need carbon cleaning?<span class="pl"></span></summary><div class="fa">It varies with driving and engine, but many direct-injection BMWs benefit around 60,000–80,000 miles, then periodically after. Short trips and city driving accelerate buildup.</div></details>
+      <details><summary>Which BMW engines are affected?<span class="pl"></span></summary><div class="fa">The direct-injection turbo engines — N54, N55, N20, N63 and B58 among others — are prone to it, as are Audi's 2.0T and 3.0T TFSI engines. We service all of them.</div></details>
+      <details><summary>Can you do it with other work?<span class="pl"></span></summary><div class="fa">Yes, and you should. Since the intake is already off, it's the ideal time to do spark plugs, coils or a valve-cover gasket — bundling overlapping labor saves you money.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="sec book" id="book">
+  <div class="container">
+    <div class="book-shell" style="grid-template-columns:1fr;text-align:center;max-width:720px;margin:0 auto">
+      <div class="book-copy reveal">
+        <span class="eyebrow" style="justify-content:center">Book · Estimate · Ask</span>
+        <h2 class="h2" data-make-tpl="Let's get your {make} breathing again." style="text-align:center">Carbon clogging your engine?</h2>
+        <p class="lead" style="margin:16px auto 30px;max-width:54ch">Tell us your model and the symptoms and we'll quote a walnut-blasting service the same business day — and tell you honestly whether you need it yet.</p>
+        <div class="hero-cta" style="justify-content:center">
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Get a Quote</a>
+          <a class="btn btn-light" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "serviceType":"BMW Carbon Build-Up Cleaning & Walnut Blasting",
+  "name":"BMW & Audi Walnut Blasting / Carbon Cleaning",
+  "provider":{"@type":"AutoRepair","name":"German Car Specialists","telephone":"+1-210-399-1172","image":"https://mygermancarsa.com/assets/logo-color.png","address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325"}},
+  "areaServed":{"@type":"City","name":"San Antonio, TX"},
+  "audience":{"@type":"Audience","audienceType":"BMW and Audi owners"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"What is BMW carbon build-up?","acceptedAnswer":{"@type":"Answer","text":"On direct-injection engines fuel no longer washes the intake valves, so oil vapor bakes into hard carbon deposits that restrict airflow and cause rough running, misfires and lost power. It's a byproduct of the design, not a defect."}},
+    {"@type":"Question","name":"What are the symptoms of carbon build-up?","acceptedAnswer":{"@type":"Answer","text":"A rough cold idle, misfire codes, hesitation under acceleration, reduced power and worse fuel economy that creeps in gradually."}},
+    {"@type":"Question","name":"Does walnut blasting really work or can a spray clean it?","acceptedAnswer":{"@type":"Answer","text":"Walnut blasting is the only method that fully removes baked-on intake-valve carbon. Chemical sprays and additives can't strip hardened deposits off the valves; media blasting cleans them to bare metal without damage."}},
+    {"@type":"Question","name":"How often does a BMW need carbon cleaning?","acceptedAnswer":{"@type":"Answer","text":"It varies, but many direct-injection BMWs benefit around 60,000 to 80,000 miles and periodically after. Short trips and city driving accelerate buildup."}},
+    {"@type":"Question","name":"Which BMW engines are affected?","acceptedAnswer":{"@type":"Answer","text":"The direct-injection turbo engines such as N54, N55, N20, N63 and B58, as well as Audi 2.0T and 3.0T TFSI engines. We service all of them."}},
+    {"@type":"Question","name":"Can you do it with other work?","acceptedAnswer":{"@type":"Answer","text":"Yes. Since the intake is already off, it's the ideal time to do spark plugs, coils or a valve-cover gasket, bundling overlapping labor to save money."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"BMW","item":"https://mygermancarsa.com/bmw-repair-san-antonio"},
+    {"@type":"ListItem","position":3,"name":"Carbon Build-Up Cleaning","item":"https://mygermancarsa.com/bmw-carbon-buildup-cleaning-san-antonio"}
+  ]
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>

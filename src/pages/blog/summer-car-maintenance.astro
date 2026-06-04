@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export const prerender = true;
+const TITLE = `Summer Car Maintenance for German Cars in Texas Heat | My German Car SA`;
+const DESC = `Beat the San Antonio heat: cooling, A/C, battery and tire checks every BMW, Audi, Mercedes &amp; Porsche owner should do before summer.`;
+const CANON = `https://mygermancarsa.com/blog/summer-car-maintenance`;
+const SCREEN = `Blog — Summer Car Maintenance`;
+const BLOG = true;
+const DEFAULT_MAKE = undefined;
+const STYLE = ``;
+const CONTENT = `<!-- BREADCRUMB -->
+<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><a href="/shop-notes">Shop Notes</a><i data-lucide="chevron-right"></i><span class="cur">Summer Car Maintenance</span></div></div></div>
+
+<!-- ARTICLE -->
+<article class="sec" style="padding-top:clamp(40px,5vw,64px)">
+  <div class="container">
+
+    <div class="article-head reveal">
+      <span class="ptag">Maintenance</span>
+      <h1>Summer Car Maintenance for German Cars in Texas Heat</h1>
+      <div class="article-meta">
+        <span class="au"><span class="av">GC</span><b>The GCS Team</b></span>
+        <span class="pmeta"><span>Jun 4, 2026</span><span class="dot"></span><span>5 min read</span></span>
+      </div>
+    </div>
+
+    <figure class="article-fig reveal">
+      <image-slot id="hero-fig" placeholder="Article hero — a German car in summer / shop bay" fit="cover"></image-slot>
+    </figure>
+
+    <div class="article">
+      <div class="prose reveal">
+        <p>San Antonio summers don't ease German cars into the heat — they slam them with 100°+ days, brutal pavement temps, and stop-and-go traffic that pushes cooling and A/C systems to their limit. A little <strong>summer car maintenance</strong> in spring is the difference between a comfortable season and a breakdown on the side of the 410.</p>
+        <p>Here's the short, Texas-specific checklist we run for BMW, Audi, Mercedes and Porsche owners before the worst of the heat arrives.</p>
+
+        <h2>1. Cooling system first</h2>
+        <p>Heat is the enemy, and the cooling system is the first thing to fail in a Texas summer. Have it pressure-tested, check the coolant level and condition, and look closely at the water pump, thermostat housing and the brittle plastic expansion tanks German cars are known for. Catching a weep now beats an overheat in August.</p>
+
+        <h2>2. A/C — before you actually need it</h2>
+        <p>The first 100° day is the worst time to discover weak A/C. If it's not blowing ice-cold, it's usually low refrigerant from a slow leak or a tired compressor. We can check the pressures and find the leak before you're sweating in traffic.</p>
+
+        <h2>3. Battery &amp; charging</h2>
+        <p>Counterintuitively, heat kills batteries faster than cold — it accelerates the chemistry and evaporates electrolyte. Most batteries that die in winter were actually cooked the summer before. A quick load test tells you if yours will survive another Texas summer.</p>
+
+        <h2>4. Tires &amp; fluids</h2>
+        <p>Hot pavement plus underinflated tires is a blowout waiting to happen — check pressures (they read low in the cool morning) and tread. Top off and inspect the oil and brake fluid too; heat is hard on both, and old fluid breaks down faster.</p>
+
+        <blockquote>If your temperature gauge climbs in stop-and-go traffic, treat it as urgent — Texas heat turns a small cooling issue into a big one fast.</blockquote>
+
+        <div class="takeaways">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Before-Summer Checklist</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Pressure-test the cooling system and check coolant condition.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Verify the A/C blows cold and check the battery with a load test.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Set tire pressures and inspect oil and brake fluid.</li>
+          </ul>
+        </div>
+
+        <div class="inline-cta">
+          <div>
+            <b>Get summer-ready in one visit.</b>
+            <span>We'll run the full heat-season check — cooling, A/C, battery, tires and fluids — and send photos.</span>
+          </div>
+          <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book a Summer Check</a>
+        </div>
+
+        <h2>Frequently asked questions</h2>
+        <div class="faq" style="margin-top:8px">
+          <details><summary>When should I do summer maintenance in San Antonio?<span class="pl"></span></summary><div class="fa">Ideally in early spring, before the first stretch of 90°+ days. That gives you time to fix any cooling or A/C issues before the heat is relentless and shops are busiest.</div></details>
+          <details><summary>Why does my A/C work in the morning but not in traffic?<span class="pl"></span></summary><div class="fa">That's a classic sign of low refrigerant or a struggling condenser/compressor — airflow at speed masks a weak system, but it can't keep up when you're sitting still in heat. It's worth checking before it quits entirely.</div></details>
+          <details><summary>Does Texas heat really shorten battery life?<span class="pl"></span></summary><div class="fa">Yes. Heat is harder on batteries than cold — it speeds up the internal chemistry and dries them out. A summer load test catches a weak battery before it strands you.</div></details>
+          <details><summary>Can you do all of this in one appointment?<span class="pl"></span></summary><div class="fa">Absolutely. Our summer check covers cooling, A/C, battery, tires and fluids in a single visit, with a photo-documented report and an upfront estimate for anything that needs attention.</div></details>
+        </div>
+      </div>
+
+      <!-- AUTHOR -->
+      <div class="author-box reveal">
+        <span class="av">GC</span>
+        <div>
+          <b>The GCS Team</b>
+          <p>Factory-trained Audi, BMW, Mercedes &amp; Porsche technicians at German Car Specialists in San Antonio — independent since 2010, Carfax Top-Rated.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- RELATED -->
+<section class="sec alt related">
+  <div class="container">
+    <div class="sec-head reveal" style="text-align:left;margin:0 0 40px">
+      <span class="eyebrow">Keep Reading</span>
+      <h2 class="h2">More from Shop Notes.</h2>
+    </div>
+    <div class="post-grid">
+      <a class="pcard reveal" href="/german-car-coolant-leak-repair-san-antonio">
+        <div class="thumb"><span class="ptag">Service</span><image-slot id="r1" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body"><h3>German Car Coolant Leak &amp; Cooling Repair</h3><p>The #1 German failure point in Texas heat — what to watch for.</p><div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>5 min</span></div></div>
+      </a>
+      <a class="pcard reveal" href="/blog/long-term-car-storage">
+        <div class="thumb"><span class="ptag">Ownership</span><image-slot id="r2" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body"><h3>Long-Term Car Storage: A German Car Owner's Guide</h3><p>Parking the weekend car? Do it without a dead battery or flat spots.</p><div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>8 min</span></div></div>
+      </a>
+      <a class="pcard reveal" href="/blog/are-german-cars-worth-it">
+        <div class="thumb"><span class="ptag">Ownership</span><image-slot id="r3" placeholder="Post image" fit="cover"></image-slot></div>
+        <div class="pc-body"><h3>Are German Cars Worth It? The Real Cost of Ownership</h3><p>What they really cost — and how to keep them affordable.</p><div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>6 min</span></div></div>
+      </a>
+    </div>
+  </div>
+</section>`;
+const JSONLD = `<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"Summer Car Maintenance for German Cars in Texas Heat",
+  "description":"Beat the San Antonio heat: cooling, A/C, battery and tire checks every German car owner should do before summer.",
+  "author":{"@type":"Organization","name":"German Car Specialists"},
+  "publisher":{"@type":"Organization","name":"German Car Specialists","logo":{"@type":"ImageObject","url":"assets/logo-color.png"}},
+  "datePublished":"2026-06-04",
+  "articleSection":"Maintenance",
+  "mainEntityOfPage":"https://mygermancarsa.com/blog/summer-car-maintenance"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://mygermancarsa.com/"},
+    {"@type":"ListItem","position":2,"name":"Blog","item":"https://mygermancarsa.com/blog"},
+    {"@type":"ListItem","position":3,"name":"Summer Car Maintenance","item":"https://mygermancarsa.com/blog/summer-car-maintenance"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"When should I do summer maintenance in San Antonio?","acceptedAnswer":{"@type":"Answer","text":"Ideally in early spring, before the first stretch of 90-degree days, so you can fix any cooling or A/C issues before the heat is relentless."}},
+    {"@type":"Question","name":"Why does my A/C work in the morning but not in traffic?","acceptedAnswer":{"@type":"Answer","text":"That's a classic sign of low refrigerant or a struggling compressor — airflow at speed masks a weak system but it can't keep up at a standstill in heat."}},
+    {"@type":"Question","name":"Does Texas heat really shorten battery life?","acceptedAnswer":{"@type":"Answer","text":"Yes. Heat is harder on batteries than cold; it speeds up the internal chemistry and dries them out. A summer load test catches a weak battery early."}},
+    {"@type":"Question","name":"Can you do all of this in one appointment?","acceptedAnswer":{"@type":"Answer","text":"Yes. Our summer check covers cooling, A/C, battery, tires and fluids in one visit with a photo-documented report and upfront estimate."}}
+  ]
+}
+</script>`;
+---
+<BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
+  <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
+  <Fragment set:html={CONTENT} />
+  <Fragment slot="end" set:html={JSONLD} />
+</BaseLayout>
