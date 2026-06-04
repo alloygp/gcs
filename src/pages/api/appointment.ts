@@ -21,7 +21,10 @@ import { createAppointmentRequest, shopmonkeyConfigured } from '~/lib/shopmonkey
 
 export const prerender = false; // server route — must not be statically built
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
+// Read keys at module scope, but DON'T construct the Resend client here —
+// `new Resend("")` throws, which would crash the whole function with a non-JSON
+// 500 before any error handling runs. Construct it lazily inside the handler.
+const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
 const FORM_ALERT_SLACK_URL = import.meta.env.FORM_ALERT_SLACK_URL;
 
 const INTENT_LABEL: Record<string, string> = {
@@ -85,27 +88,32 @@ export const POST: APIRoute = async ({ request }) => {
     const smLine = shopmonkeyConfigured
       ? `<p style="color:${sm.ok ? '#127a2e' : '#b00020'}"><strong>Shopmonkey:</strong> ${sm.detail}</p>`
       : '';
-    try {
-      await sendWithAlert(
-        { client: EMAIL_CONFIG.brand.name, formName: 'Appointment request — notification', slackWebhookUrl: FORM_ALERT_SLACK_URL },
-        () => resend.emails.send({
-          from: EMAIL_CONFIG.from.notifications,
-          to: EMAIL_CONFIG.notify,
-          subject: `New ${intentLabel.toLowerCase()}: ${name}${vehicle ? ` (${vehicle})` : ''}`,
-          html: `
-            <h2>New Appointment Request</h2>
-            <p><strong>Intent:</strong> ${intentLabel}</p>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
-            <p><strong>Preferred date:</strong> ${date || '— (none given)'}</p>
-            ${message ? `<p><strong>What it needs:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
-            ${smLine}
-          `,
-        })
-      );
-    } catch (err) {
-      console.error('Resend notify error:', err);
+    if (RESEND_API_KEY) {
+      try {
+        const resend = new Resend(RESEND_API_KEY);
+        await sendWithAlert(
+          { client: EMAIL_CONFIG.brand.name, formName: 'Appointment request — notification', slackWebhookUrl: FORM_ALERT_SLACK_URL },
+          () => resend.emails.send({
+            from: EMAIL_CONFIG.from.notifications,
+            to: EMAIL_CONFIG.notify,
+            subject: `New ${intentLabel.toLowerCase()}: ${name}${vehicle ? ` (${vehicle})` : ''}`,
+            html: `
+              <h2>New Appointment Request</h2>
+              <p><strong>Intent:</strong> ${intentLabel}</p>
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Phone:</strong> ${phone}</p>
+              <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
+              <p><strong>Preferred date:</strong> ${date || '— (none given)'}</p>
+              ${message ? `<p><strong>What it needs:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
+              ${smLine}
+            `,
+          })
+        );
+      } catch (err) {
+        console.error('Resend notify error:', err);
+      }
+    } else {
+      console.warn('RESEND_API_KEY not set — skipping shop notification email');
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
