@@ -76,5 +76,42 @@
     render();
   })();
 
+  // Booking / estimate / question form → POST /api/appointment (Shopmonkey + shop email).
+  (function () {
+    var form = document.getElementById('bkForm');
+    if (!form) return;
+    var btn = document.getElementById('submitBtn');
+    var btnText = document.getElementById('btnText');
+    var body = document.getElementById('formBody');
+    var success = document.getElementById('formSuccess');
+    var note = document.getElementById('formNote');
+    var defaultNote = note ? note.textContent : '';
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.textContent = 'Sending…';
+      if (note) { note.style.color = ''; note.textContent = defaultNote; }
+
+      fetch('/api/appointment', { method: 'POST', body: new FormData(form) })
+        .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
+        .then(function (r) {
+          if (r.ok && r.j && r.j.success) {
+            if (body) body.style.display = 'none';
+            if (note) note.style.display = 'none';
+            if (success) success.classList.add('show');
+          } else {
+            throw new Error((r.j && r.j.error) || 'Request failed');
+          }
+        })
+        .catch(function (err) {
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.textContent = 'Request Appointment';
+          if (note) { note.style.color = '#b00020'; note.textContent = err.message + ' — or call us at (210) 399-1172.'; }
+        });
+    });
+  })();
+
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 })();

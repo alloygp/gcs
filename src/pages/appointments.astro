@@ -114,12 +114,9 @@ const CONTENT = `<!-- BREADCRUMB -->
       <div class="bkform">
         <div class="fh"><span class="sm"><i data-lucide="wrench"></i></span><b data-make-tpl="Tell us about your {make}">Tell us about your car</b><span class="sec-lk"><i data-lucide="lock"></i>Secure</span></div>
         <div class="fb" id="formBody">
-          <!-- TODO (forms): placeholder form — not yet submitting.
-               Option A (Shopmonkey): replace this <form> with the Shopmonkey booking embed,
-               OR POST to a new server route (e.g. src/pages/api/appointment.ts) that calls the
-               Shopmonkey API. Keep id="apptMake" so the make-picker pre-selects the make.
-               Option B (fallback): POST to the existing /api/lead route (Resend + Slack alerts).
-               Site runs output:'server', so either server route works. -->
+          <!-- Submits via fetch to /api/appointment (see public/site.js #bkForm handler),
+               which creates a Shopmonkey customer + unconfirmed appointment and emails
+               the shop. All three intents feed the same pipeline. -->
           <form id="bkForm" onsubmit="return false">
             <label class="intent-q">I'd like to…</label>
             <div class="intent">
@@ -128,12 +125,12 @@ const CONTENT = `<!-- BREADCRUMB -->
               <label><input type="radio" name="intent" value="question"><i data-lucide="message-circle"></i><span>Ask a question</span><small>No obligation</small></label>
             </div>
             <div class="sm-form">
-              <div class="sm-field"><label>Full name</label><input type="text" placeholder="Jordan Becker"></div>
-              <div class="sm-field"><label>Phone</label><input type="tel" placeholder="(210) 555-0123"></div>
-              <div class="sm-field"><label>Make</label><select id="apptMake"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
-              <div class="sm-field"><label>Model &amp; year</label><input type="text" placeholder="e.g. 2019 Q5"></div>
-              <div class="sm-field full"><label id="msgLabel">What does it need? <span class="dateline">— symptoms, service, or your question</span></label><input type="text" placeholder="e.g. oil service + check-engine light"></div>
-              <div class="sm-field full" id="dateField"><label>Preferred date <span class="dateline">(optional)</span></label><input type="date"></div>
+              <div class="sm-field"><label>Full name</label><input type="text" name="name" required placeholder="Jordan Becker"></div>
+              <div class="sm-field"><label>Phone</label><input type="tel" name="phone" required placeholder="(210) 555-0123"></div>
+              <div class="sm-field"><label>Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
+              <div class="sm-field"><label>Model &amp; year</label><input type="text" name="model" placeholder="e.g. 2019 Q5"></div>
+              <div class="sm-field full"><label id="msgLabel">What does it need? <span class="dateline">— symptoms, service, or your question</span></label><input type="text" name="message" placeholder="e.g. oil service + check-engine light"></div>
+              <div class="sm-field full" id="dateField"><label>Preferred date <span class="dateline">(optional)</span></label><input type="date" name="date"></div>
               <button class="btn btn-primary full" id="submitBtn"><i data-lucide="send"></i><span id="btnText">Request Appointment</span></button>
             </div>
           </form>
@@ -144,7 +141,7 @@ const CONTENT = `<!-- BREADCRUMB -->
           <h3>Request sent</h3>
           <p>Thanks — a technician will reach out shortly to confirm the details. Prefer to talk now? Call us at <strong>(210) 399-1172</strong>.</p>
         </div>
-        <div class="note" id="formNote">↑ Replace this with your live Shopmonkey booking embed — all three intents feed the same pipeline.</div>
+        <div class="note" id="formNote">No obligation — a technician reviews every request and replies the same business day.</div>
       </div>
     </div>
   </div>
