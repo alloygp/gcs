@@ -172,7 +172,7 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 .stats .container{display:grid;grid-template-columns:repeat(3,1fr);}
 .statc{padding:46px 22px;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
 .statc:last-child{border-right:none;}
-.statc b{display:block;font-weight:900;font-size:clamp(38px,4.4vw,58px);line-height:1;color:#fff;letter-spacing:-.02em;}
+.statc b{display:block;font-weight:900;font-size:clamp(38px,4.4vw,58px);line-height:1;color:var(--acc-mid);letter-spacing:-.02em;}
 .statc b .r{color:var(--acc-mid);}
 .statc span{display:block;margin-top:11px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55);}
 @media(max-width:600px){.stats .container{grid-template-columns:1fr;}.statc{border-right:none;border-bottom:1px solid rgba(255,255,255,.1);}.statc:last-child{border-bottom:none;}}
@@ -182,6 +182,9 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 .sec-head{text-align:center;max-width:760px;margin:0 auto 58px;}
 .sec-head .h2{margin:16px 0 18px;}
 .sec-head .lead{margin:0 auto;}
+.sec-head.left{text-align:left;margin-left:0;max-width:720px;}
+.sec-head.left .eyebrow{justify-content:flex-start;}
+.sec-head.left .lead{margin:0;}
 .sec.alt{background:var(--paper);}
 
 /* reviews (trust-first, high up) */
@@ -224,10 +227,13 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 @media(max-width:720px){.deal{grid-template-columns:1fr;}}
 
 /* services */
-.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-.svc{background:#fff;border:1px solid var(--fog);border-radius:12px;padding:32px;transition:transform .2s var(--ease),box-shadow .2s;}
-.svc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(12,14,18,.1);}
-.svc .ico{width:54px;height:54px;border-radius:14px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;margin-bottom:22px;}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:svc;}
+.svc{position:relative;overflow:hidden;background:#fff;border:1px solid var(--fog);border-radius:12px;padding:32px;transition:transform .2s var(--ease),box-shadow .2s,border-color .2s;counter-increment:svc;}
+.svc::after{content:counter(svc,decimal-leading-zero);position:absolute;top:20px;right:24px;font-family:var(--font-display);font-size:30px;font-weight:800;line-height:1;color:var(--fog);transition:color .2s;pointer-events:none;}
+.svc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(12,14,18,.1);border-color:var(--acc);}
+.svc:hover::after{color:var(--acc);}
+.svc .ico{width:54px;height:54px;border-radius:14px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;margin-bottom:22px;transition:background .2s,color .2s;}
+.svc:hover .ico{background:var(--acc);color:#fff;}
 .svc .ico svg{width:27px;height:27px;}
 .svc h3{font-size:21px;margin-bottom:10px;}
 .svc p{font-size:15px;color:var(--steel-500);font-weight:400;line-height:1.6;}
@@ -249,6 +255,19 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 .makecard .mcta svg{width:15px;height:15px;}
 @media(max-width:900px){.makes-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:480px){.makes-grid{grid-template-columns:1fr;}}
+/* dark section variant (used as a mid-page anchor band) */
+.sec.dark{background:var(--navy);color:#fff;}
+.sec.dark .sec-head .h2,.sec.dark h2{color:#fff;}
+.sec.dark .eyebrow{color:var(--acc-mid);}
+.sec.dark .eyebrow::before{background:var(--acc-mid);}
+.sec.dark .lead{color:rgba(255,255,255,.72);}
+.sec.dark .makecard{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.12);color:#fff;}
+.sec.dark .makecard .ml{background:#fff;border-radius:10px;padding:9px 16px;height:auto;min-height:46px;}
+.sec.dark .makecard h3{color:#fff;}
+.sec.dark .makecard .mline{color:rgba(255,255,255,.5);}
+.sec.dark .makecard p{color:rgba(255,255,255,.64);}
+.sec.dark .makecard .mcta{color:var(--acc-mid);border-top-color:rgba(255,255,255,.14);}
+.sec.dark .makecard:hover{background:rgba(255,255,255,.08);border-color:var(--acc-mid);}
 
 /* work gallery strip */
 .gallery{padding:clamp(60px,7vw,104px) 0 0;}
@@ -437,7 +456,7 @@ const CONTENT = `<!-- HERO -->
 <!-- DEAL -->
 <section class="sec alt" id="deal">
   <div class="container">
-    <div class="sec-head reveal">
+    <div class="sec-head left reveal">
       <span class="eyebrow">GCS vs. The Dealership</span>
       <h2 class="h2">Better care. Better price. Real people.</h2>
       <p class="lead">You get everything the dealer offers — without the markup, the wait, or the upsell.</p>
@@ -472,7 +491,7 @@ const CONTENT = `<!-- HERO -->
 <!-- SERVICES -->
 <section class="sec" id="services">
   <div class="container">
-    <div class="sec-head reveal">
+    <div class="sec-head left reveal">
       <span class="eyebrow">What we do</span>
       <h2 class="h2">The complete dealer alternative.</h2>
       <p class="lead">From routine maintenance to deep diagnostics — your German car never needs to see the dealer again.</p>
@@ -492,7 +511,7 @@ const CONTENT = `<!-- HERO -->
 </section>
 
 <!-- BY MAKE -->
-<section class="sec alt" id="makes">
+<section class="sec dark" id="makes">
   <div class="container">
     <div class="sec-head reveal">
       <span class="eyebrow">Choose your make</span>
