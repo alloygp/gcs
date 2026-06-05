@@ -140,7 +140,7 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 
 /* section */
 .sec{padding:clamp(60px,7vw,108px) 0;}
-.sec.alt{background:var(--paper);}
+.sec.alt{background-color:var(--paper);background-image:var(--paper-tex);}
 .sec-head{text-align:center;max-width:780px;margin:0 auto 56px;}
 .sec-head.left{text-align:left;margin-left:0;}
 .sec-head .h2{margin:16px 0 18px;}
