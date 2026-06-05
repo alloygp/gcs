@@ -261,13 +261,13 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 .sec.dark .eyebrow{color:var(--acc-mid);}
 .sec.dark .eyebrow::before{background:var(--acc-mid);}
 .sec.dark .lead{color:rgba(255,255,255,.72);}
-.sec.dark .makecard{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.12);color:#fff;}
+.sec.dark .makecard{background-color:var(--navy);background-image:linear-gradient(160deg,rgba(21,24,29,.80),rgba(21,24,29,.94)),var(--mkimg,none);background-size:cover;background-position:center;border-color:rgba(255,255,255,.12);color:#fff;}
 .sec.dark .makecard .ml{background:#fff;border-radius:10px;padding:9px 16px;height:auto;min-height:46px;}
 .sec.dark .makecard h3{color:#fff;}
 .sec.dark .makecard .mline{color:rgba(255,255,255,.5);}
 .sec.dark .makecard p{color:rgba(255,255,255,.64);}
 .sec.dark .makecard .mcta{color:var(--acc-mid);border-top-color:rgba(255,255,255,.14);}
-.sec.dark .makecard:hover{background:rgba(255,255,255,.08);border-color:var(--acc-mid);}
+.sec.dark .makecard:hover{background-image:linear-gradient(160deg,rgba(21,24,29,.62),rgba(21,24,29,.88)),var(--mkimg,none);border-color:var(--acc-mid);}
 
 /* work gallery strip */
 .gallery{padding:clamp(60px,7vw,104px) 0 0;}
@@ -519,28 +519,28 @@ const CONTENT = `<!-- HERO -->
       <p class="lead">We focus on what we know best. Pick your make for model-specific German car service near you — common repairs, maintenance schedules, and real San Antonio pricing.</p>
     </div>
     <div class="makes-grid">
-      <a class="makecard reveal" href="/audi-repair-san-antonio">
+      <a class="makecard reveal" href="/audi-repair-san-antonio" style="--mkimg:url('/assets/photo-audi-r8-shop.jpeg')">
         <span class="ml"><img src="/assets/marques/audi.svg" alt="Audi"></span>
         <h3>Audi</h3>
         <div class="mline">A4 · Q5 · S/RS · R8</div>
         <p>Carbon cleaning, timing service, quattro driveline and the electronics other shops won't touch.</p>
         <span class="mcta">Audi Repair San Antonio <i data-lucide="arrow-right"></i></span>
       </a>
-      <a class="makecard reveal" href="/bmw-repair-san-antonio">
+      <a class="makecard reveal" href="/bmw-repair-san-antonio" style="--mkimg:url('/assets/bmw-coupe-on-lift.jpeg')">
         <span class="ml"><img src="/assets/marques/bmw.svg" alt="BMW"></span>
         <h3>BMW</h3>
         <div class="mline">3 · 5 · X · M</div>
         <p>Oil leaks, cooling systems, VANOS and M-car maintenance done to factory spec.</p>
         <span class="mcta">BMW Repair San Antonio <i data-lucide="arrow-right"></i></span>
       </a>
-      <a class="makecard reveal" href="/mercedes-repair-san-antonio">
+      <a class="makecard reveal" href="/mercedes-repair-san-antonio" style="--mkimg:url('/assets/mercedes-gls-service.jpeg')">
         <span class="ml"><img src="/assets/marques/mercedes.svg" alt="Mercedes-Benz"></span>
         <h3>Mercedes</h3>
         <div class="mline">C · E · S · AMG</div>
         <p>Service A &amp; B, air suspension, and the full diagnostic suite for every Mercedes platform.</p>
         <span class="mcta">Mercedes Repair San Antonio <i data-lucide="arrow-right"></i></span>
       </a>
-      <a class="makecard reveal" href="/porsche-repair-san-antonio">
+      <a class="makecard reveal" href="/porsche-repair-san-antonio" style="--mkimg:url('/assets/porsche-718-on-lift.jpeg')">
         <span class="ml"><img src="/assets/marques/porsche.svg" alt="Porsche"></span>
         <h3>Porsche</h3>
         <div class="mline">911 · Cayenne · Macan</div>
@@ -548,22 +548,6 @@ const CONTENT = `<!-- HERO -->
         <span class="mcta">Porsche Repair San Antonio <i data-lucide="arrow-right"></i></span>
       </a>
     </div>
-  </div>
-</section>
-
-<!-- WORK GALLERY -->
-<section class="gallery" id="work">
-  <div class="container gallery-head reveal">
-    <span class="eyebrow">Inside the shop</span>
-    <h2 class="h2">A look at the work.</h2>
-    <p class="lead">From routine oil services to full engine builds — a glimpse at what rolls through our bays every week.</p>
-  </div>
-  <div class="gwrap">
-    <img src="/assets/bmw-x5-service.jpeg" alt="BMW X5 with the hood up for service in the shop bay" loading="lazy" width="600" height="300">
-    <img src="/assets/bmw-engine-bay-service.jpeg" alt="Clean BMW engine bay during diagnostics" loading="lazy" width="600" height="300">
-    <img src="/assets/bmw-coupe-on-lift.jpeg" alt="White BMW coupe raised on the shop lift" loading="lazy" width="600" height="300">
-    <img src="/assets/bmw-intake-detail.jpeg" alt="BMW intake manifold removed with tools laid out for detailed engine work" loading="lazy" width="600" height="300">
-    <img src="/assets/bmw-engine-diagnostics.jpeg" alt="BMW engine bay open on the shop floor during diagnostics" loading="lazy" width="600" height="300">
   </div>
 </section>
 
