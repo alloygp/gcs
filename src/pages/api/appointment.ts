@@ -43,6 +43,13 @@ function tomorrowDate(): string {
 export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.formData();
+
+    // Honeypot: humans never see the off-screen "website" field. If it's filled,
+    // it's a bot — return success so it doesn't retry, but process nothing.
+    if (data.get('website')?.toString().trim()) {
+      return new Response(JSON.stringify({ success: true }), { status: 200 });
+    }
+
     const name    = data.get('name')?.toString().trim()    ?? '';
     const phone   = data.get('phone')?.toString().trim()   ?? '';
     const make    = data.get('make')?.toString().trim()    ?? '';

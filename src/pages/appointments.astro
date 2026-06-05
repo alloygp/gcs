@@ -124,6 +124,10 @@ const CONTENT = `<!-- BREADCRUMB -->
               <label><input type="radio" name="intent" value="estimate"><i data-lucide="receipt-text"></i><span>Get an estimate</span><small>Ballpark price</small></label>
               <label><input type="radio" name="intent" value="question"><i data-lucide="message-circle"></i><span>Ask a question</span><small>No obligation</small></label>
             </div>
+            <!-- Honeypot: hidden from humans; bots that fill it are silently rejected server-side. -->
+            <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden;" tabindex="-1">
+              <label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
             <div class="sm-form">
               <div class="sm-field"><label>Full name</label><input type="text" name="name" required placeholder="Jordan Becker"></div>
               <div class="sm-field"><label>Phone</label><input type="tel" name="phone" required placeholder="(210) 555-0123"></div>

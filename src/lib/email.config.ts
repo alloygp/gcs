@@ -18,6 +18,8 @@ export const EMAIL_CONFIG = {
 
   // Everyone here gets a copy of every form submission
   notify: [
+    'customer@mygermancarsa.com',
+    'contact@mygermancarsa.com',
     'skyler@alloygp.co',
   ],
 
