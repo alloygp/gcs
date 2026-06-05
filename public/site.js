@@ -32,6 +32,19 @@
     reveals.forEach(function (e) { e.classList.add('in'); });
   }
 
+  // Photo slideshow (crossfade). Guarded: no-op with <2 slides or reduced motion.
+  (function () {
+    var slides = [].slice.call(document.querySelectorAll('.why-slide'));
+    if (slides.length < 2) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var i = 0;
+    setInterval(function () {
+      slides[i].classList.remove('is-active');
+      i = (i + 1) % slides.length;
+      slides[i].classList.add('is-active');
+    }, 4500);
+  })();
+
   // Nav dropdowns (Makes mega + Why Us cards): identical hover-intent.
   (function () {
     var dds = [].slice.call(document.querySelectorAll('#makesMenu, .nav .has-menu'));
