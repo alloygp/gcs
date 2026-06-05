@@ -135,22 +135,28 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
     firstName: req.firstName,
     lastName: req.lastName,
   };
-  try {
-    let customer;
+  // Shopmonkey validates phone AND email; a bad one 400s the whole create.
+  // Try the richest contact set first, then progressively drop the likely-bad
+  // field so a VALID contact still attaches (a bad phone shouldn't lose a good
+  // email, and vice-versa). Worst case, name-only still links the customer.
+  const variants: Array<{ emails: typeof emails; phoneNumbers: typeof phoneNumbers }> = [
+    { emails, phoneNumbers },
+  ];
+  if (phoneNumbers.length) variants.push({ emails, phoneNumbers: [] });          // drop phone, keep email
+  if (emails.length && phoneNumbers.length) variants.push({ emails: [], phoneNumbers }); // drop email, keep phone
+  if (emails.length || phoneNumbers.length) variants.push({ emails: [], phoneNumbers: [] }); // name only
+  for (const contacts of variants) {
     try {
-      customer = await smFetch('/customer', { ...customerBase, emails, phoneNumbers });
+      const customer = await smFetch('/customer', { ...customerBase, ...contacts });
+      customerId = customer?.id;
+      customerPhoneId = customer?.phoneNumbers?.[0]?.id;
+      customerEmailId = customer?.emails?.[0]?.id;
+      customerError = undefined;
+      break;
     } catch (err) {
-      // Shopmonkey validates phone AND email; a bad one 400s the whole create.
-      // Retry name-only so the customer + name still link (contacts stay in the complaint).
-      console.error('Customer create failed (bad phone/email?); retrying name-only:', err);
-      customer = await smFetch('/customer', { ...customerBase });
+      customerError = err instanceof Error ? err.message : String(err);
+      console.error('Customer create attempt failed; trying with fewer contacts:', err);
     }
-    customerId = customer?.id;
-    customerPhoneId = customer?.phoneNumbers?.[0]?.id;
-    customerEmailId = customer?.emails?.[0]?.id;
-  } catch (err) {
-    customerError = err instanceof Error ? err.message : String(err);
-    console.error('Shopmonkey customer create failed:', err);
   }
 
   // 2. Vehicle (linked to the customer). `size` is required.
