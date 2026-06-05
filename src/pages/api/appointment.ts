@@ -123,6 +123,7 @@ export const POST: APIRoute = async ({ request }) => {
               <p><strong>Name:</strong> ${name}</p>
               <p><strong>Phone:</strong> ${phone}</p>
               <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
+              ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
               <p><strong>Preferred date:</strong> ${date || '— (none given)'}</p>
               ${message ? `<p><strong>What it needs:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
               ${smLine}
