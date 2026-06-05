@@ -12,7 +12,8 @@ export interface Props {
 const { title, description, canonical, screenLabel = '', blog = false, defaultMake } = Astro.props;
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // Only the production build (PUBLIC_ENV=production on the Vercel prod project) is
-// indexable. Every other deployment (staging, preview, local) emits noindex,nofollow.
+// indexable. Every other deployment (staging, preview, local) emits noindex but stays
+// crawlable (no nofollow) so QA/audit tools can follow links normally.
 const isProduction = import.meta.env.PUBLIC_ENV === 'production';
 ---
 <!DOCTYPE html>
@@ -20,7 +21,7 @@ const isProduction = import.meta.env.PUBLIC_ENV === 'production';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  {!isProduction && <meta name="robots" content="noindex, nofollow" />}
+  {!isProduction && <meta name="robots" content="noindex" />}
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalURL} />
