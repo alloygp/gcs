@@ -14,3 +14,12 @@ _build/
 # Raw data exports (Screaming Frog, Ahrefs CSVs) — large files, no need to commit
 exports/
 .vercel
+.gstack/
+
+# Raw photo source folders (originals; resized/optimized copies live in public/assets/ root).
+# Not referenced by the site — kept local to avoid bloating the repo & deploy.
+public/assets/audi/
+public/assets/bmw/
+public/assets/mercedes/
+public/assets/porsche/
+public/assets/shop/
