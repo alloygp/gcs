@@ -369,10 +369,11 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 
 
 /* Why Us card dropdown (compact, mtile-style) */
-.nav .menu.cards{left:50%;width:600px;min-width:600px;padding:0 0 18px;display:flex;flex-direction:column;gap:16px;transform:translateX(-50%) translateY(8px);border:none;border-top:1px solid var(--fog);border-radius:0 0 14px 14px;box-shadow:0 28px 48px rgba(12,14,18,.14);overflow:hidden;}
-.nav .menu.cards .why-cred{display:block;width:100%;height:190px;overflow:hidden;}
+.nav .menu.cards{left:50%;width:800px;min-width:800px;padding:16px;display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:stretch;transform:translateX(-50%) translateY(8px);border:none;border-top:1px solid var(--fog);border-radius:0 0 14px 14px;box-shadow:0 28px 48px rgba(12,14,18,.14);}
+.nav .menu.cards .why-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.nav .menu.cards .why-cred{display:block;border:1px solid var(--fog);border-radius:10px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+.nav .menu.cards .why-cred:hover{border-color:var(--acc);box-shadow:0 12px 28px rgba(12,14,18,.1);}
 .nav .menu.cards .why-cred img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;}
-.nav .menu.cards .why-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 18px;}
 .nav .has-menu:hover .menu.cards,.nav .has-menu.open .menu.cards{opacity:1;visibility:visible;transform:translateX(-50%) translateY(27px);}
 .nav .has-menu.open>a svg{transform:rotate(180deg);}
 .nav .menu.cards .ctile{background:#fff;border:1px solid var(--fog);border-radius:10px;padding:24px 22px 20px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;position:relative;overflow:hidden;color:var(--navy);text-decoration:none;transition:transform .18s var(--ease),border-color .18s,box-shadow .18s;}
