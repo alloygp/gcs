@@ -43,6 +43,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const name    = data.get('name')?.toString().trim()    ?? '';
     const phone   = data.get('phone')?.toString().trim()   ?? '';
+    const email   = data.get('email')?.toString().trim()   ?? '';
     const make    = data.get('make')?.toString().trim()    ?? '';
     const modelYear = data.get('model')?.toString().trim()  ?? ''; // "2019 Q5"
     const vin     = data.get('vin')?.toString().trim().toUpperCase() ?? '';
@@ -56,9 +57,9 @@ export const POST: APIRoute = async ({ request }) => {
     const model = yearMatch ? modelYear.replace(yearMatch[0], '').trim() : modelYear;
     const intent  = INTENT_LABEL[intentRaw] ? intentRaw : 'book';
 
-    if (!name || !phone) {
+    if (!name || !phone || !email) {
       return new Response(
-        JSON.stringify({ error: 'Please add your name and a phone number.' }),
+        JSON.stringify({ error: 'Please add your name, phone, and email.' }),
         { status: 400 }
       );
     }
@@ -78,7 +79,7 @@ export const POST: APIRoute = async ({ request }) => {
       sm = await createLead({
         firstName: firstName || name,
         lastName,
-        email: '', // this form has no email field
+        email,
         phone,
         service: leadTitle,
         vehicle,
@@ -112,6 +113,7 @@ export const POST: APIRoute = async ({ request }) => {
               <p><strong>Intent:</strong> ${intentLabel}</p>
               <p><strong>Name:</strong> ${name}</p>
               <p><strong>Phone:</strong> ${phone}</p>
+              <p><strong>Email:</strong> ${email}</p>
               <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
               ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
               <p><strong>Preferred date:</strong> ${date || '— (none given)'}</p>

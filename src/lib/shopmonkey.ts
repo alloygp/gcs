@@ -134,15 +134,16 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
     customerType: 'Customer',
     firstName: req.firstName,
     lastName: req.lastName,
-    emails,
   };
   try {
     let customer;
     try {
-      customer = await smFetch('/customer', { ...customerBase, phoneNumbers });
+      customer = await smFetch('/customer', { ...customerBase, emails, phoneNumbers });
     } catch (err) {
-      console.error('Customer create failed (likely invalid phone); retrying without phone:', err);
-      customer = await smFetch('/customer', { ...customerBase, phoneNumbers: [] });
+      // Shopmonkey validates phone AND email; a bad one 400s the whole create.
+      // Retry name-only so the customer + name still link (contacts stay in the complaint).
+      console.error('Customer create failed (bad phone/email?); retrying name-only:', err);
+      customer = await smFetch('/customer', { ...customerBase });
     }
     customerId = customer?.id;
     customerPhoneId = customer?.phoneNumbers?.[0]?.id;
