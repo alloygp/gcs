@@ -45,6 +45,28 @@
     }, 4500);
   })();
 
+  // Sticky nav: hide on scroll down, ease back on scroll up; glassy once scrolled.
+  (function () {
+    var hdr = document.getElementById('hdr');
+    if (!hdr) return;
+    var lastY = window.pageYOffset || 0;
+    var ticking = false;
+    function update() {
+      var y = window.pageYOffset || 0;
+      if (y > 8) hdr.classList.add('is-glass'); else hdr.classList.remove('is-glass');
+      if (Math.abs(y - lastY) > 4) {
+        if (y > lastY && y > 120) hdr.classList.add('is-hidden');
+        else if (y < lastY) hdr.classList.remove('is-hidden');
+        lastY = y;
+      }
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
+  })();
+
   // Nav dropdowns (Makes mega + Why Us cards): identical hover-intent.
   (function () {
     var dds = [].slice.call(document.querySelectorAll('#makesMenu, .nav .has-menu'));
