@@ -117,6 +117,8 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
 
   // 1. Customer
   let customerId: string | undefined;
+  let customerPhoneId: string | undefined; // set on the order so the card shows the phone
+  let customerEmailId: string | undefined;
   let customerError: string | undefined;
   try {
     const customer = await smFetch('/customer', {
@@ -133,6 +135,8 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
         : [],
     });
     customerId = customer?.id;
+    customerPhoneId = customer?.phoneNumbers?.[0]?.id;
+    customerEmailId = customer?.emails?.[0]?.id;
   } catch (err) {
     customerError = err instanceof Error ? err.message : String(err);
     console.error('Shopmonkey customer create failed:', err);
@@ -184,6 +188,9 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
       complaint,
       ...(customerId ? { customerId } : {}),
       ...(vehicleId ? { vehicleId } : {}),
+      // Point the order at the customer's contact so the board card shows them.
+      ...(customerPhoneId ? { phoneNumberId: customerPhoneId } : {}),
+      ...(customerEmailId ? { emailId: customerEmailId } : {}),
     });
 
     const okBits: string[] = [];
