@@ -115,25 +115,35 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
   // locationId is optional; only sent when configured (HQ/multi-location keys).
   const locationField = LOCATION_ID ? { locationId: LOCATION_ID } : {};
 
-  // 1. Customer
+  // 1. Customer. Shopmonkey models contact info as nested arrays (verified
+  //    against v3) and VALIDATES phone numbers — a bad one 400s the whole
+  //    create. So if the first attempt fails, retry without the phone so the
+  //    customer + name still link; the phone is preserved in the complaint.
   let customerId: string | undefined;
   let customerPhoneId: string | undefined; // set on the order so the card shows the phone
   let customerEmailId: string | undefined;
   let customerError: string | undefined;
+  const emails = req.email
+    ? [{ email: req.email, primary: true, subscribed: false, marketingOptIn: false }]
+    : [];
+  const phoneNumbers = req.phone
+    ? [{ number: normalizePhone(req.phone), type: 'Mobile', primary: true }]
+    : [];
+  const customerBase = {
+    ...locationField,
+    customerType: 'Customer',
+    firstName: req.firstName,
+    lastName: req.lastName,
+    emails,
+  };
   try {
-    const customer = await smFetch('/customer', {
-      ...locationField,
-      customerType: 'Customer',
-      firstName: req.firstName,
-      lastName: req.lastName,
-      // Shopmonkey models contact info as nested arrays (verified against v3).
-      emails: req.email
-        ? [{ email: req.email, primary: true, subscribed: false, marketingOptIn: false }]
-        : [],
-      phoneNumbers: req.phone
-        ? [{ number: normalizePhone(req.phone), type: 'Mobile', primary: true }]
-        : [],
-    });
+    let customer;
+    try {
+      customer = await smFetch('/customer', { ...customerBase, phoneNumbers });
+    } catch (err) {
+      console.error('Customer create failed (likely invalid phone); retrying without phone:', err);
+      customer = await smFetch('/customer', { ...customerBase, phoneNumbers: [] });
+    }
     customerId = customer?.id;
     customerPhoneId = customer?.phoneNumbers?.[0]?.id;
     customerEmailId = customer?.emails?.[0]?.id;

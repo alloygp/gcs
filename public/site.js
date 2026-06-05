@@ -173,6 +173,17 @@
     }
     if (vinEl) { vinEl.addEventListener('input', decodeVin); vinEl.addEventListener('change', decodeVin); }
 
+    // Phone field: live-format as (111) 111-1111 while typing.
+    var phoneEl = form.querySelector('[name="phone"]');
+    if (phoneEl) phoneEl.addEventListener('input', function () {
+      var d = phoneEl.value.replace(/\D/g, '').slice(0, 10);
+      var out = d;
+      if (d.length > 6) out = '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+      else if (d.length > 3) out = '(' + d.slice(0, 3) + ') ' + d.slice(3);
+      else if (d.length > 0) out = '(' + d;
+      phoneEl.value = out;
+    });
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
