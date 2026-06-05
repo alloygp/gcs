@@ -46,10 +46,16 @@ export const POST: APIRoute = async ({ request }) => {
     const name    = data.get('name')?.toString().trim()    ?? '';
     const phone   = data.get('phone')?.toString().trim()   ?? '';
     const make    = data.get('make')?.toString().trim()    ?? '';
-    const model   = data.get('model')?.toString().trim()   ?? '';
+    const modelYear = data.get('model')?.toString().trim()  ?? ''; // "2019 Q5"
+    const vin     = data.get('vin')?.toString().trim().toUpperCase() ?? '';
     const message = data.get('message')?.toString().trim() ?? '';
     const date    = data.get('date')?.toString().trim()    ?? '';
     const intentRaw = data.get('intent')?.toString().trim() ?? 'book';
+
+    // Split a 4-digit year out of the combined "Model & year" field.
+    const yearMatch = modelYear.match(/\b(19|20)\d{2}\b/);
+    const year = yearMatch ? Number(yearMatch[0]) : undefined;
+    const model = yearMatch ? modelYear.replace(yearMatch[0], '').trim() : modelYear;
     const intent  = INTENT_LABEL[intentRaw] ? intentRaw : 'book';
 
     if (!name || !phone) {
@@ -61,7 +67,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const [firstName, ...rest] = name.split(' ');
     const lastName = rest.join(' ');
-    const vehicle = [make, model].filter(Boolean).join(' ');
+    const vehicle = [make, modelYear].filter(Boolean).join(' '); // human-readable, keeps year
     const intentLabel = INTENT_LABEL[intent];
     // Appointment name shown in Shopmonkey's scheduler.
     const apptName = `${intentLabel}${vehicle ? ` — ${vehicle}` : ''}${message ? `: ${message}` : ''}`.slice(0, 140);
@@ -78,6 +84,10 @@ export const POST: APIRoute = async ({ request }) => {
         phone,
         service: apptName,
         vehicle,
+        make,
+        model,
+        year,
+        vin,
         preferredDate: date || tomorrowDate(), // placeholder slot if none given
         preferredTime: '09:00',
         message: `Intent: ${intentLabel}${date ? '' : ' (no preferred date given)'}${message ? `\n${message}` : ''}`,

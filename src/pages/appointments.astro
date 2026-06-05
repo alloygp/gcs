@@ -129,6 +129,7 @@ const CONTENT = `<!-- BREADCRUMB -->
               <div class="sm-field"><label>Phone</label><input type="tel" name="phone" required placeholder="(210) 555-0123"></div>
               <div class="sm-field"><label>Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
               <div class="sm-field"><label>Model &amp; year</label><input type="text" name="model" placeholder="e.g. 2019 Q5"></div>
+              <div class="sm-field full"><label>VIN <span class="dateline">(optional — lets us pull your exact vehicle)</span></label><input type="text" name="vin" maxlength="17" autocapitalize="characters" placeholder="17-character VIN"></div>
               <div class="sm-field full"><label id="msgLabel">What does it need? <span class="dateline">— symptoms, service, or your question</span></label><input type="text" name="message" placeholder="e.g. oil service + check-engine light"></div>
               <div class="sm-field full" id="dateField"><label>Preferred date <span class="dateline">(optional)</span></label><input type="date" name="date"></div>
               <button class="btn btn-primary full" id="submitBtn"><i data-lucide="send"></i><span id="btnText">Request Appointment</span></button>

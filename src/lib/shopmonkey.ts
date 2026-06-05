@@ -46,8 +46,13 @@ export interface AppointmentRequest {
   phone: string;
   /** Service the customer is requesting, e.g. "Oil change". Becomes the appt name. */
   service: string;
-  /** Free-text vehicle description, e.g. "2018 Toyota Tacoma". */
+  /** Free-text vehicle description for the note/title, e.g. "2018 BMW 330i". */
   vehicle: string;
+  /** Structured vehicle fields used to create a linked Shopmonkey Vehicle. */
+  make?: string;
+  model?: string;
+  year?: number | undefined;
+  vin?: string;
   /** YYYY-MM-DD from the form's date input. */
   preferredDate: string;
   /** HH:MM (24h) from the form's time input. */
@@ -59,6 +64,7 @@ export interface AppointmentRequest {
 export interface ShopmonkeyResult {
   ok: boolean;
   customerId?: string | undefined;
+  vehicleId?: string | undefined;
   appointmentId?: string | undefined;
   /** Human-readable summary of what happened, for logs + the shop email. */
   detail: string;
@@ -164,17 +170,46 @@ export async function createAppointmentRequest(
     console.error('Shopmonkey customer create failed:', err);
   }
 
+  // Create the vehicle (linked to the customer) so the appointment's Vehicle
+  // field is populated. `size` is required. VIN doesn't auto-decode, so we also
+  // send make/model/year. Best-effort — failure just leaves the car in the note.
+  let vehicleId: string | undefined;
+  let vehicleError: string | undefined;
+  if (req.vin || req.make || req.model) {
+    try {
+      const vehicle = await smFetch('/vehicle', {
+        ...locationField,
+        size: 'LightDuty',
+        ...(customerId ? { customerId } : {}),
+        ...(req.vin ? { vin: req.vin } : {}),
+        ...(req.year ? { year: req.year } : {}),
+        ...(req.make ? { make: req.make } : {}),
+        ...(req.model ? { model: req.model } : {}),
+      });
+      vehicleId = vehicle?.id;
+    } catch (err) {
+      vehicleError = err instanceof Error ? err.message : String(err);
+      console.error('Shopmonkey vehicle create failed:', err);
+    }
+  }
+
   // Name + contact go in the note too, so the shop sees who it is even when the
   // customer record can't be linked. If linking failed, record WHY in the note
   // so it's diagnosable straight from the Shopmonkey appointment.
+  const vehicleLine = [req.vehicle, req.vin ? `VIN ${req.vin}` : '']
+    .filter(Boolean)
+    .join(' · ');
   const note = [
     'Website appointment request (unconfirmed — review and confirm in Shopmonkey).',
     fullName ? `Name: ${fullName}` : '',
     `Requested: ${humanSlot}`,
-    req.vehicle ? `Vehicle: ${req.vehicle}` : '',
+    vehicleLine ? `Vehicle: ${vehicleLine}` : '',
     req.message ? `Notes: ${req.message}` : '',
     contact ? `Contact: ${contact}` : '',
     customerId ? '' : `(Customer not auto-linked${customerError ? ` — ${customerError}` : ''})`,
+    (req.vin || req.make || req.model) && !vehicleId
+      ? `(Vehicle not auto-linked${vehicleError ? ` — ${vehicleError}` : ''})`
+      : '',
   ]
     .filter(Boolean)
     .join('\n');
@@ -186,6 +221,7 @@ export async function createAppointmentRequest(
       startDate,
       endDate,
       ...(customerId ? { customerId } : {}),
+      ...(vehicleId ? { vehicleId } : {}),
       note,
       color: 'blue',
       // Do NOT auto-message the customer or auto-confirm — the shop owns that.
@@ -195,13 +231,18 @@ export async function createAppointmentRequest(
       useSMS: false,
     });
 
+    const parts = [
+      `appointment ${appointment?.id ?? '(unknown id)'}`,
+      customerId ? `customer ${customerId}` : 'no customer (create failed — see note)',
+    ];
+    if (vehicleId) parts.push(`vehicle ${vehicleId}`);
+    else if (req.vin || req.make || req.model) parts.push('no vehicle (create failed — see note)');
     return {
       ok: true,
       customerId,
+      vehicleId,
       appointmentId: appointment?.id,
-      detail: customerId
-        ? `Created Shopmonkey customer ${customerId} and appointment ${appointment?.id ?? '(unknown id)'}.`
-        : `Created Shopmonkey appointment ${appointment?.id ?? '(unknown id)'} (customer create failed — contact info is in the note).`,
+      detail: `Created Shopmonkey ${parts.join(', ')}.`,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
