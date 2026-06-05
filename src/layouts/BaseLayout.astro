@@ -15,6 +15,9 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // indexable. Every other deployment (staging, preview, local) emits noindex but stays
 // crawlable (no nofollow) so QA/audit tools can follow links normally.
 const isProduction = import.meta.env.PUBLIC_ENV === 'production';
+const ogImage = new URL('/assets/og.png', Astro.site).href;
+// GA4: set PUBLIC_GA_MEASUREMENT_ID (G-XXXXXXXXXX) in Vercel prod env. Only loads in production.
+const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +31,22 @@ const isProduction = import.meta.env.PUBLIC_ENV === 'production';
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <link rel="icon" href="/assets/icon.png" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:site_name" content="German Car Specialists" />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  {isProduction && GA_ID && (
+    <Fragment>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+      <script is:inline define:vars={{ GA_ID }}>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',GA_ID);</script>
+    </Fragment>
+  )}
   <link rel="stylesheet" href="/assets/base.css" />
   <link rel="stylesheet" href="/assets/make-page.css" />
   {blog && <link rel="stylesheet" href="/assets/blog.css" />}

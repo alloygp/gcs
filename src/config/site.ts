@@ -41,6 +41,6 @@ export const SITE = {
     addressCountry: 'US',
     areaServed: 'United States',
     priceRange: '$$',
-    logo: 'https://mygermancarsa.com/assets/logo.svg',
+    logo: 'https://mygermancarsa.com/assets/logo-color.png',
   },
 } as const;
