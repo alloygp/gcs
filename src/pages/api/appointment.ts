@@ -102,8 +102,11 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // 2. Notify the shop — always, with the full request + Shopmonkey status.
+    const smLink = sm.ok
+      ? ` <a href="https://app.shopmonkey.io/" style="color:#127a2e">Open Shopmonkey →</a>`
+      : '';
     const smLine = shopmonkeyConfigured
-      ? `<p style="color:${sm.ok ? '#127a2e' : '#b00020'}"><strong>Shopmonkey:</strong> ${sm.detail}</p>`
+      ? `<p style="color:${sm.ok ? '#127a2e' : '#b00020'}"><strong>Shopmonkey:</strong> ${sm.detail}${smLink}</p>`
       : '';
     if (RESEND_API_KEY) {
       try {

@@ -231,18 +231,21 @@ export async function createAppointmentRequest(
       useSMS: false,
     });
 
-    const parts = [
-      `appointment ${appointment?.id ?? '(unknown id)'}`,
-      customerId ? `customer ${customerId}` : 'no customer (create failed — see note)',
-    ];
-    if (vehicleId) parts.push(`vehicle ${vehicleId}`);
-    else if (req.vin || req.make || req.model) parts.push('no vehicle (create failed — see note)');
+    // Human-readable summary for the shop email (raw IDs stay in the returned
+    // object for logging, not in this text).
+    const okBits: string[] = [];
+    const failBits: string[] = [];
+    if (customerId) okBits.push('customer'); else failBits.push('customer');
+    if (vehicleId) okBits.push('vehicle');
+    else if (req.vin || req.make || req.model) failBits.push('vehicle');
+    let linked = okBits.length ? `${okBits.join(' + ')} linked` : '';
+    if (failBits.length) linked += `${linked ? '; ' : ''}${failBits.join(' + ')} not auto-linked (see note above)`;
     return {
       ok: true,
       customerId,
       vehicleId,
       appointmentId: appointment?.id,
-      detail: `Created Shopmonkey ${parts.join(', ')}.`,
+      detail: `Added to the scheduler as an unconfirmed appointment for ${humanSlot}${linked ? ` — ${linked}` : ''}. Confirm the time in Shopmonkey.`,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
