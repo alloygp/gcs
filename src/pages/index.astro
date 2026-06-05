@@ -133,17 +133,19 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 .hero-vis{position:relative;}
 .hero-vis .frame{border-radius:16px;overflow:hidden;box-shadow:0 30px 70px rgba(12,14,18,.22);}
 .hero-vis image-slot{width:100%;height:460px;display:block;}
-.hero-vis .float{position:absolute;background:#fff;border-radius:16px;box-shadow:0 18px 44px rgba(12,14,18,.16);padding:18px 20px;}
-.hero-vis .f-rev{left:-22px;bottom:42px;display:flex;align-items:center;gap:14px;}
-.hero-vis .f-rev .big{font-size:34px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1;}
-.hero-vis .f-rev .gs{display:flex;gap:2px;color:var(--star);}
-.hero-vis .f-rev .gs svg{width:14px;height:14px;fill:var(--star);stroke:none;}
-.hero-vis .f-rev small{font-size:12px;color:var(--steel-500);display:block;margin-top:3px;}
-.hero-vis .f-rev .grow{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.hero-vis .f-rev .grow b{font-size:12px;font-weight:700;color:var(--navy);letter-spacing:.01em;}
-.hero-vis .f-warr{right:-24px;top:26px;left:auto;bottom:auto;padding:0;overflow:hidden;width:256px;display:block;}
-.hero-vis .f-warr .map{display:block;width:100%;height:186px;border:0;}
-@media(max-width:920px){.hero .container{grid-template-columns:1fr;}.hero-vis{margin-top:10px;}.hero-vis image-slot{height:340px;}.hero-vis .f-rev{left:8px;}.hero-vis .f-warr{right:8px;}}
+.hero-vis .hero-cards{position:absolute;left:12px;right:12px;bottom:12px;display:grid;grid-template-columns:1fr 1.18fr;gap:12px;align-items:stretch;}
+.hero-vis .hcard{background:#fff;border-radius:12px;box-shadow:0 14px 38px rgba(12,14,18,.26);overflow:hidden;}
+.hero-vis .hcard-rev{padding:16px 18px;display:flex;flex-direction:column;justify-content:center;gap:5px;}
+.hero-vis .hcard-rev .rev-head{display:flex;align-items:center;gap:8px;}
+.hero-vis .hcard-rev .rev-head b{font-size:12px;font-weight:700;color:var(--navy);letter-spacing:.01em;}
+.hero-vis .hcard-rev .rev-score{font-family:var(--font-display);font-size:42px;font-weight:900;line-height:1;color:var(--navy);letter-spacing:-.02em;}
+.hero-vis .hcard-rev .gs{display:flex;gap:2px;color:var(--star);}
+.hero-vis .hcard-rev .gs svg{width:17px;height:17px;fill:var(--star);stroke:none;}
+.hero-vis .hcard-rev small{font-size:12px;color:var(--steel-500);}
+.hero-vis .hcard-map{display:flex;padding:0;}
+.hero-vis .hcard-map .map{flex:1;width:100%;align-self:stretch;border:0;display:block;min-height:150px;}
+@media(max-width:920px){.hero .container{grid-template-columns:1fr;}.hero-vis{margin-top:10px;}.hero-vis image-slot{height:340px;}}
+@media(max-width:560px){.hero-vis .hcard-rev{padding:13px 14px;}.hero-vis .hcard-rev .rev-score{font-size:34px;}}
 
 /* trust band */
 .tband{border-bottom:1px solid var(--fog);background:#fff;}
@@ -400,15 +402,19 @@ const CONTENT = `<!-- HERO -->
     </div>
     <div class="hero-vis">
       <div class="frame"><img src="/assets/photo-audi-r8-shop.jpeg" alt="German car on the lift in the shop bay" width="800" height="460" style="width:100%;height:460px;object-fit:cover;display:block;" loading="eager"></div>
-      <div class="float f-rev">
-        <div class="big">4.9</div>
-        <div>
-          <div class="grow"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg><b>Google Rating</b></div>
-          <div class="gs" id="d3-fr"></div><small>325 verified reviews</small>
+      <div class="hero-cards">
+        <div class="hcard hcard-rev">
+          <div class="rev-head">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg>
+            <b>Google Rating</b>
+          </div>
+          <div class="rev-score">4.9</div>
+          <div class="gs" id="d3-fr"></div>
+          <small>Based on 325 verified reviews</small>
         </div>
-      </div>
-      <div class="float f-warr">
-        <iframe class="map" src="https://maps.google.com/maps?q=15555+Tradesman+Dr+Ste+500,+San+Antonio,+TX+78249&z=15&output=embed" title="German Car Specialists location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="hcard hcard-map">
+          <iframe class="map" src="https://maps.google.com/maps?q=15555+Tradesman+Dr+Ste+500,+San+Antonio,+TX+78249&z=15&output=embed" title="German Car Specialists location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
       </div>
     </div>
   </div>
