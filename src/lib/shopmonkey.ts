@@ -66,8 +66,11 @@ export interface ShopmonkeyResult {
 
 /** Build an ISO 8601 instant from the form's wall-clock date + time. */
 function toIso(date: string, time: string): string {
-  const suffix = TZ_OFFSET || 'Z';
-  // e.g. "2026-06-10T14:30:00-07:00"
+  // Default to Central (San Antonio) so the placeholder slot isn't 5h off when
+  // SHOPMONKEY_TZ_OFFSET isn't set. CDT = -05:00; off by 1h in winter (CST),
+  // which is fine — the shop reschedules, and the note carries the exact time.
+  const suffix = TZ_OFFSET || '-05:00';
+  // e.g. "2026-06-10T09:00:00-05:00"
   return `${date}T${time}:00${suffix}`;
 }
 
@@ -130,20 +133,16 @@ export async function createAppointmentRequest(
   ).toISOString();
 
   const humanSlot = `${req.preferredDate} at ${req.preferredTime}`;
-  const note = [
-    'Website appointment request (unconfirmed — review and confirm in Shopmonkey).',
-    `Requested: ${humanSlot}`,
-    req.vehicle ? `Vehicle: ${req.vehicle}` : '',
-    req.message ? `Notes: ${req.message}` : '',
-    `Contact: ${req.email} · ${req.phone}`,
-  ]
-    .filter(Boolean)
-    .join('\n');
+  const fullName = [req.firstName, req.lastName].filter(Boolean).join(' ');
+  const contact = [req.email, req.phone].filter(Boolean).join(' · ');
 
   // locationId is optional; only sent when configured (HQ/multi-location keys).
   const locationField = LOCATION_ID ? { locationId: LOCATION_ID } : {};
 
+  // Create the customer first so we can link it (and so we know if it failed
+  // before writing the note).
   let customerId: string | undefined;
+  let customerError: string | undefined;
   try {
     const customer = await smFetch('/customer', {
       ...locationField,
@@ -160,9 +159,25 @@ export async function createAppointmentRequest(
     });
     customerId = customer?.id;
   } catch (err) {
-    // Non-fatal: we can still create the appointment with contact info in the note.
+    // Non-fatal: we still create the appointment with contact info in the note.
+    customerError = err instanceof Error ? err.message : String(err);
     console.error('Shopmonkey customer create failed:', err);
   }
+
+  // Name + contact go in the note too, so the shop sees who it is even when the
+  // customer record can't be linked. If linking failed, record WHY in the note
+  // so it's diagnosable straight from the Shopmonkey appointment.
+  const note = [
+    'Website appointment request (unconfirmed — review and confirm in Shopmonkey).',
+    fullName ? `Name: ${fullName}` : '',
+    `Requested: ${humanSlot}`,
+    req.vehicle ? `Vehicle: ${req.vehicle}` : '',
+    req.message ? `Notes: ${req.message}` : '',
+    contact ? `Contact: ${contact}` : '',
+    customerId ? '' : `(Customer not auto-linked${customerError ? ` — ${customerError}` : ''})`,
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   try {
     const appointment = await smFetch('/appointment', {
