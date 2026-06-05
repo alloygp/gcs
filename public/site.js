@@ -67,6 +67,25 @@
     update();
   })();
 
+  // Shop Notes category filter. Guarded: no-op without the chip bar.
+  (function () {
+    var chips = document.getElementById('catChips');
+    if (!chips) return;
+    var links = [].slice.call(chips.querySelectorAll('a'));
+    var posts = [].slice.call(document.querySelectorAll('[data-cat]'));
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        links.forEach(function (x) { x.classList.remove('on'); });
+        a.classList.add('on');
+        var f = a.getAttribute('data-filter');
+        posts.forEach(function (p) {
+          p.style.display = (f === 'all' || p.getAttribute('data-cat') === f) ? '' : 'none';
+        });
+      });
+    });
+  })();
+
   // Nav dropdowns (Makes mega + Why Us cards): identical hover-intent.
   (function () {
     var dds = [].slice.call(document.querySelectorAll('#makesMenu, .nav .has-menu'));

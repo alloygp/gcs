@@ -8,22 +8,18 @@ const SCREEN = `Shop Notes — Hub`;
 const BLOG = true;
 const DEFAULT_MAKE = undefined;
 const STYLE = ``;
-const CONTENT = `<!-- BREADCRUMB -->
-<div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><span class="cur">Shop Notes</span></div></div></div>
-
-<!-- HERO -->
-<section class="bhero">
+const CONTENT = `<!-- BANNER -->
+<section class="article-banner">
+  <div class="ab-bg"><img src="/assets/shop-interior-bays.jpeg" alt="Inside the German Car Specialists shop in San Antonio" width="1600" height="600" loading="eager"></div>
   <div class="container">
+    <div class="ab-crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><span class="cur">Shop Notes</span></div>
     <span class="eyebrow">Shop Notes</span>
     <h1 class="h2">German car know-how, straight from our bays.</h1>
     <p class="lead">Honest guides on maintenance, common problems, repair costs and dealer alternatives — written by the technicians who actually turn the wrenches on your Audi, BMW, Mercedes &amp; Porsche.</p>
-    <div class="cat-chips">
-      <a href="#" class="on">All</a>
-      <a href="#">Maintenance</a>
-      <a href="#">Diagnostics</a>
-      <a href="#">Model Guides</a>
-      <a href="#">Dealer Alternative</a>
-      <a href="#">Buying</a>
+    <div class="cat-chips" id="catChips">
+      <a href="#" class="on" data-filter="all">All</a>
+      <a href="#" data-filter="Maintenance">Maintenance</a>
+      <a href="#" data-filter="Ownership">Ownership</a>
     </div>
   </div>
 </section>
@@ -33,7 +29,7 @@ const CONTENT = `<!-- BREADCRUMB -->
   <div class="container">
 
     <!-- FEATURED -->
-    <a class="featpost reveal" href="/bmw-maintenance-cost-san-antonio">
+    <a class="featpost reveal" href="/bmw-maintenance-cost-san-antonio" data-cat="Maintenance">
       <div class="thumb">
         <span class="badge">Featured</span>
         <img src="/assets/bmw-engine-bay-service.jpeg" alt="BMW engine bay during an oil service" loading="lazy" width="760" height="420">
@@ -48,7 +44,7 @@ const CONTENT = `<!-- BREADCRUMB -->
 
     <!-- GRID -->
     <div class="post-grid">
-      <a class="pcard reveal" href="/blog/long-term-car-storage">
+      <a class="pcard reveal" href="/blog/long-term-car-storage" data-cat="Ownership">
         <div class="thumb"><span class="ptag">Ownership</span><img src="/assets/photo-audi-r8-shop.jpeg" alt="German car stored in the shop" loading="lazy" width="600" height="360"></div>
         <div class="pc-body">
           <h3>Long-Term Car Storage: A German Car Owner's Guide</h3>
@@ -56,7 +52,7 @@ const CONTENT = `<!-- BREADCRUMB -->
           <div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>8 min</span></div>
         </div>
       </a>
-      <a class="pcard reveal" href="/blog/are-german-cars-worth-it">
+      <a class="pcard reveal" href="/blog/are-german-cars-worth-it" data-cat="Ownership">
         <div class="thumb"><span class="ptag">Ownership</span><img src="/assets/mercedes-c-coupe.jpeg" alt="Mercedes-Benz coupe" loading="lazy" width="600" height="360"></div>
         <div class="pc-body">
           <h3>Are German Cars Worth It? The Real Cost of Ownership</h3>
@@ -64,7 +60,7 @@ const CONTENT = `<!-- BREADCRUMB -->
           <div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>6 min</span></div>
         </div>
       </a>
-      <a class="pcard reveal" href="/blog/summer-car-maintenance">
+      <a class="pcard reveal" href="/blog/summer-car-maintenance" data-cat="Maintenance">
         <div class="thumb"><span class="ptag">Maintenance</span><img src="/assets/shop-interior-bays.jpeg" alt="German cars in the service bays" loading="lazy" width="600" height="360"></div>
         <div class="pc-body">
           <h3>Summer Car Maintenance for German Cars in Texas Heat</h3>
@@ -72,7 +68,7 @@ const CONTENT = `<!-- BREADCRUMB -->
           <div class="pmeta"><span>Jun 2026</span><span class="dot"></span><span>5 min</span></div>
         </div>
       </a>
-      <a class="pcard reveal" href="/mercedes-service-a-vs-b">
+      <a class="pcard reveal" href="/mercedes-service-a-vs-b" data-cat="Maintenance">
         <div class="thumb"><span class="ptag">Maintenance</span><img src="/assets/mercedes-gle-service.jpeg" alt="Mercedes service" loading="lazy" width="600" height="360"></div>
         <div class="pc-body">
           <h3>Mercedes Service A vs B — Explained</h3>
@@ -80,7 +76,7 @@ const CONTENT = `<!-- BREADCRUMB -->
           <div class="pmeta"><span>Feb 2026</span><span class="dot"></span><span>5 min</span></div>
         </div>
       </a>
-      <a class="pcard reveal" href="/audi-maintenance-cost-san-antonio">
+      <a class="pcard reveal" href="/audi-maintenance-cost-san-antonio" data-cat="Maintenance">
         <div class="thumb"><span class="ptag">Maintenance</span><img src="/assets/audi-engine-bay-service.jpeg" alt="Audi engine bay" loading="lazy" width="600" height="360"></div>
         <div class="pc-body">
           <h3>Audi Maintenance Cost &amp; Service Schedule</h3>
@@ -88,7 +84,7 @@ const CONTENT = `<!-- BREADCRUMB -->
           <div class="pmeta"><span>Feb 2026</span><span class="dot"></span><span>5 min</span></div>
         </div>
       </a>
-      <a class="pcard reveal" href="/porsche-maintenance-cost-san-antonio">
+      <a class="pcard reveal" href="/porsche-maintenance-cost-san-antonio" data-cat="Maintenance">
         <div class="thumb"><span class="ptag">Maintenance</span><img src="/assets/porsche-cayenne-service.jpeg" alt="Porsche service" loading="lazy" width="600" height="360"></div>
         <div class="pc-body">
           <h3>Porsche Maintenance Cost: 911, Cayenne &amp; Macan</h3>
