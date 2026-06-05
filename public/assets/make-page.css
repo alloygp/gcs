@@ -312,8 +312,8 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 
 
 /* Why Us card dropdown (compact, mtile-style) */
-.nav .menu.cards{left:50%;width:800px;min-width:800px;padding:16px;display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:stretch;transform:translateX(-50%) translateY(8px);border:none;border-top:1px solid var(--fog);border-radius:0 0 14px 14px;box-shadow:0 28px 48px rgba(12,14,18,.14);}
-.nav .menu.cards .why-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.nav .menu.cards{left:50%;width:780px;min-width:780px;padding:16px;display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:14px;align-items:stretch;transform:translateX(-50%) translateY(8px);border:none;border-top:1px solid var(--fog);border-radius:0 0 14px 14px;box-shadow:0 28px 48px rgba(12,14,18,.14);}
+.nav .menu.cards .why-cards{display:contents;}
 .nav .menu.cards .why-cred{display:block;border:1px solid var(--fog);border-radius:10px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
 .nav .menu.cards .why-cred:hover{border-color:var(--acc);box-shadow:0 12px 28px rgba(12,14,18,.1);}
 .nav .menu.cards .why-cred img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;}
