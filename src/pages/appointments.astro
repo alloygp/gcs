@@ -47,6 +47,9 @@ const STYLE = `/* booking/contact page specifics */
 .bkform .reassure b{color:var(--navy);font-weight:700;}
 .bkform .note{text-align:center;font-size:12px;color:var(--steel-400);padding:0 28px 22px;}
 .dateline{font-size:11.5px;color:var(--steel-400);font-weight:500;}
+/* Force the Make <select> to the exact box of the text inputs (same height/width). */
+.bkform .sm-field input,.bkform .sm-field select{width:100%;box-sizing:border-box;height:52px;}
+.bkform .sm-field select{-webkit-appearance:none;appearance:none;background-color:#fff;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23647084' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;}
 /* success state */
 .bk-success{display:none;padding:48px 32px;text-align:center;}
 .bk-success.show{display:block;}
@@ -131,9 +134,9 @@ const CONTENT = `<!-- BREADCRUMB -->
             <div class="sm-form">
               <div class="sm-field"><label>Full name</label><input type="text" name="name" required placeholder="Jordan Becker"></div>
               <div class="sm-field"><label>Phone</label><input type="tel" name="phone" required placeholder="(210) 555-0123"></div>
+              <div class="sm-field full"><label>VIN <span class="dateline">— we'll pull your exact vehicle</span></label><input type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
               <div class="sm-field"><label>Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
               <div class="sm-field"><label>Model &amp; year</label><input type="text" name="model" placeholder="e.g. 2019 Q5"></div>
-              <div class="sm-field full"><label>VIN <span class="dateline">(optional — lets us pull your exact vehicle)</span></label><input type="text" name="vin" maxlength="17" autocapitalize="characters" placeholder="17-character VIN"></div>
               <div class="sm-field full"><label id="msgLabel">What does it need? <span class="dateline">— symptoms, service, or your question</span></label><input type="text" name="message" placeholder="e.g. oil service + check-engine light"></div>
               <div class="sm-field full" id="dateField"><label>Preferred date <span class="dateline">(optional)</span></label><input type="date" name="date"></div>
               <button class="btn btn-primary full" id="submitBtn"><i data-lucide="send"></i><span id="btnText">Request Appointment</span></button>
