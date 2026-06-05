@@ -141,6 +141,38 @@
     var note = document.getElementById('formNote');
     var defaultNote = note ? note.textContent : '';
 
+    // VIN lookup: decode a 17-char VIN via NHTSA (free, no key) and auto-fill
+    // Make + Model & year — same idea as Shopmonkey's embed VIN lookup.
+    var vinEl = form.querySelector('[name="vin"]');
+    var makeEl = document.getElementById('apptMake');
+    var modelEl = form.querySelector('[name="model"]');
+    var lastVin = '';
+    function decodeVin() {
+      if (!vinEl) return;
+      var vin = (vinEl.value || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      if (vin.length !== 17 || vin === lastVin) return;
+      lastVin = vin;
+      fetch('https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/' + vin + '?format=json')
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var v = d && d.Results && d.Results[0];
+          if (!v) return;
+          if (makeEl && v.Make) {
+            var mk = v.Make.toUpperCase(), matched = false, i;
+            for (i = 0; i < makeEl.options.length; i++) {
+              var opt = makeEl.options[i].text.toUpperCase();
+              if (opt.indexOf(mk) === 0 || mk.indexOf(opt) === 0) { makeEl.selectedIndex = i; matched = true; break; }
+            }
+            if (!matched) for (i = 0; i < makeEl.options.length; i++) {
+              if (/other/i.test(makeEl.options[i].text)) { makeEl.selectedIndex = i; break; }
+            }
+          }
+          if (modelEl && v.Model) modelEl.value = ((v.ModelYear || '') + ' ' + v.Model).trim();
+        })
+        .catch(function () {});
+    }
+    if (vinEl) { vinEl.addEventListener('input', decodeVin); vinEl.addEventListener('change', decodeVin); }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;

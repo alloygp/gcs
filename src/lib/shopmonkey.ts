@@ -1,8 +1,10 @@
 // src/lib/shopmonkey.ts
 //
 // Thin client for the Shopmonkey REST API v3.
-// Used by src/pages/api/appointments.ts to push website appointment
-// requests into the shop's Shopmonkey account (customer + appointment).
+// Used by src/pages/api/appointment.ts to push website leads into Shopmonkey:
+// it creates a customer + vehicle, then an ORDER dropped into the first
+// Workflow board column ("Customer Pool & Appointments") — NOT a calendar
+// appointment. The shop works the lead down the board.
 //
 // Auth is an OAuth bearer token (an API key created in Shopmonkey under
 // Settings → Integration → API Keys). It lives ONLY in server-side env vars —
@@ -16,48 +18,37 @@ const API_BASE =
   import.meta.env.SHOPMONKEY_API_BASE?.toString().trim() ||
   'https://api.shopmonkey.cloud/v3';
 
-const API_KEY      = import.meta.env.SHOPMONKEY_API_KEY?.toString().trim() ?? '';
+const API_KEY = import.meta.env.SHOPMONKEY_API_KEY?.toString().trim() ?? '';
 // companyId/locationId are derived from the API key — not required in bodies.
 // LOCATION_ID is sent only when set (matters for HQ/multi-location keys).
-const LOCATION_ID  = import.meta.env.SHOPMONKEY_LOCATION_ID?.toString().trim() ?? '';
+const LOCATION_ID = import.meta.env.SHOPMONKEY_LOCATION_ID?.toString().trim() ?? '';
 
-// How long (minutes) to block out for a website request. The shop adjusts the
-// real duration when they confirm; this is just a placeholder slot.
-const DEFAULT_DURATION_MIN = Number(
-  import.meta.env.SHOPMONKEY_DEFAULT_DURATION_MIN ?? 60
-);
+// The Workflow board column new leads land in. Defaults to this shop's
+// "Customer Pool & Appointments" column; override per account via env.
+const WORKFLOW_STATUS_ID =
+  import.meta.env.SHOPMONKEY_WORKFLOW_STATUS_ID?.toString().trim() ||
+  '64305ec142c03dbb1d5a974e';
 
-// UTC offset for the shop's local time, e.g. "-07:00". The form collects a
-// wall-clock date + time; we stamp it with this offset to build a correct ISO
-// instant. Leave blank to treat the input as UTC. Either way the human-readable
-// requested time is ALSO written into the appointment note + the shop email,
-// so the shop always sees the intended slot even if the offset is wrong.
-const TZ_OFFSET = import.meta.env.SHOPMONKEY_TZ_OFFSET?.toString().trim() ?? '';
-
-// Only the API key is strictly required — the key scopes company + location
-// automatically (verified against the live v3 API). LOCATION_ID is sent only
-// when set, which matters for multi-location/HQ keys.
+// Only the API key is strictly required — the key scopes company + location.
 export const shopmonkeyConfigured = Boolean(API_KEY);
 
-export interface AppointmentRequest {
+export interface LeadRequest {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  /** Service the customer is requesting, e.g. "Oil change". Becomes the appt name. */
+  /** Short title for the order, e.g. "Book a service — Audi A6: Tires". */
   service: string;
-  /** Free-text vehicle description for the note/title, e.g. "2018 BMW 330i". */
+  /** Free-text vehicle description for the order complaint, e.g. "2019 Audi A6". */
   vehicle: string;
   /** Structured vehicle fields used to create a linked Shopmonkey Vehicle. */
   make?: string;
   model?: string;
   year?: number | undefined;
   vin?: string;
-  /** YYYY-MM-DD from the form's date input. */
-  preferredDate: string;
-  /** HH:MM (24h) from the form's time input. */
-  preferredTime: string;
-  /** Extra notes from the customer. */
+  /** YYYY-MM-DD from the form's date input (optional). */
+  preferredDate?: string;
+  /** Extra context (intent + the customer's message). */
   message: string;
 }
 
@@ -65,19 +56,9 @@ export interface ShopmonkeyResult {
   ok: boolean;
   customerId?: string | undefined;
   vehicleId?: string | undefined;
-  appointmentId?: string | undefined;
+  orderId?: string | undefined;
   /** Human-readable summary of what happened, for logs + the shop email. */
   detail: string;
-}
-
-/** Build an ISO 8601 instant from the form's wall-clock date + time. */
-function toIso(date: string, time: string): string {
-  // Default to Central (San Antonio) so the placeholder slot isn't 5h off when
-  // SHOPMONKEY_TZ_OFFSET isn't set. CDT = -05:00; off by 1h in winter (CST),
-  // which is fine — the shop reschedules, and the note carries the exact time.
-  const suffix = TZ_OFFSET || '-05:00';
-  // e.g. "2026-06-10T09:00:00-05:00"
-  return `${date}T${time}:00${suffix}`;
 }
 
 /**
@@ -119,34 +100,22 @@ async function smFetch(path: string, body: unknown): Promise<any> {
 }
 
 /**
- * Create a customer, then an appointment linked to that customer.
+ * Create a customer + vehicle, then an order on the Workflow board.
  * Returns a structured result; never throws — failures are reported in `detail`.
  */
-export async function createAppointmentRequest(
-  req: AppointmentRequest
-): Promise<ShopmonkeyResult> {
+export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
   if (!shopmonkeyConfigured) {
-    return {
-      ok: false,
-      detail:
-        'Shopmonkey not configured (missing SHOPMONKEY_API_KEY or SHOPMONKEY_LOCATION_ID).',
-    };
+    return { ok: false, detail: 'Shopmonkey not configured (missing SHOPMONKEY_API_KEY).' };
   }
 
-  const startDate = toIso(req.preferredDate, req.preferredTime);
-  const endDate = new Date(
-    new Date(startDate).getTime() + DEFAULT_DURATION_MIN * 60_000
-  ).toISOString();
-
-  const humanSlot = `${req.preferredDate} at ${req.preferredTime}`;
   const fullName = [req.firstName, req.lastName].filter(Boolean).join(' ');
   const contact = [req.email, req.phone].filter(Boolean).join(' · ');
+  const vehicleLine = [req.vehicle, req.vin ? `VIN ${req.vin}` : ''].filter(Boolean).join(' · ');
 
   // locationId is optional; only sent when configured (HQ/multi-location keys).
   const locationField = LOCATION_ID ? { locationId: LOCATION_ID } : {};
 
-  // Create the customer first so we can link it (and so we know if it failed
-  // before writing the note).
+  // 1. Customer
   let customerId: string | undefined;
   let customerError: string | undefined;
   try {
@@ -165,14 +134,11 @@ export async function createAppointmentRequest(
     });
     customerId = customer?.id;
   } catch (err) {
-    // Non-fatal: we still create the appointment with contact info in the note.
     customerError = err instanceof Error ? err.message : String(err);
     console.error('Shopmonkey customer create failed:', err);
   }
 
-  // Create the vehicle (linked to the customer) so the appointment's Vehicle
-  // field is populated. `size` is required. VIN doesn't auto-decode, so we also
-  // send make/model/year. Best-effort — failure just leaves the car in the note.
+  // 2. Vehicle (linked to the customer). `size` is required.
   let vehicleId: string | undefined;
   let vehicleError: string | undefined;
   if (req.vin || req.make || req.model) {
@@ -193,18 +159,14 @@ export async function createAppointmentRequest(
     }
   }
 
-  // Name + contact go in the note too, so the shop sees who it is even when the
-  // customer record can't be linked. If linking failed, record WHY in the note
-  // so it's diagnosable straight from the Shopmonkey appointment.
-  const vehicleLine = [req.vehicle, req.vin ? `VIN ${req.vin}` : '']
-    .filter(Boolean)
-    .join(' · ');
-  const note = [
-    'Website appointment request (unconfirmed — review and confirm in Shopmonkey).',
+  // 3. Order on the Workflow board. The complaint carries the lead detail
+  //    (orders have no calendar slot). Failures to link are recorded inline.
+  const complaint = [
+    'Website lead — created from the appointment form.',
     fullName ? `Name: ${fullName}` : '',
-    `Requested: ${humanSlot}`,
+    req.preferredDate ? `Requested date: ${req.preferredDate}` : '',
     vehicleLine ? `Vehicle: ${vehicleLine}` : '',
-    req.message ? `Notes: ${req.message}` : '',
+    req.message ? req.message : '',
     contact ? `Contact: ${contact}` : '',
     customerId ? '' : `(Customer not auto-linked${customerError ? ` — ${customerError}` : ''})`,
     (req.vin || req.make || req.model) && !vehicleId
@@ -215,45 +177,38 @@ export async function createAppointmentRequest(
     .join('\n');
 
   try {
-    const appointment = await smFetch('/appointment', {
+    const order = await smFetch('/order', {
       ...locationField,
-      name: req.service || 'Website appointment request',
-      startDate,
-      endDate,
+      workflowStatusId: WORKFLOW_STATUS_ID,
+      name: req.service || 'Website lead',
+      complaint,
       ...(customerId ? { customerId } : {}),
       ...(vehicleId ? { vehicleId } : {}),
-      note,
-      color: 'blue',
-      // Do NOT auto-message the customer or auto-confirm — the shop owns that.
-      sendConfirmation: false,
-      sendReminder: false,
-      useEmail: false,
-      useSMS: false,
     });
 
-    // Human-readable summary for the shop email (raw IDs stay in the returned
-    // object for logging, not in this text).
     const okBits: string[] = [];
     const failBits: string[] = [];
     if (customerId) okBits.push('customer'); else failBits.push('customer');
     if (vehicleId) okBits.push('vehicle');
     else if (req.vin || req.make || req.model) failBits.push('vehicle');
     let linked = okBits.length ? `${okBits.join(' + ')} linked` : '';
-    if (failBits.length) linked += `${linked ? '; ' : ''}${failBits.join(' + ')} not auto-linked (see note above)`;
+    if (failBits.length) linked += `${linked ? '; ' : ''}${failBits.join(' + ')} not auto-linked (see complaint)`;
+
     return {
       ok: true,
       customerId,
       vehicleId,
-      appointmentId: appointment?.id,
-      detail: `Added to the scheduler as an unconfirmed appointment for ${humanSlot}${linked ? ` — ${linked}` : ''}. Confirm the time in Shopmonkey.`,
+      orderId: order?.id,
+      detail: `Added to the Workflow board (Customer Pool & Appointments)${linked ? ` — ${linked}` : ''}.`,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error('Shopmonkey appointment create failed:', err);
+    console.error('Shopmonkey order create failed:', err);
     return {
       ok: false,
       customerId,
-      detail: `Shopmonkey appointment create failed: ${message}`,
+      vehicleId,
+      detail: `Shopmonkey order create failed: ${message}`,
     };
   }
 }
