@@ -110,7 +110,7 @@ const CONTENT = `<!-- BREADCRUMB -->
       </ul>
       <div class="alt-call">
         <a class="ph" href="tel:+12103991172"><i data-lucide="phone"></i>(210) 399-1172</a>
-        <div><small>Rather talk it through?</small><small style="color:rgba(255,255,255,.8)">Call or text us, Mon–Fri 8–5:30</small></div>
+        <div><small>Rather talk it through?</small><small style="color:rgba(255,255,255,.8)">Call or text us, Mon–Thu 7:30a–5:30p · Fri til 5p</small></div>
       </div>
     </div>
     <div class="hero-vis">
@@ -184,7 +184,7 @@ const CONTENT = `<!-- BREADCRUMB -->
         <div class="ci"><i data-lucide="phone"></i></div>
         <h3>Call or text</h3>
         <span class="big">(210) 399-1172</span>
-        <p>Talk to the people who'll actually work on your car. Mon–Fri, 8:00a–5:30p.</p>
+        <p>Talk to the people who'll actually work on your car. Mon–Thu 7:30a–5:30p · Fri 7:30a–5:00p.</p>
         <a class="go" href="tel:+12103991172">Call now <i data-lucide="arrow-right"></i></a>
       </div>
       <div class="cc reveal">
@@ -206,11 +206,11 @@ const CONTENT = `<!-- BREADCRUMB -->
       <iframe class="map" src="https://www.google.com/maps?q=15555+Tradesman+Dr+Ste+500,+San+Antonio,+TX+78249&z=12&output=embed" title="German Car Specialists location" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       <div class="hours">
         <h3>Hours</h3>
-        <div class="hr"><span>Monday</span><b>8:00a – 5:30p</b></div>
-        <div class="hr"><span>Tuesday</span><b>8:00a – 5:30p</b></div>
-        <div class="hr"><span>Wednesday</span><b>8:00a – 5:30p</b></div>
-        <div class="hr"><span>Thursday</span><b>8:00a – 5:30p</b></div>
-        <div class="hr"><span>Friday</span><b>8:00a – 5:30p</b></div>
+        <div class="hr"><span>Monday</span><b>7:30a – 5:30p</b></div>
+        <div class="hr"><span>Tuesday</span><b>7:30a – 5:30p</b></div>
+        <div class="hr"><span>Wednesday</span><b>7:30a – 5:30p</b></div>
+        <div class="hr"><span>Thursday</span><b>7:30a – 5:30p</b></div>
+        <div class="hr"><span>Friday</span><b>7:30a – 5:00p</b></div>
         <div class="hr closed"><span>Saturday</span><b>Closed</b></div>
         <div class="hr closed"><span>Sunday</span><b>Closed</b></div>
         <div class="addr"><i data-lucide="map-pin"></i><span>15555 Tradesman Dr, Ste 500<br>San Antonio, TX 78249</span></div>
@@ -233,7 +233,7 @@ const JSONLD = `<script type="application/ld+json">
       "address":{"@type":"PostalAddress","streetAddress":"15555 Tradesman Dr, Ste 500","addressLocality":"San Antonio","addressRegion":"TX","postalCode":"78249","addressCountry":"US"},
       "geo":{"@type":"GeoCoordinates","latitude":29.5712,"longitude":-98.6097},
       "areaServed":{"@type":"City","name":"San Antonio"},
-      "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:30"}],
+      "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday"],"opens":"07:30","closes":"17:30"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Friday"],"opens":"07:30","closes":"17:00"}],
       "makesOffered":["Audi","BMW","Mercedes-Benz","Porsche"],
       "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325","bestRating":"5"},
       "potentialAction":{
