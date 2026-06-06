@@ -11,10 +11,14 @@ export interface Props {
 }
 const { title, description, canonical, screenLabel = '', blog = false, defaultMake } = Astro.props;
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
-// Only the production build (PUBLIC_ENV=production on the Vercel prod project) is
-// indexable. Every other deployment (staging, preview, local) emits noindex but stays
+// A page is indexable ONLY when it's the production build AND the real domain is live.
+// PUBLIC_ENV=production stays set on prod for app behavior (GA, etc.); indexability is
+// gated separately by PUBLIC_SITE_LIVE so prod can run noindexed until the domain is pointed.
+// → Launch day: add PUBLIC_SITE_LIVE=true to the Vercel production project and redeploy.
+// Everything else (staging, preview, local, pre-launch prod) emits noindex but stays
 // crawlable (no nofollow) so QA/audit tools can follow links normally.
 const isProduction = import.meta.env.PUBLIC_ENV === 'production';
+const indexable = isProduction && import.meta.env.PUBLIC_SITE_LIVE === 'true';
 const ogImage = new URL('/assets/og.png', Astro.site).href;
 // GA4: set PUBLIC_GA_MEASUREMENT_ID (G-XXXXXXXXXX) in Vercel prod env. Only loads in production.
 const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
@@ -24,7 +28,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  {!isProduction && <meta name="robots" content="noindex" />}
+  {!indexable && <meta name="robots" content="noindex" />}
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalURL} />
