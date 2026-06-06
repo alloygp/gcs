@@ -67,6 +67,30 @@
     update();
   })();
 
+  // Hero review carousel — rotate between Google reviews with arrows + dots. Guarded.
+  (function () {
+    var track = document.getElementById('hfmTrack');
+    if (!track) return;
+    var slides = track.children.length, i = 0, timer;
+    var dotsWrap = document.getElementById('hfmDots');
+    for (var d = 0; d < slides; d++) {
+      var b = document.createElement('button');
+      b.className = 'hfm-dot' + (d === 0 ? ' on' : ''); b.type = 'button';
+      b.setAttribute('aria-label', 'Review ' + (d + 1));
+      (function (n) { b.onclick = function () { go(n); reset(); }; })(d);
+      dotsWrap.appendChild(b);
+    }
+    var dots = dotsWrap.children;
+    function go(n) { i = (n + slides) % slides; track.style.transform = 'translateX(' + (-i * 100) + '%)'; for (var k = 0; k < dots.length; k++) dots[k].classList.toggle('on', k === i); }
+    function reset() { clearInterval(timer); timer = setInterval(function () { go(i + 1); }, 6000); }
+    var prev = document.getElementById('hfmPrev'), next = document.getElementById('hfmNext');
+    if (prev) prev.onclick = function () { go(i - 1); reset(); };
+    if (next) next.onclick = function () { go(i + 1); reset(); };
+    var car = track.closest('.hfm-rev-carousel');
+    if (car) { car.addEventListener('mouseenter', function () { clearInterval(timer); }); car.addEventListener('mouseleave', reset); }
+    reset();
+  })();
+
   // Shop Notes category filter. Guarded: no-op without the chip bar.
   (function () {
     var chips = document.getElementById('catChips');
