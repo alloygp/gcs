@@ -1,0 +1,79 @@
+/* ==========================================================================
+   mobile.css — responsive overrides for phones/tablets.
+   Loaded LAST in BaseLayout (after make-page.css AND each page's inline
+   <style>), so equal-specificity rules here win. Put mobile behavior here
+   instead of hunting duplicated chrome rules across pages.
+   ========================================================================== */
+
+/* ---------- Tablet / small-laptop (≤860) ---------- */
+@media (max-width:860px){
+  /* Homepage hero: collapse to one column and let grid tracks shrink.
+     Without min-width:0 the grid items keep their content's min-width and
+     overflow the viewport (headline + lead were getting clipped). */
+  .hero-fb-grid{grid-template-columns:1fr;min-width:0;}
+  .hero-fb-copy,.hero-fb-mosaic{min-width:0;max-width:100%;}
+  .hero-fb-mosaic{justify-self:stretch;}
+}
+
+/* Appointments hero collapses to one column at ≤920 (page inline style);
+   match that breakpoint so the form sits ABOVE the copy the moment it stacks. */
+@media (max-width:920px){
+  .hero.bk .container{display:flex;flex-direction:column;}
+  .hero.bk .hero-vis{order:-1;}
+  .hero.bk .hero-copy{order:0;}
+}
+
+/* ---------- Phone (≤600) ---------- */
+@media (max-width:600px){
+
+  /* Tighter page gutters so content isn't pinched by 28px rails. */
+  .container{padding-left:18px;padding-right:18px;}
+
+  /* ---- Top utility bar ----
+     The address is long and collides with the rating on narrow screens.
+     Drop it (it lives in the header drawer + footer) and center the rating
+     as compact social proof. */
+  .topbar .container{justify-content:center;height:34px;gap:0;}
+  .topbar .tl{display:none;}
+  .topbar .tr{font-size:12px;}
+
+  /* ---- Header ---- shrink height, logo, gaps; compact the CTA so the
+     logo + Book button + burger sit on one clean row instead of smashing. */
+  .hdr .container{height:60px;gap:10px;}
+  .brand img{height:30px;}
+  .hdr-r{gap:8px;}
+  .hdr-r .btn{padding:10px 13px;font-size:11px;gap:6px;letter-spacing:.04em;}
+  .hdr-r .btn svg{width:15px;height:15px;}
+  .burger{width:42px;height:42px;}
+
+  /* ---- Car-picker bar ---- keep the label on its own line, then let the
+     make chips scroll horizontally in a single tidy row (no 3-row stack). */
+  .carbar .container{gap:10px;padding:10px 18px;}
+  .carbar .cb-label{width:100%;}
+  /* Bleed the scroll row to the screen edges but keep an 18px gutter at the
+     start/end so the first and last chip aren't jammed against the edge. */
+  .carbar .cb-chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;width:auto;margin:0 -18px;padding:2px 18px;}
+  .carbar .cb-chips::-webkit-scrollbar{display:none;}
+  .carbar .cb-chip{flex:none;}
+
+  /* ---- Homepage hero ---- scale type down and reclaim vertical space. */
+  .hero-fb-grid{padding-left:18px;padding-right:18px;
+    padding-top:78px;padding-bottom:52px;gap:26px;}
+  .hero-fb-h1{font-size:clamp(30px,8.4vw,40px);margin:14px 0 16px;}
+  .hero-fb-lead{font-size:15.5px;max-width:100%;margin-bottom:22px;}
+  .hero-fb-pills{gap:8px;margin-top:20px;}
+  .hfp{font-size:12.5px;padding:8px 13px 8px 11px;}
+
+  /* ---- Appointments hero/form ---- sit the form near the top and pad the
+     card body a little tighter. */
+  .hero.bk{padding-top:24px;}
+  .hero.bk .display{font-size:clamp(28px,8vw,38px);}
+  .bkform .fb{padding:22px 20px;}
+  .bkform .fh{padding:18px 20px;}
+  .bkform .note{padding:0 20px 20px;}
+  .intent{gap:6px;}
+  .intent label{padding:11px 5px;}
+  .intent label span{font-size:11.5px;}
+  .intent label small{display:none;}
+}
