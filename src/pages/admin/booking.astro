@@ -11,7 +11,9 @@ export const prerender = true; // static shell; all values load/save via the API
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Booking settings — German Car Specialists</title>
-  <style>
+  <!-- global (not scoped): the chips + picker are injected by JS at runtime, so
+       scoped selectors wouldn't match them. Safe here — this page is standalone. -->
+  <style is:global>
     :root{--navy:#16233b;--acc:#af0d19;--fog:#e3e7ee;--steel:#647084;--mist:#f4f6fa;}
     *{box-sizing:border-box;}
     body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--mist);color:var(--navy);min-height:100vh;display:grid;place-items:center;padding:24px;}
@@ -28,13 +30,15 @@ export const prerender = true; // static shell; all values load/save via the API
     button{width:100%;height:50px;border:none;border-radius:10px;background:var(--acc);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
     button:hover{filter:brightness(.94);}
     button:disabled{opacity:.6;cursor:default;}
-    .btn-add{height:42px;background:#fff;color:var(--navy);border:1.5px solid var(--fog);font-size:14px;margin-top:8px;}
+    .bo-row{display:flex;gap:8px;align-items:flex-start;margin-top:2px;}
+    .bo-row .dp-mount{flex:1;margin-top:0;}
+    .btn-add{flex:none;width:auto;height:52px;padding:0 18px;background:#fff;color:var(--navy);border:1.5px solid var(--fog);font-size:14px;margin-top:0;}
     .btn-add:hover{border-color:var(--acc);color:var(--acc);filter:none;}
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px;}
-    .chip{display:inline-flex;align-items:center;gap:8px;background:var(--mist);border:1px solid var(--fog);border-radius:999px;padding:6px 8px 6px 13px;font-size:13px;font-weight:600;}
-    .chip button{width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--fog);color:var(--steel);font-size:13px;line-height:1;display:grid;place-items:center;padding:0;margin:0;}
-    .chip button:hover{background:var(--acc);color:#fff;border-color:var(--acc);filter:none;}
-    .empty-note{font-size:13px;color:var(--steel);margin:12px 0 2px;}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 12px;}
+    .chip{display:inline-flex;align-items:center;gap:7px;background:#f0f2f6;border:1px solid #e2e6ee;border-radius:9px;padding:7px 8px 7px 13px;font-size:13px;font-weight:600;color:var(--navy);}
+    .chip button{width:18px;height:18px;border-radius:5px;background:transparent;border:none;color:var(--steel);font-size:15px;line-height:1;display:grid;place-items:center;padding:0;margin:0;}
+    .chip button:hover{background:var(--acc);color:#fff;filter:none;}
+    .empty-note{font-size:13px;color:var(--steel);margin:12px 0;}
     .rule{border:none;border-top:1px solid var(--fog);margin:24px 0;}
     .msg{margin-top:16px;font-size:14px;line-height:1.5;min-height:1.2em;}
     .msg.ok{color:#127a2e;}
@@ -57,8 +61,10 @@ export const prerender = true; // static shell; all values load/save via the API
         <span class="hint">Holidays or days off — customers can’t book these.</span>
       </label>
       <div class="chips" id="boChips"></div>
-      <div id="boPicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
-      <button type="button" class="btn-add" id="boAdd">+ Add closed date</button>
+      <div class="bo-row">
+        <div id="boPicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
+        <button type="button" class="btn-add" id="boAdd">Add</button>
+      </div>
 
       <hr class="rule" />
 
@@ -83,6 +89,11 @@ export const prerender = true; // static shell; all values load/save via the API
         if (!iso) return '—';
         var p = iso.split('-');
         return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      // Compact form for chips (no weekday) so the tags stay tidy.
+      function fmtShort(iso) {
+        var p = iso.split('-');
+        return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
 
       var capDate = new Date(new Date().getFullYear() + 2, 0, 1);
@@ -110,7 +121,7 @@ export const prerender = true; // static shell; all values load/save via the API
       function renderChips() {
         if (!bo.length) { boChips.innerHTML = '<div class="empty-note">No closed dates yet.</div>'; return; }
         boChips.innerHTML = bo.map(function (d) {
-          return '<span class="chip">' + fmt(d) + '<button type="button" data-rm="' + d + '" aria-label="Remove">&times;</button></span>';
+          return '<span class="chip">' + fmtShort(d) + '<button type="button" data-rm="' + d + '" aria-label="Remove">&times;</button></span>';
         }).join('');
       }
       boChips.addEventListener('click', function (e) {
