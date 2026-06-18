@@ -14,7 +14,10 @@ export default defineConfig({
 
   integrations: [
     react(),
-    sitemap(), // auto-generates /sitemap-index.xml on every build — no manual sitemap.xml needed
+    sitemap({
+      // auto-generates /sitemap-index.xml on every build — no manual sitemap.xml needed.
+      filter: (page) => !page.includes('/admin'), // keep the unlisted shop settings page out of the sitemap
+    }),
   ],
 
   prefetch: { prefetchAll: true },

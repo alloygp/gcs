@@ -1,0 +1,170 @@
+---
+// Unlisted, password-protected settings page so the shop can change online-booking
+// availability themselves — no developer, no deploy. Standalone (no site nav/footer)
+// and noindex; data flows through /api/admin/booking.
+export const prerender = true; // static shell; all values load/save via the API
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Booking settings — German Car Specialists</title>
+  <style>
+    :root{--navy:#16233b;--acc:#af0d19;--fog:#e3e7ee;--steel:#647084;--mist:#f4f6fa;}
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--mist);color:var(--navy);min-height:100vh;display:grid;place-items:center;padding:24px;}
+    .card{background:#fff;border:1px solid var(--fog);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.12);padding:30px;width:100%;max-width:440px;}
+    h1{font-size:21px;margin:0 0 6px;}
+    .sub{font-size:14px;color:var(--steel);line-height:1.5;margin:0 0 20px;}
+    .cur{font-size:14px;background:var(--mist);border-radius:10px;padding:12px 14px;margin-bottom:20px;}
+    .cur strong{font-weight:700;}
+    label{display:block;font-size:13px;font-weight:700;margin-bottom:14px;}
+    .hint{display:block;font-weight:500;color:var(--steel);font-size:12px;margin-top:2px;}
+    input{display:block;width:100%;margin-top:6px;height:48px;border:1.5px solid var(--fog);border-radius:10px;padding:0 14px;font-size:15px;font-family:inherit;color:var(--navy);}
+    .dp-mount{margin-top:6px;} /* match the gap under a label's input */
+    input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(175,13,25,.1);}
+    button{width:100%;height:50px;border:none;border-radius:10px;background:var(--acc);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
+    button:hover{filter:brightness(.94);}
+    button:disabled{opacity:.6;cursor:default;}
+    .btn-add{height:42px;background:#fff;color:var(--navy);border:1.5px solid var(--fog);font-size:14px;margin-top:8px;}
+    .btn-add:hover{border-color:var(--acc);color:var(--acc);filter:none;}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px;}
+    .chip{display:inline-flex;align-items:center;gap:8px;background:var(--mist);border:1px solid var(--fog);border-radius:999px;padding:6px 8px 6px 13px;font-size:13px;font-weight:600;}
+    .chip button{width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--fog);color:var(--steel);font-size:13px;line-height:1;display:grid;place-items:center;padding:0;margin:0;}
+    .chip button:hover{background:var(--acc);color:#fff;border-color:var(--acc);filter:none;}
+    .empty-note{font-size:13px;color:var(--steel);margin:12px 0 2px;}
+    .rule{border:none;border-top:1px solid var(--fog);margin:24px 0;}
+    .msg{margin-top:16px;font-size:14px;line-height:1.5;min-height:1.2em;}
+    .msg.ok{color:#127a2e;}
+    .msg.err{color:var(--acc);}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Booking settings</h1>
+    <p class="sub">Control when customers can request a drop-off. Anything you block here — past dates, dates before you open, and closed dates — won’t be selectable on the website.</p>
+    <div class="cur">Currently open from: <strong id="cur">…</strong></div>
+    <form id="f">
+      <label>Earliest booking date
+        <div id="datePicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
+      </label>
+
+      <hr class="rule" />
+
+      <label>Closed dates
+        <span class="hint">Holidays or days off — customers can’t book these.</span>
+      </label>
+      <div class="chips" id="boChips"></div>
+      <div id="boPicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
+      <button type="button" class="btn-add" id="boAdd">+ Add closed date</button>
+
+      <hr class="rule" />
+
+      <label>Password
+        <input type="password" name="password" required autocomplete="current-password" placeholder="Shop password">
+      </label>
+      <button type="submit" id="save">Save changes</button>
+    </form>
+    <div class="msg" id="msg"></div>
+  </main>
+  <script is:inline src="/date-picker.js"></script>
+  <script is:inline>
+    (function () {
+      var cur = document.getElementById('cur');
+      var f = document.getElementById('f');
+      var msg = document.getElementById('msg');
+      var save = document.getElementById('save');
+      var boChips = document.getElementById('boChips');
+      var boAdd = document.getElementById('boAdd');
+
+      function fmt(iso) {
+        if (!iso) return '—';
+        var p = iso.split('-');
+        return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      var capDate = new Date(new Date().getFullYear() + 2, 0, 1);
+
+      // Earliest-booking calendar. Floor = today (no past dates); pick any future date.
+      var dp = window.initDatePicker({
+        mount: document.getElementById('datePicker'),
+        name: 'date',
+        placeholder: 'Pick a date',
+        allowClear: false,
+        cap: capDate,
+      });
+
+      // Closed-dates calendar (just used to pick a date to add to the list).
+      var boPicker = window.initDatePicker({
+        mount: document.getElementById('boPicker'),
+        name: '_bo',
+        placeholder: 'Pick a date to close',
+        allowClear: false,
+        cap: capDate,
+      });
+
+      // Working list of blackout dates (YYYY-MM-DD), kept sorted + de-duped.
+      var bo = [];
+      function renderChips() {
+        if (!bo.length) { boChips.innerHTML = '<div class="empty-note">No closed dates yet.</div>'; return; }
+        boChips.innerHTML = bo.map(function (d) {
+          return '<span class="chip">' + fmt(d) + '<button type="button" data-rm="' + d + '" aria-label="Remove">&times;</button></span>';
+        }).join('');
+      }
+      boChips.addEventListener('click', function (e) {
+        var rm = e.target.closest('[data-rm]');
+        if (!rm) return;
+        var v = rm.getAttribute('data-rm');
+        bo = bo.filter(function (d) { return d !== v; });
+        renderChips();
+      });
+      boAdd.addEventListener('click', function () {
+        var v = boPicker.getValue();
+        if (!v) { msg.textContent = 'Pick a date to add first.'; msg.className = 'msg err'; return; }
+        if (bo.indexOf(v) === -1) { bo.push(v); bo.sort(); renderChips(); }
+        msg.textContent = ''; msg.className = 'msg';
+      });
+
+      fetch('/api/admin/booking')
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          cur.textContent = fmt(j.floor);
+          if (j.floor) dp.setValue(j.floor);
+          bo = Array.isArray(j.blackout) ? j.blackout.slice() : [];
+          renderChips();
+        })
+        .catch(function () { cur.textContent = '(couldn’t load)'; renderChips(); });
+
+      f.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!dp.getValue()) { msg.textContent = 'Please pick an earliest booking date.'; msg.className = 'msg err'; return; }
+        save.disabled = true;
+        msg.textContent = 'Saving…'; msg.className = 'msg';
+        var body = new FormData();
+        body.set('password', f.password.value);
+        body.set('date', dp.getValue());
+        body.set('blackout', JSON.stringify(bo));
+        fetch('/api/admin/booking', { method: 'POST', body: body })
+          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+          .then(function (r) {
+            save.disabled = false;
+            if (r.ok && r.j.success) {
+              cur.textContent = fmt(r.j.floor);
+              bo = Array.isArray(r.j.blackout) ? r.j.blackout.slice() : [];
+              renderChips();
+              var n = bo.length;
+              msg.textContent = 'Saved — open from ' + fmt(r.j.floor) + (n ? ', ' + n + ' closed date' + (n > 1 ? 's' : '') : '') + '. The website updates within a minute.';
+              msg.className = 'msg ok';
+              f.password.value = '';
+            } else {
+              throw new Error((r.j && r.j.error) || 'Something went wrong.');
+            }
+          })
+          .catch(function (err) { save.disabled = false; msg.textContent = err.message; msg.className = 'msg err'; });
+      });
+    })();
+  </script>
+</body>
+</html>
