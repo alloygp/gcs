@@ -9,6 +9,10 @@
    is redundant there — hide it on every viewport. */
 [data-screen-label="Book Appointment"] .hdr-r{display:none;}
 
+/* Drawer CTA: the generic `.drawer a{color:navy}` rule was darkening the red
+   Book/Contact button's text — keep it white. */
+.drawer .btn-primary{color:#fff;}
+
 /* ---------- Tablet / small-laptop (≤860) ---------- */
 @media (max-width:860px){
   /* Homepage hero: collapse to one column and let grid tracks shrink.
