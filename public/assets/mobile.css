@@ -5,6 +5,10 @@
    instead of hunting duplicated chrome rules across pages.
    ========================================================================== */
 
+/* The appointments page IS the booking form, so the header's Book/Contact CTA
+   is redundant there — hide it on every viewport. */
+[data-screen-label="Book Appointment"] .hdr-r{display:none;}
+
 /* ---------- Tablet / small-laptop (≤860) ---------- */
 @media (max-width:860px){
   /* Homepage hero: collapse to one column and let grid tracks shrink.
@@ -48,6 +52,13 @@
   .hdr-r .hdr-phone{display:none;}
   .hdr-r .btn{width:100%;justify-content:center;padding:14px 18px;font-size:13px;letter-spacing:.06em;}
   .hdr-r .btn svg{width:17px;height:17px;}
+
+  /* ---- Mobile drawer ---- smaller links + tighter spacing so every nav
+     item + the CTA fit on one screen without scrolling. */
+  .drawer{padding:20px;}
+  .drawer .dh{margin-bottom:16px;}
+  .drawer a{font-size:18px;padding:11px 0;}
+  .drawer .btn{margin-top:14px;}
 
   /* ---- Car-picker bar ---- keep the label on its own line, then let the
      make chips scroll horizontally in a single tidy row (no 3-row stack). */
