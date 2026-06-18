@@ -23,8 +23,9 @@
    match that breakpoint so the form sits ABOVE the copy the moment it stacks. */
 @media (max-width:920px){
   .hero.bk .container{display:flex;flex-direction:column;}
-  .hero.bk .hero-vis{order:-1;}
-  .hero.bk .hero-copy{order:0;}
+  .hero.bk .bk-head{order:0;}      /* eyebrow + headline on top */
+  .hero.bk .hero-vis{order:1;}     /* then the form */
+  .hero.bk .bk-aside{order:2;margin-top:28px;}  /* lead + bullets + phone below */
 }
 
 /* ---------- Phone (≤600) ---------- */
@@ -81,8 +82,10 @@
 
   /* ---- Appointments hero/form ---- sit the form near the top and pad the
      card body a little tighter. */
-  .hero.bk{padding-top:24px;}
-  .hero.bk .display{font-size:clamp(28px,8vw,38px);}
+  /* Keep the eyebrow + headline compact so the form stays in view below them. */
+  .hero.bk{padding-top:16px;}
+  .hero.bk .bk-head{margin-bottom:6px;}
+  .hero.bk .display{font-size:clamp(24px,6.6vw,32px);margin:8px 0 0;}
   .bkform .fb{padding:22px 20px;}
   .bkform .fh{padding:18px 20px;}
   .bkform .note{padding:0 20px 20px;}
