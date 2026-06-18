@@ -10,6 +10,11 @@ export interface Props {
   defaultMake?: string;   // pre-highlight a make in the picker bar (brand pages)
 }
 const { title, description, canonical, screenLabel = '', blog = false, defaultMake } = Astro.props;
+// Cache-buster for the static /assets CSS files. These live in public/ (not
+// hashed by Astro), and Vercel caches /assets immutably. Bump this when a CSS
+// change must reach already-cached browsers. Going forward the must-revalidate
+// header on *.css (vercel.json) keeps them fresh without bumping.
+const CSS_V = '2';
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // A page is indexable ONLY when it's the production build AND the real domain is live.
 // PUBLIC_ENV=production stays set on prod for app behavior (GA, etc.); indexability is
@@ -51,13 +56,13 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
       <script is:inline define:vars={{ GA_ID }}>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',GA_ID);</script>
     </Fragment>
   )}
-  <link rel="stylesheet" href="/assets/base.css" />
-  <link rel="stylesheet" href="/assets/make-page.css" />
-  {blog && <link rel="stylesheet" href="/assets/blog.css" />}
+  <link rel="stylesheet" href={`/assets/base.css?v=${CSS_V}`} />
+  <link rel="stylesheet" href={`/assets/make-page.css?v=${CSS_V}`} />
+  {blog && <link rel="stylesheet" href={`/assets/blog.css?v=${CSS_V}`} />}
   <script is:inline src="https://unpkg.com/lucide@latest"></script>
   <slot name="head" />
   <!-- Loaded LAST so its @media rules override make-page.css + per-page inline styles. -->
-  <link rel="stylesheet" href="/assets/mobile.css" />
+  <link rel="stylesheet" href={`/assets/mobile.css?v=${CSS_V}`} />
 </head>
 <body>
 <div class="wrap" data-screen-label={screenLabel}>
