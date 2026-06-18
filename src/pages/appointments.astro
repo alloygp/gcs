@@ -24,7 +24,10 @@ const STYLE = `/* booking/contact page specifics */
 .hero.bk .alt-call small{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);display:block;}
 
 /* unified form card */
-.bkform{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.4);color:var(--navy);}
+.bkform{background:#fff;border-radius:16px;box-shadow:0 40px 90px rgba(0,0,0,.4);color:var(--navy);}
+/* round only the header's top corners (was handled by the card's overflow:hidden,
+   removed so the date-picker popover can extend past the card edge). */
+.bkform .fh{border-radius:16px 16px 0 0;}
 .bkform .fh{padding:22px 28px;border-bottom:1px solid var(--fog);display:flex;align-items:center;gap:12px;}
 .bkform .fh .sm{width:34px;height:34px;border-radius:9px;background:var(--acc);color:#fff;display:grid;place-items:center;}
 .bkform .fh .sm svg{width:18px;height:18px;}
@@ -58,6 +61,7 @@ const STYLE = `/* booking/contact page specifics */
 .dp-caret{width:16px;height:16px;color:var(--steel-400);flex:none;transition:transform .15s;}
 .dp-trigger[aria-expanded="true"] .dp-caret{transform:rotate(180deg);}
 .dp-pop{position:absolute;z-index:50;top:calc(100% + 6px);left:0;width:300px;max-width:calc(100vw - 56px);background:#fff;border:1px solid var(--fog);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.22);padding:14px;}
+.dp-pop.up{top:auto;bottom:calc(100% + 6px);}
 .dp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .dp-title{font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--navy);}
 .dp-nav{width:34px;height:34px;border-radius:8px;border:1px solid var(--fog);background:#fff;display:grid;place-items:center;cursor:pointer;color:var(--navy);padding:0;}

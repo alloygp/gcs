@@ -223,7 +223,17 @@
         pop.innerHTML = html;
       }
 
-      function open() { render(); pop.hidden = false; trigger.setAttribute('aria-expanded', 'true'); }
+      function open() {
+        render();
+        pop.classList.remove('up');
+        pop.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+        // Flip above the field if the calendar would run off the bottom of the viewport.
+        var rect = trigger.getBoundingClientRect();
+        if (rect.bottom + 6 + pop.offsetHeight > window.innerHeight && rect.top - 6 - pop.offsetHeight > 0) {
+          pop.classList.add('up');
+        }
+      }
       function close() { pop.hidden = true; trigger.setAttribute('aria-expanded', 'false'); }
 
       trigger.addEventListener('click', function () { if (pop.hidden) open(); else close(); });
