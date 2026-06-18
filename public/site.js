@@ -165,6 +165,17 @@
     var note = document.getElementById('formNote');
     var defaultNote = note ? note.textContent : '';
 
+    // Preferred-date floor: block past dates AND anything before bookings open (June 24, 2026).
+    // min = the later of today / June 24, so it stays correct after the 24th passes.
+    var dateInput = form.querySelector('[name="date"]');
+    if (dateInput) {
+      var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+      var d = new Date();
+      var todayISO = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+      var BOOKING_FLOOR = '2026-06-24';
+      dateInput.min = todayISO > BOOKING_FLOOR ? todayISO : BOOKING_FLOOR;
+    }
+
     // VIN lookup: decode a 17-char VIN via NHTSA (free, no key) and auto-fill
     // Make + Model & year — same idea as Shopmonkey's embed VIN lookup.
     var vinEl = form.querySelector('[name="vin"]');
