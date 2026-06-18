@@ -37,14 +37,17 @@
   .topbar .tl{display:none;}
   .topbar .tr{font-size:12px;}
 
-  /* ---- Header ---- shrink height, logo, gaps; compact the CTA so the
-     logo + Book button + burger sit on one clean row instead of smashing. */
-  .hdr .container{height:60px;gap:10px;}
-  .brand img{height:30px;}
-  .hdr-r{gap:8px;}
-  .hdr-r .btn{padding:10px 13px;font-size:11px;gap:6px;letter-spacing:.04em;}
-  .hdr-r .btn svg{width:15px;height:15px;}
-  .burger{width:42px;height:42px;}
+  /* ---- Header ---- two rows: logo + menu on top (logo gets full room, no
+     squish), full-width Book/Contact button below as a big tap target. */
+  .hdr .container{flex-wrap:wrap;height:auto;gap:12px;padding-top:11px;padding-bottom:11px;
+    align-items:center;justify-content:space-between;}
+  .brand{order:0;flex:0 0 auto;}
+  .brand img{height:34px;}
+  .burger{order:1;width:44px;height:44px;}
+  .hdr-r{order:2;width:100%;margin-left:0;gap:0;}
+  .hdr-r .hdr-phone{display:none;}
+  .hdr-r .btn{width:100%;justify-content:center;padding:14px 18px;font-size:13px;letter-spacing:.06em;}
+  .hdr-r .btn svg{width:17px;height:17px;}
 
   /* ---- Car-picker bar ---- keep the label on its own line, then let the
      make chips scroll horizontally in a single tidy row (no 3-row stack). */
