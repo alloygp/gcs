@@ -48,6 +48,8 @@ export interface LeadRequest {
   vin?: string;
   /** YYYY-MM-DD from the form's date input (optional). */
   preferredDate?: string;
+  /** Drop-off time window from the form's time select (optional). */
+  preferredTime?: string;
   /** Extra context (intent + the customer's message). */
   message: string;
 }
@@ -186,6 +188,7 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
     'Website lead — created from the appointment form.',
     fullName ? `Name: ${fullName}` : '',
     req.preferredDate ? `Requested date: ${req.preferredDate}` : '',
+    req.preferredTime ? `Requested time: ${req.preferredTime}` : '',
     vehicleLine ? `Vehicle: ${vehicleLine}` : '',
     req.message ? req.message : '',
     contact ? `Contact: ${contact}` : '',

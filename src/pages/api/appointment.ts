@@ -49,6 +49,7 @@ export const POST: APIRoute = async ({ request }) => {
     const vin     = data.get('vin')?.toString().trim().toUpperCase() ?? '';
     const message = data.get('message')?.toString().trim() ?? '';
     const date    = data.get('date')?.toString().trim()    ?? '';
+    const time    = data.get('time')?.toString().trim()    ?? '';
     const intentRaw = data.get('intent')?.toString().trim() ?? 'book';
 
     // Split a 4-digit year out of the combined "Model & year" field.
@@ -88,6 +89,7 @@ export const POST: APIRoute = async ({ request }) => {
         year,
         vin,
         preferredDate: date,
+        preferredTime: time,
         message: `Intent: ${intentLabel}${message ? `\n${message}` : ''}`,
       });
     }
@@ -116,7 +118,8 @@ export const POST: APIRoute = async ({ request }) => {
               <p><strong>Email:</strong> ${email}</p>
               <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
               ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
-              <p><strong>Preferred date:</strong> ${date || '— (none given)'}</p>
+              <p><strong>Preferred drop-off date:</strong> ${date || '— (none given)'}</p>
+              <p><strong>Preferred drop-off time:</strong> ${time || '— (no preference)'}</p>
               ${message ? `<p><strong>What it needs:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
               ${smLine}
             `,
