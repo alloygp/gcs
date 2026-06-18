@@ -165,16 +165,98 @@
     var note = document.getElementById('formNote');
     var defaultNote = note ? note.textContent : '';
 
-    // Preferred-date floor: block past dates AND anything before bookings open (June 24, 2026).
-    // min = the later of today / June 24, so it stays correct after the 24th passes.
-    var dateInput = form.querySelector('[name="date"]');
-    if (dateInput) {
+    // Custom drop-off date picker. Native <input type=date min> is only a hint in
+    // several browsers (Firefox desktop, some mobile pickers let you navigate/type
+    // earlier dates), so we render our own calendar and ONLY ever expose selectable
+    // days. Floor = the later of today / June 24, 2026 — disabled days can't be
+    // clicked or typed, so an invalid date can never reach the form.
+    (function () {
+      var trigger = document.getElementById('dpTrigger');
+      var pop = document.getElementById('dpPop');
+      var hidden = document.getElementById('dpValue');
+      var labelEl = document.getElementById('dpLabel');
+      if (!trigger || !pop || !hidden || !labelEl) return;
+
       var pad = function (n) { return (n < 10 ? '0' : '') + n; };
-      var d = new Date();
-      var todayISO = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-      var BOOKING_FLOOR = '2026-06-24';
-      dateInput.min = todayISO > BOOKING_FLOOR ? todayISO : BOOKING_FLOOR;
-    }
+      var iso = function (dt) { return dt.getFullYear() + '-' + pad(dt.getMonth() + 1) + '-' + pad(dt.getDate()); };
+
+      var now = new Date();
+      var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var OPEN = new Date(2026, 5, 24); // June 24, 2026 (month is 0-based)
+      var floor = today.getTime() > OPEN.getTime() ? today : OPEN;
+      var cap = new Date(floor.getFullYear() + 1, floor.getMonth(), floor.getDate()); // up to a year out
+      var viewY = floor.getFullYear(), viewM = floor.getMonth();
+      var selected = null;
+
+      var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var DOW = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+      var WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      var CHEV_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+      var CHEV_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+
+      function fmt(dt) { return WD[dt.getDay()] + ', ' + MONTHS[dt.getMonth()].slice(0, 3) + ' ' + dt.getDate() + ', ' + dt.getFullYear(); }
+
+      function render() {
+        var startDow = new Date(viewY, viewM, 1).getDay();
+        var daysIn = new Date(viewY, viewM + 1, 0).getDate();
+        var prevDisabled = viewY < floor.getFullYear() || (viewY === floor.getFullYear() && viewM <= floor.getMonth());
+        var nextDisabled = viewY > cap.getFullYear() || (viewY === cap.getFullYear() && viewM >= cap.getMonth());
+        var html = '<div class="dp-head">'
+          + '<button type="button" class="dp-nav" data-nav="-1"' + (prevDisabled ? ' disabled' : '') + ' aria-label="Previous month">' + CHEV_L + '</button>'
+          + '<span class="dp-title">' + MONTHS[viewM] + ' ' + viewY + '</span>'
+          + '<button type="button" class="dp-nav" data-nav="1"' + (nextDisabled ? ' disabled' : '') + ' aria-label="Next month">' + CHEV_R + '</button>'
+          + '</div><div class="dp-dow">';
+        var i;
+        for (i = 0; i < 7; i++) html += '<span>' + DOW[i] + '</span>';
+        html += '</div><div class="dp-grid">';
+        for (i = 0; i < startDow; i++) html += '<button type="button" class="dp-day empty" disabled tabindex="-1"></button>';
+        for (var day = 1; day <= daysIn; day++) {
+          var cur = new Date(viewY, viewM, day);
+          var dis = cur.getTime() < floor.getTime() || cur.getTime() > cap.getTime();
+          var cls = 'dp-day';
+          if (cur.getTime() === today.getTime()) cls += ' today';
+          if (selected && cur.getTime() === selected.getTime()) cls += ' sel';
+          html += '<button type="button" class="' + cls + '"' + (dis ? ' disabled' : ' data-day="' + iso(cur) + '"') + '>' + day + '</button>';
+        }
+        html += '</div>';
+        if (selected) html += '<div class="dp-foot"><button type="button" class="dp-clear" data-clear>Clear date</button></div>';
+        pop.innerHTML = html;
+      }
+
+      function open() { render(); pop.hidden = false; trigger.setAttribute('aria-expanded', 'true'); }
+      function close() { pop.hidden = true; trigger.setAttribute('aria-expanded', 'false'); }
+
+      trigger.addEventListener('click', function () { if (pop.hidden) open(); else close(); });
+
+      pop.addEventListener('click', function (ev) {
+        var nav = ev.target.closest('[data-nav]');
+        if (nav) {
+          viewM += parseInt(nav.getAttribute('data-nav'), 10);
+          if (viewM < 0) { viewM = 11; viewY--; } else if (viewM > 11) { viewM = 0; viewY++; }
+          render(); return;
+        }
+        if (ev.target.closest('[data-clear]')) {
+          selected = null; hidden.value = '';
+          labelEl.textContent = 'Choose a date'; labelEl.classList.remove('set');
+          close(); return;
+        }
+        var dayBtn = ev.target.closest('[data-day]');
+        if (dayBtn) {
+          var v = dayBtn.getAttribute('data-day'), p = v.split('-');
+          selected = new Date(+p[0], +p[1] - 1, +p[2]);
+          hidden.value = v;
+          labelEl.textContent = fmt(selected); labelEl.classList.add('set');
+          close();
+        }
+      });
+
+      document.addEventListener('click', function (ev) {
+        if (!pop.hidden && !ev.target.closest('#datePicker')) close();
+      });
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && !pop.hidden) close();
+      });
+    })();
 
     // VIN lookup: decode a 17-char VIN via NHTSA (free, no key) and auto-fill
     // Make + Model & year — same idea as Shopmonkey's embed VIN lookup.
