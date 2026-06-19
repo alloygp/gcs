@@ -63,3 +63,35 @@ src/
 - Set up Resend DNS for the client domain
 - Add env vars to Vercel (copy from `.env`, set `PUBLIC_ENV=production` on prod project)
 - Add `FORM_ALERT_SLACK_URL` to Vercel — the same Slack Incoming Webhook URL the `resend-slack-alerts` project uses, so form send-failure alerts land in the same channel. Leave blank to disable (forms still work). The helper is `src/lib/form-alert.ts`, already wired into all three API routes (contact/lead/subscribe).
+
+## Booking availability admin (`/admin/booking`)
+
+Lets the shop control online-booking availability themselves — **no code deploy**. They
+log in and set the **earliest bookable date** and **closed/blackout dates**; both are
+blocked on the `/appointments` calendar (past dates are always blocked too).
+
+- **Shop URL:** `mygermancarsa.com/admin/booking` — unlisted, `noindex`, kept out of the
+  sitemap. Log in with the shop password → set the earliest date + any closed dates →
+  **Save changes**. Saving writes straight to Edge Config (no Vercel build) and is live on
+  the site within a few seconds. **Log out** clears the session (it also clears when the
+  browser tab is closed).
+- **Login:** client-side gate over a server-checked password (`POST` with `verify=1`). The
+  session password lives in `sessionStorage` for that tab only. The real protection is
+  server-side: every write re-checks the password, so the page being viewable without a
+  login leaks nothing (the dates it shows are already public on the calendar).
+- **Storage:** a Vercel **Edge Config** store (`gcs-booking`) with keys `bookingFloor`
+  (YYYY-MM-DD) and `blackoutDates` (string[]). The calendar reads it via
+  `GET /api/booking-config`; if the store is unreachable it falls back to the baked-in
+  date in `src/lib/booking-config.ts`, so the calendar can never break.
+- **Write path:** `POST /api/admin/booking` validates password + dates, then upserts both
+  keys via the Vercel REST API.
+- **Calendar component:** `public/date-picker.js` (`window.initDatePicker`) is shared by the
+  appointments form and the admin page. Supports `floor` / `cap` / `isDisabled`, so future
+  rules (closed weekdays, an end date) are options, not a rewrite.
+- **Required Vercel env** (read path is public; write/login needs the rest):
+  - `EDGE_CONFIG` — read connection string for the store
+  - `VERCEL_API_TOKEN` — Vercel API token with write access (made in the dashboard)
+  - `VERCEL_TEAM_ID` — team that owns the store
+  - `ADMIN_BOOKING_PASSWORD` — the shop's password for the page
+- **Change the password:** update `ADMIN_BOOKING_PASSWORD` in Vercel — takes effect on the
+  next request, no redeploy. See `.env.example` for full setup steps.

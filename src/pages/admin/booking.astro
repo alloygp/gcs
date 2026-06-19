@@ -1,7 +1,8 @@
 ---
 // Unlisted, password-protected settings page so the shop can change online-booking
 // availability themselves — no developer, no deploy. Standalone (no site nav/footer)
-// and noindex; data flows through /api/admin/booking.
+// and noindex. Login gate (password verified server-side) reveals the settings;
+// Log out clears the session. All data flows through /api/admin/booking.
 export const prerender = true; // static shell; all values load/save via the API
 ---
 <!DOCTYPE html>
@@ -10,15 +11,22 @@ export const prerender = true; // static shell; all values load/save via the API
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Booking settings — German Car Specialists</title>
+  <title>German Car Specialists Admin</title>
   <!-- global (not scoped): the chips + picker are injected by JS at runtime, so
        scoped selectors wouldn't match them. Safe here — this page is standalone. -->
   <style is:global>
     :root{--navy:#16233b;--acc:#af0d19;--fog:#e3e7ee;--steel:#647084;--mist:#f4f6fa;}
     *{box-sizing:border-box;}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--mist);color:var(--navy);min-height:100vh;display:grid;place-items:center;padding:24px;}
+    [hidden]{display:none !important;}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--navy);color:var(--navy);min-height:100vh;display:grid;place-items:center;padding:24px;}
+    /* Porsche shop photo behind the card; dark overlay 30% at login → 80% once signed in. */
+    body::before{content:'';position:fixed;inset:0;z-index:-2;background:url('/assets/porsche-bg.jpg') center/cover no-repeat;}
+    body::after{content:'';position:fixed;inset:0;z-index:-1;background:#0d1626;opacity:.30;transition:opacity .45s ease;}
+    body.authed::after{opacity:.80;}
     .card{background:#fff;border:1px solid var(--fog);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.12);padding:30px;width:100%;max-width:440px;}
     h1{font-size:21px;margin:0 0 6px;}
+    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
+    .panel-head h1{margin:0;}
     .sub{font-size:14px;color:var(--steel);line-height:1.5;margin:0 0 20px;}
     .cur{font-size:14px;background:var(--mist);border-radius:10px;padding:12px 14px;margin-bottom:20px;}
     .cur strong{font-weight:700;}
@@ -30,10 +38,12 @@ export const prerender = true; // static shell; all values load/save via the API
     button{width:100%;height:50px;border:none;border-radius:10px;background:var(--acc);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
     button:hover{filter:brightness(.94);}
     button:disabled{opacity:.6;cursor:default;}
-    .bo-row{display:flex;gap:8px;align-items:flex-start;margin-top:2px;}
-    .bo-row .dp-mount{flex:1;margin-top:0;}
+    .btn-ghost{width:auto;height:auto;background:none;border:none;color:var(--steel);font-size:13px;font-weight:600;padding:6px 8px;margin:0;border-radius:8px;flex:none;}
+    .btn-ghost:hover{color:var(--acc);background:var(--mist);filter:none;}
     .btn-add{flex:none;width:auto;height:52px;padding:0 18px;background:#fff;color:var(--navy);border:1.5px solid var(--fog);font-size:14px;margin-top:0;}
     .btn-add:hover{border-color:var(--acc);color:var(--acc);filter:none;}
+    .bo-row{display:flex;gap:8px;align-items:flex-start;margin-top:2px;}
+    .bo-row .dp-mount{flex:1;margin-top:0;}
     .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 12px;}
     .chip{display:inline-flex;align-items:center;gap:7px;background:#f0f2f6;border:1px solid #e2e6ee;border-radius:9px;padding:7px 8px 7px 13px;font-size:13px;font-weight:600;color:var(--navy);}
     .chip button{width:18px;height:18px;border-radius:5px;background:transparent;border:none;color:var(--steel);font-size:15px;line-height:1;display:grid;place-items:center;padding:0;margin:0;}
@@ -46,8 +56,25 @@ export const prerender = true; // static shell; all values load/save via the API
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1>Booking settings</h1>
+  <!-- LOGIN -->
+  <main class="card" id="login" hidden>
+    <h1>German Car Specialists Admin</h1>
+    <p class="sub">This is for shop admins only.</p>
+    <form id="loginForm">
+      <label>Password
+        <input type="password" id="loginPw" required autocomplete="current-password" placeholder="Shop password">
+      </label>
+      <button type="submit" id="loginBtn">Log in</button>
+    </form>
+    <div class="msg" id="loginMsg"></div>
+  </main>
+
+  <!-- SETTINGS (shown after login) -->
+  <main class="card" id="panel" hidden>
+    <div class="panel-head">
+      <h1>Booking settings</h1>
+      <button type="button" class="btn-ghost" id="logout">Log out</button>
+    </div>
     <p class="sub">Control when customers can request a drop-off. Anything you block here — past dates, dates before you open, and closed dates — won’t be selectable on the website.</p>
     <div class="cur">Currently open from: <strong id="cur">…</strong></div>
     <form id="f">
@@ -68,97 +95,99 @@ export const prerender = true; // static shell; all values load/save via the API
 
       <hr class="rule" />
 
-      <label>Password
-        <input type="password" name="password" required autocomplete="current-password" placeholder="Shop password">
-      </label>
       <button type="submit" id="save">Save changes</button>
     </form>
     <div class="msg" id="msg"></div>
   </main>
+
   <script is:inline src="/date-picker.js"></script>
   <script is:inline>
     (function () {
-      var cur = document.getElementById('cur');
-      var f = document.getElementById('f');
-      var msg = document.getElementById('msg');
-      var save = document.getElementById('save');
-      var boChips = document.getElementById('boChips');
-      var boAdd = document.getElementById('boAdd');
+      var KEY = 'gcs_admin_pw';
+      var byId = function (id) { return document.getElementById(id); };
+      var login = byId('login'), panel = byId('panel');
+      var loginForm = byId('loginForm'), loginPw = byId('loginPw'), loginBtn = byId('loginBtn'), loginMsg = byId('loginMsg');
+      var logout = byId('logout');
+      var cur = byId('cur'), f = byId('f'), msg = byId('msg'), save = byId('save');
+      var boChips = byId('boChips'), boAdd = byId('boAdd');
 
       function fmt(iso) {
         if (!iso) return '—';
         var p = iso.split('-');
         return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
       }
-      // Compact form for chips (no weekday) so the tags stay tidy.
       function fmtShort(iso) {
         var p = iso.split('-');
         return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
+      function pw() { return sessionStorage.getItem(KEY) || ''; }
+
+      // Verify a password against the server (no write).
+      function verify(p) {
+        var b = new FormData();
+        b.set('verify', '1');
+        b.set('password', p);
+        return fetch('/api/admin/booking', { method: 'POST', body: b }).then(function (r) { return r.ok; });
+      }
 
       var capDate = new Date(new Date().getFullYear() + 2, 0, 1);
+      var dp = null, boPicker = null, bo = [], inited = false;
 
-      // Earliest-booking calendar. Floor = today (no past dates); pick any future date.
-      var dp = window.initDatePicker({
-        mount: document.getElementById('datePicker'),
-        name: 'date',
-        placeholder: 'Pick a date',
-        allowClear: false,
-        cap: capDate,
-      });
-
-      // Closed-dates calendar (just used to pick a date to add to the list).
-      var boPicker = window.initDatePicker({
-        mount: document.getElementById('boPicker'),
-        name: '_bo',
-        placeholder: 'Pick a date to close',
-        allowClear: false,
-        cap: capDate,
-      });
-
-      // Working list of blackout dates (YYYY-MM-DD), kept sorted + de-duped.
-      var bo = [];
       function renderChips() {
         if (!bo.length) { boChips.innerHTML = '<div class="empty-note">No closed dates yet.</div>'; return; }
         boChips.innerHTML = bo.map(function (d) {
           return '<span class="chip">' + fmtShort(d) + '<button type="button" data-rm="' + d + '" aria-label="Remove">&times;</button></span>';
         }).join('');
       }
-      boChips.addEventListener('click', function (e) {
-        var rm = e.target.closest('[data-rm]');
-        if (!rm) return;
-        var v = rm.getAttribute('data-rm');
-        bo = bo.filter(function (d) { return d !== v; });
-        renderChips();
-      });
-      boAdd.addEventListener('click', function () {
-        var v = boPicker.getValue();
-        if (!v) { msg.textContent = 'Pick a date to add first.'; msg.className = 'msg err'; return; }
-        if (bo.indexOf(v) === -1) { bo.push(v); bo.sort(); renderChips(); }
-        msg.textContent = ''; msg.className = 'msg';
-      });
 
-      fetch('/api/admin/booking')
-        .then(function (r) { return r.json(); })
-        .then(function (j) {
-          cur.textContent = fmt(j.floor);
-          if (j.floor) dp.setValue(j.floor);
-          bo = Array.isArray(j.blackout) ? j.blackout.slice() : [];
+      // Build pickers + wire the settings form once, the first time the panel shows.
+      function initPanel() {
+        if (inited) return; inited = true;
+        dp = window.initDatePicker({ mount: byId('datePicker'), name: 'date', placeholder: 'Pick a date', allowClear: false, cap: capDate });
+        boPicker = window.initDatePicker({ mount: byId('boPicker'), name: '_bo', placeholder: 'Pick a date to close', allowClear: false, cap: capDate });
+
+        boChips.addEventListener('click', function (e) {
+          var rm = e.target.closest('[data-rm]');
+          if (!rm) return;
+          var v = rm.getAttribute('data-rm');
+          bo = bo.filter(function (d) { return d !== v; });
           renderChips();
-        })
-        .catch(function () { cur.textContent = '(couldn’t load)'; renderChips(); });
+        });
+        boAdd.addEventListener('click', function () {
+          var v = boPicker.getValue();
+          if (!v) { msg.textContent = 'Pick a date to add first.'; msg.className = 'msg err'; return; }
+          if (bo.indexOf(v) === -1) { bo.push(v); bo.sort(); renderChips(); }
+          msg.textContent = ''; msg.className = 'msg';
+        });
+        f.addEventListener('submit', onSave);
+      }
 
-      f.addEventListener('submit', function (e) {
+      function loadConfig() {
+        fetch('/api/admin/booking')
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            cur.textContent = fmt(j.floor);
+            if (j.floor) dp.setValue(j.floor);
+            bo = Array.isArray(j.blackout) ? j.blackout.slice() : [];
+            renderChips();
+          })
+          .catch(function () { cur.textContent = '(couldn’t load)'; renderChips(); });
+      }
+
+      function showPanel() { login.hidden = true; panel.hidden = false; document.body.classList.add('authed'); initPanel(); loadConfig(); }
+      function showLogin() { panel.hidden = true; login.hidden = false; document.body.classList.remove('authed'); loginPw.value = ''; loginPw.focus(); }
+
+      function onSave(e) {
         e.preventDefault();
         if (!dp.getValue()) { msg.textContent = 'Please pick an earliest booking date.'; msg.className = 'msg err'; return; }
         save.disabled = true;
         msg.textContent = 'Saving…'; msg.className = 'msg';
         var body = new FormData();
-        body.set('password', f.password.value);
+        body.set('password', pw());
         body.set('date', dp.getValue());
         body.set('blackout', JSON.stringify(bo));
         fetch('/api/admin/booking', { method: 'POST', body: body })
-          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); })
           .then(function (r) {
             save.disabled = false;
             if (r.ok && r.j.success) {
@@ -166,15 +195,41 @@ export const prerender = true; // static shell; all values load/save via the API
               bo = Array.isArray(r.j.blackout) ? r.j.blackout.slice() : [];
               renderChips();
               var n = bo.length;
-              msg.textContent = 'Saved — open from ' + fmt(r.j.floor) + (n ? ', ' + n + ' closed date' + (n > 1 ? 's' : '') : '') + '. The website updates within a minute.';
+              msg.textContent = 'Saved — open from ' + fmt(r.j.floor) + (n ? ', ' + n + ' closed date' + (n > 1 ? 's' : '') : '') + '. The website updates within a few seconds.';
               msg.className = 'msg ok';
-              f.password.value = '';
+            } else if (r.status === 401) {
+              // Password changed/expired — bounce back to login.
+              sessionStorage.removeItem(KEY); msg.textContent = '';
+              showLogin();
+              loginMsg.textContent = 'Session expired — please log in again.'; loginMsg.className = 'msg err';
             } else {
               throw new Error((r.j && r.j.error) || 'Something went wrong.');
             }
           })
           .catch(function (err) { save.disabled = false; msg.textContent = err.message; msg.className = 'msg err'; });
+      }
+
+      loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var p = loginPw.value;
+        loginBtn.disabled = true; loginMsg.textContent = 'Checking…'; loginMsg.className = 'msg';
+        verify(p).then(function (ok) {
+          loginBtn.disabled = false;
+          if (ok) { sessionStorage.setItem(KEY, p); loginMsg.textContent = ''; showPanel(); }
+          else { loginMsg.textContent = 'Incorrect password.'; loginMsg.className = 'msg err'; }
+        }).catch(function () { loginBtn.disabled = false; loginMsg.textContent = 'Something went wrong — try again.'; loginMsg.className = 'msg err'; });
       });
+
+      logout.addEventListener('click', function () { sessionStorage.removeItem(KEY); showLogin(); });
+
+      // On load: resume the session if the stored password still checks out.
+      var stored = pw();
+      if (stored) {
+        verify(stored).then(function (ok) { if (ok) showPanel(); else { sessionStorage.removeItem(KEY); showLogin(); } })
+          .catch(function () { showLogin(); });
+      } else {
+        showLogin();
+      }
     })();
   </script>
 </body>
