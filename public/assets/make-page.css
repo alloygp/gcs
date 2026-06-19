@@ -264,6 +264,12 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 .sm-field label{font-size:12px;font-weight:700;color:var(--steel-700);letter-spacing:.02em;}
 .sm-field input,.sm-field select{border:1.5px solid var(--fog);border-radius:10px;padding:14px;font-family:var(--font);font-size:15px;font-weight:500;color:var(--navy);transition:border-color .15s,box-shadow .15s;}
 .sm-field input:focus,.sm-field select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft);}
+/* Current-customer Yes/No radios: opt out of the .sm-field text-input styling
+   (border/padding/radius) that was ballooning them into giant circles. */
+.cust-opts{display:flex;gap:22px;align-items:center;}
+.cust-opts label{flex-direction:row;align-items:center;gap:8px;font-size:15px;font-weight:500;color:var(--navy);cursor:pointer;}
+.cust-opts input[type="radio"]{appearance:auto;-webkit-appearance:radio;width:18px;height:18px;min-width:18px;margin:0;padding:0;border:0;border-radius:50%;box-shadow:none;flex:0 0 auto;accent-color:var(--acc);}
+.cust-opts input[type="radio"]:focus{outline:revert;box-shadow:none;}
 .sm-form .btn{width:100%;justify-content:center;}
 .embed .note{text-align:center;font-size:12px;color:var(--steel-400);padding:0 0 22px;}
 @media(max-width:860px){.book-shell{grid-template-columns:1fr;}.sm-form{grid-template-columns:1fr;}}
