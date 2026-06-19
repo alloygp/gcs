@@ -25,10 +25,13 @@ export const prerender = false; // server route — must not be statically built
 const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
 const FORM_ALERT_SLACK_URL = import.meta.env.FORM_ALERT_SLACK_URL;
 
+// Internal labels shown on the Shopmonkey board card + shop notification email.
+// Keys MUST stay book/question to match the form's intent values; estimate is
+// retained as a harmless fallback (the form no longer sends it).
 const INTENT_LABEL: Record<string, string> = {
-  book: 'Book a service',
+  book: 'Schedule an appointment',
   estimate: 'Get an estimate',
-  question: 'Ask a question',
+  question: 'General inquiry',
 }
 
 export const POST: APIRoute = async ({ request }) => {

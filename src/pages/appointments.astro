@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 export const prerender = true;
-const TITLE = `Book Your Audi, BMW, Mercedes or Porsche Service | My German Car SA`;
+const TITLE = `Book Audi, BMW, Mercedes & Porsche Service in San Antonio`;
 const DESC = `Schedule German auto repair in San Antonio online in under a minute. Fast turnaround, master techs, no dealer markup — or just send us a question.`;
 const CANON = `https://mygermancarsa.com/appointments`;
 const SCREEN = `Book Appointment`;
@@ -115,7 +115,7 @@ const CONTENT = `<!-- BREADCRUMB -->
       <h1 class="display">Let's get your <span data-make-word>German car</span> <em>taken care of.</em></h1>
     </div>
     <div class="bk-aside">
-      <p class="lead">One form, whatever you need — schedule a service, ask for a ballpark estimate, or just send a question. A real person at the shop reads every request and replies fast. No call center, no pressure.</p>
+      <p class="lead">Two ways in — schedule an appointment, or send a general inquiry. A real person at the shop reads every request and replies fast. No call center, no pressure.</p>
       <ul class="bk-mini">
         <li><i data-lucide="calendar-check"></i>Most requests answered same business day</li>
         <li><i data-lucide="receipt-text"></i>Upfront estimate before any work begins</li>
@@ -134,10 +134,11 @@ const CONTENT = `<!-- BREADCRUMB -->
                the shop. All three intents feed the same pipeline. -->
           <form id="bkForm" onsubmit="return false">
             <label class="intent-q">I'd like to…</label>
+            <!-- Two intents only. Underlying values stay `book` / `question` so the
+                 /api/appointment + Shopmonkey contract is unchanged — only labels differ. -->
             <div class="intent">
-              <label><input type="radio" name="intent" value="book" checked><i data-lucide="calendar-check"></i><span>Book a service</span><small>Pick a date</small></label>
-              <label><input type="radio" name="intent" value="estimate"><i data-lucide="receipt-text"></i><span>Get an estimate</span><small>Ballpark price</small></label>
-              <label><input type="radio" name="intent" value="question"><i data-lucide="message-circle"></i><span>Ask a question</span><small>No obligation</small></label>
+              <label><input type="radio" name="intent" value="book" checked><i data-lucide="calendar-check"></i><span>Schedule an Appointment</span><small>Pick a date</small></label>
+              <label><input type="radio" name="intent" value="question"><i data-lucide="message-circle"></i><span>General Inquiries</span><small>No obligation</small></label>
             </div>
             <!-- Honeypot: hidden from humans; bots that fill it are silently rejected server-side. -->
             <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden;" tabindex="-1">
@@ -147,18 +148,18 @@ const CONTENT = `<!-- BREADCRUMB -->
               <div class="sm-field"><label>Full name</label><input type="text" name="name" required placeholder="Jordan Becker"></div>
               <div class="sm-field"><label>Phone</label><input type="tel" name="phone" required placeholder="(210) 555-0123"></div>
               <div class="sm-field full"><label>Email</label><input type="email" name="email" required placeholder="you@email.com"></div>
-              <div class="sm-field full"><label>VIN <span class="dateline">— we'll pull your exact vehicle</span></label><input type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
-              <div class="sm-field"><label>Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
-              <div class="sm-field"><label>Model &amp; year</label><input type="text" name="model" placeholder="e.g. 2019 Q5"></div>
-              <div class="sm-field full"><label id="msgLabel">What does it need? <span class="dateline">— symptoms, service, or your question</span></label><input type="text" name="message" placeholder="e.g. oil service + check-engine light"></div>
-              <div class="sm-field" id="dateField"><label>Preferred drop-off date <span class="dateline">(optional)</span></label>
+              <div class="sm-field full appt-only"><label>VIN</label><input type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
+              <div class="sm-field appt-only"><label>Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
+              <div class="sm-field appt-only"><label>Model &amp; year</label><input type="text" name="model" placeholder="e.g. 2019 Q5"></div>
+              <div class="sm-field full"><label id="msgLabel">Services needed <span class="dateline">— symptoms or service requested</span></label><input type="text" name="message" id="msgInput" placeholder="e.g. oil service + check-engine light"></div>
+              <div class="sm-field appt-only" id="dateField"><label>Preferred drop-off date <span class="dateline">(optional)</span></label>
                 <div id="datePicker"><!-- shared calendar mounts here (public/date-picker.js) --></div>
               </div>
-              <div class="sm-field"><label>Preferred drop-off time <span class="dateline">(optional)</span></label><select name="time"><option value="">No preference</option><option>First thing (7:30–9a)</option><option>Morning (9–11a)</option><option>Midday (11a–1p)</option><option>Afternoon (1–3p)</option><option>Late afternoon (3–5p)</option></select></div>
+              <div class="sm-field appt-only"><label>Preferred drop-off time <span class="dateline">(optional)</span></label><select name="time"><option value="">No preference</option><option>First thing (7:30–9a)</option><option>Morning (9–11a)</option><option>Midday (11a–1p)</option><option>Afternoon (1–3p)</option><option>Late afternoon (3–5p)</option></select></div>
               <button class="btn btn-primary full" id="submitBtn"><i data-lucide="send"></i><span id="btnText">Request Appointment</span></button>
             </div>
           </form>
-          <div class="reassure"><i data-lucide="shield-check"></i><span><b>Not sure what you need yet?</b> Just tell us about your car — there's no obligation. We'll reply with options and a ballpark before anything is scheduled.</span></div>
+          <div class="reassure"><i data-lucide="shield-check"></i><span><b>Not sure what you need yet?</b> Just tell us about your car — there's no obligation. We'll reply with options before anything is scheduled.</span></div>
         </div>
         <div class="bk-success" id="formSuccess">
           <div class="ok"><i data-lucide="check"></i></div>
@@ -180,7 +181,7 @@ const CONTENT = `<!-- BREADCRUMB -->
     </div>
     <div class="steps">
       <div class="step reveal"><span class="n">01</span><div class="si"><i data-lucide="send"></i></div><h3>Send your request</h3><p>Tell us your car and what it needs. Booking, estimate, or just a question — it all comes to the shop, not a call center.</p></div>
-      <div class="step reveal"><span class="n">02</span><div class="si"><i data-lucide="check-circle-2"></i></div><h3>We confirm same day</h3><p>A technician replies the same business day with a time and a ballpark — before anything is scheduled.</p></div>
+      <div class="step reveal"><span class="n">02</span><div class="si"><i data-lucide="check-circle-2"></i></div><h3>We confirm same day</h3><p>A technician replies the same business day with a time and next steps — before anything is scheduled.</p></div>
       <div class="step reveal"><span class="n">03</span><div class="si"><i data-lucide="car-front"></i></div><h3>Drop off &amp; relax</h3><p>We send a photo-documented digital inspection, you approve the work, and we get your German car back to you right.</p></div>
     </div>
   </div>
@@ -249,7 +250,6 @@ const JSONLD = `<script type="application/ld+json">
       "geo":{"@type":"GeoCoordinates","latitude":29.5712,"longitude":-98.6097},
       "areaServed":{"@type":"City","name":"San Antonio"},
       "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday"],"opens":"07:30","closes":"17:30"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Friday"],"opens":"07:30","closes":"17:00"}],
-      "makesOffered":["Audi","BMW","Mercedes-Benz","Porsche"],
       "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"325","bestRating":"5"},
       "potentialAction":{
         "@type":"ReserveAction",

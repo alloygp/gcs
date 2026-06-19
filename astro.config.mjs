@@ -119,6 +119,15 @@ export default defineConfig({
     '/category/porsche-3/page/2': '/shop-notes',
     '/category/maintenance/page/2': '/shop-notes',
     '/estimates': '/appointments',
+    // backlinked/ranking old URLs found in post-launch Ahrefs audit (had live
+    // referring domains but no redirect — were 404ing and leaking link equity).
+    '/about-german-car-specialists': '/about',     // 5 refdomains (old site 301'd here)
+    '/bosch-service-center': '/',                   // 5 refdomains
+    '/car-alignment-specialists': '/',              // 3 refdomains (cf. /alignment)
+    '/volkswagen-service': '/',                     // 3 refdomains (cf. /vwservice)
+    '/european-car-repair-san-antonio': '/',        // 2 refdomains
+    '/author/gcs': '/shop-notes',                   // 3 refdomains (WP author archive)
+    '/author/berk': '/shop-notes',                  // 2 refdomains (WP author archive)
     // internal aliases
     '/contact': '/appointments',
     '/book': '/appointments',
