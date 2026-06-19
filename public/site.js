@@ -243,6 +243,16 @@
     var apptOnly = [].slice.call(form.querySelectorAll('.appt-only'));
     var msgLabel = document.getElementById('msgLabel');
     var msgInput = document.getElementById('msgInput');
+    // VIN is required only for NEW customers on the appointment path. Current
+    // customers (Berk looks them up by record) and the inquiry form skip it.
+    function syncVinRequired() {
+      if (!vinEl) return;
+      var ci = form.querySelector('[name="intent"]:checked');
+      var isAppt = !ci || ci.value === 'book';
+      var ret = form.querySelector('[name="returning"]:checked');
+      var isNew = !ret || ret.value !== 'yes';
+      vinEl.required = isAppt && isNew && !vinEl.disabled;
+    }
     function applyIntent() {
       var checked = form.querySelector('[name="intent"]:checked');
       var isAppt = !checked || checked.value === 'book';
@@ -252,7 +262,6 @@
           f.disabled = !isAppt; // disabled fields are excluded from FormData
         });
       });
-      if (vinEl) vinEl.required = isAppt;
       if (btnText) btnText.textContent = isAppt ? 'Request Appointment' : 'Send Inquiry';
       if (msgLabel) msgLabel.innerHTML = isAppt
         ? 'Services needed <span class="dateline">— symptoms or service requested</span>'
@@ -260,9 +269,13 @@
       if (msgInput) msgInput.placeholder = isAppt
         ? 'e.g. oil service + check-engine light'
         : 'e.g. do you service the Audi RS line?';
+      syncVinRequired();
     }
     [].slice.call(form.querySelectorAll('[name="intent"]')).forEach(function (r) {
       r.addEventListener('change', applyIntent);
+    });
+    [].slice.call(form.querySelectorAll('[name="returning"]')).forEach(function (r) {
+      r.addEventListener('change', syncVinRequired);
     });
     applyIntent();
 
