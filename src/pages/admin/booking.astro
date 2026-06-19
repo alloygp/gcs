@@ -24,6 +24,15 @@ export const prerender = true; // static shell; all values load/save via the API
     body::after{content:'';position:fixed;inset:0;z-index:-1;background:#0d1626;opacity:.30;transition:opacity .45s ease;}
     body.authed::after{opacity:.80;}
     .card{background:#fff;border:1px solid var(--fog);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.12);padding:30px;width:100%;max-width:440px;}
+    /* Logged-in panel is wider with the editor on the left, live preview on the right. */
+    .panel-wide{max-width:820px;}
+    .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;}
+    .panel-col{min-width:0;} /* let the calendar grid shrink inside the column */
+    @media(max-width:680px){
+      .panel-wide{max-width:440px;}
+      .panel-grid{grid-template-columns:1fr;gap:0;}
+      .panel-col + .panel-col{margin-top:24px;padding-top:24px;border-top:1px solid var(--fog);}
+    }
     h1{font-size:21px;margin:0 0 6px;}
     .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
     .panel-head h1{margin:0;}
@@ -70,34 +79,47 @@ export const prerender = true; // static shell; all values load/save via the API
   </main>
 
   <!-- SETTINGS (shown after login) -->
-  <main class="card" id="panel" hidden>
+  <main class="card panel-wide" id="panel" hidden>
     <div class="panel-head">
       <h1>Booking settings</h1>
       <button type="button" class="btn-ghost" id="logout">Log out</button>
     </div>
     <p class="sub">Control when customers can request a drop-off. Anything you block here — past dates, dates before you open, and closed dates — won’t be selectable on the website.</p>
-    <div class="cur">Currently open from: <strong id="cur">…</strong></div>
-    <form id="f">
-      <label>Earliest booking date
-        <div id="datePicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
-      </label>
+    <div class="panel-grid">
+      <!-- LEFT: editing -->
+      <div class="panel-col">
+        <div class="cur">Currently open from: <strong id="cur">…</strong></div>
+        <form id="f">
+          <label>Earliest booking date
+            <div id="datePicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
+          </label>
 
-      <hr class="rule" />
+          <hr class="rule" />
 
-      <label>Closed dates
-        <span class="hint">Holidays or days off — customers can’t book these.</span>
-      </label>
-      <div class="chips" id="boChips"></div>
-      <div class="bo-row">
-        <div id="boPicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
-        <button type="button" class="btn-add" id="boAdd">Add</button>
+          <label>Closed dates
+            <span class="hint">Holidays or days off — customers can’t book these.</span>
+          </label>
+          <div class="chips" id="boChips"></div>
+          <div class="bo-row">
+            <div id="boPicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
+            <button type="button" class="btn-add" id="boAdd">Add</button>
+          </div>
+
+          <hr class="rule" />
+
+          <button type="submit" id="save">Save changes</button>
+        </form>
+        <div class="msg" id="msg"></div>
       </div>
 
-      <hr class="rule" />
-
-      <button type="submit" id="save">Save changes</button>
-    </form>
-    <div class="msg" id="msg"></div>
+      <!-- RIGHT: live preview -->
+      <div class="panel-col">
+        <label>Preview
+          <span class="hint">What customers see — updates live as you edit.</span>
+        </label>
+        <div id="previewCal" class="dp-mount"><!-- inline read-only calendar (/date-picker.js) --></div>
+      </div>
+    </div>
   </main>
 
   <script is:inline src="/date-picker.js"></script>
@@ -120,6 +142,8 @@ export const prerender = true; // static shell; all values load/save via the API
         var p = iso.split('-');
         return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
+      function parseISO(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+      function isoOf(d) { var z = function (n) { return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate()); }
       function pw() { return sessionStorage.getItem(KEY) || ''; }
 
       // Verify a password against the server (no write).
@@ -131,7 +155,7 @@ export const prerender = true; // static shell; all values load/save via the API
       }
 
       var capDate = new Date(new Date().getFullYear() + 2, 0, 1);
-      var dp = null, boPicker = null, bo = [], inited = false;
+      var dp = null, boPicker = null, preview = null, bo = [], inited = false;
 
       function renderChips() {
         if (!bo.length) { boChips.innerHTML = '<div class="empty-note">No closed dates yet.</div>'; return; }
@@ -143,20 +167,32 @@ export const prerender = true; // static shell; all values load/save via the API
       // Build pickers + wire the settings form once, the first time the panel shows.
       function initPanel() {
         if (inited) return; inited = true;
-        dp = window.initDatePicker({ mount: byId('datePicker'), name: 'date', placeholder: 'Pick a date', allowClear: false, cap: capDate });
+        dp = window.initDatePicker({
+          mount: byId('datePicker'), name: 'date', placeholder: 'Pick a date', allowClear: false, cap: capDate,
+          onChange: function (v) { if (preview && v) preview.setFloor(parseISO(v)); } // earliest date → preview floor
+        });
         boPicker = window.initDatePicker({ mount: byId('boPicker'), name: '_bo', placeholder: 'Pick a date to close', allowClear: false, cap: capDate });
+
+        // Live preview of the customer calendar: same component, inline + read-only.
+        // Floor follows the earliest-date picker; blackout greying reads the live bo list.
+        var pvNow = new Date();
+        preview = window.initDatePicker({
+          mount: byId('previewCal'), inline: true, readOnly: true,
+          cap: new Date(pvNow.getFullYear() + 1, pvNow.getMonth(), pvNow.getDate()),
+          isDisabled: function (d) { return bo.indexOf(isoOf(d)) !== -1; }
+        });
 
         boChips.addEventListener('click', function (e) {
           var rm = e.target.closest('[data-rm]');
           if (!rm) return;
           var v = rm.getAttribute('data-rm');
           bo = bo.filter(function (d) { return d !== v; });
-          renderChips();
+          renderChips(); if (preview) preview.refresh();
         });
         boAdd.addEventListener('click', function () {
           var v = boPicker.getValue();
           if (!v) { msg.textContent = 'Pick a date to add first.'; msg.className = 'msg err'; return; }
-          if (bo.indexOf(v) === -1) { bo.push(v); bo.sort(); renderChips(); }
+          if (bo.indexOf(v) === -1) { bo.push(v); bo.sort(); renderChips(); if (preview) preview.refresh(); }
           msg.textContent = ''; msg.className = 'msg';
         });
         f.addEventListener('submit', onSave);
@@ -170,6 +206,7 @@ export const prerender = true; // static shell; all values load/save via the API
             if (j.floor) dp.setValue(j.floor);
             bo = Array.isArray(j.blackout) ? j.blackout.slice() : [];
             renderChips();
+            if (preview && j.floor) preview.setFloor(parseISO(j.floor)); else if (preview) preview.refresh();
           })
           .catch(function () { cur.textContent = '(couldn’t load)'; renderChips(); });
       }
@@ -194,6 +231,7 @@ export const prerender = true; // static shell; all values load/save via the API
               cur.textContent = fmt(r.j.floor);
               bo = Array.isArray(r.j.blackout) ? r.j.blackout.slice() : [];
               renderChips();
+              if (preview) preview.setFloor(parseISO(r.j.floor));
               var n = bo.length;
               msg.textContent = 'Saved — open from ' + fmt(r.j.floor) + (n ? ', ' + n + ' closed date' + (n > 1 ? 's' : '') : '') + '. The website updates within a few seconds.';
               msg.className = 'msg ok';
