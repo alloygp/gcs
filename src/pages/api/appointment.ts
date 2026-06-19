@@ -54,6 +54,7 @@ export const POST: APIRoute = async ({ request }) => {
     const date    = data.get('date')?.toString().trim()    ?? '';
     const time    = data.get('time')?.toString().trim()    ?? '';
     const intentRaw = data.get('intent')?.toString().trim() ?? 'book';
+    const returning = data.get('returning')?.toString().trim() ?? '';
 
     // Split a 4-digit year out of the combined "Model & year" field.
     const yearMatch = modelYear.match(/\b(19|20)\d{2}\b/);
@@ -72,6 +73,9 @@ export const POST: APIRoute = async ({ request }) => {
     const lastName = rest.join(' ');
     const vehicle = [make, modelYear].filter(Boolean).join(' '); // human-readable, keeps year
     const intentLabel = INTENT_LABEL[intent];
+    // New customers must provide a VIN (enforced on the form); surface the
+    // answer so the shop knows whether to ask for VIN/plate on intake.
+    const customerStatus = returning === 'yes' ? 'Current customer' : returning === 'no' ? 'New customer' : '';
     // Order title on the Workflow board.
     const leadTitle = `${intentLabel}${vehicle ? ` — ${vehicle}` : ''}${message ? `: ${message}` : ''}`.slice(0, 140);
 
@@ -93,7 +97,7 @@ export const POST: APIRoute = async ({ request }) => {
         vin,
         preferredDate: date,
         preferredTime: time,
-        message: `Intent: ${intentLabel}${message ? `\n${message}` : ''}`,
+        message: `Intent: ${intentLabel}${customerStatus ? `\nCustomer: ${customerStatus}` : ''}${message ? `\n${message}` : ''}`,
       });
     }
 
@@ -119,6 +123,7 @@ export const POST: APIRoute = async ({ request }) => {
               <p><strong>Name:</strong> ${name}</p>
               <p><strong>Phone:</strong> ${phone}</p>
               <p><strong>Email:</strong> ${email}</p>
+              ${customerStatus ? `<p><strong>Customer:</strong> ${customerStatus}</p>` : ''}
               <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
               ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
               <p><strong>Preferred drop-off date:</strong> ${date || '— (none given)'}</p>

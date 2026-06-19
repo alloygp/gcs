@@ -127,7 +127,7 @@ const CONTENT = `<!-- BREADCRUMB -->
     </div>
     <div class="hero-vis">
       <div class="bkform">
-        <div class="fh"><span class="sm"><i data-lucide="wrench"></i></span><b data-make-tpl="Tell us about your {make}">Tell us about your car</b><span class="sec-lk"><i data-lucide="lock"></i>Secure</span></div>
+        <div class="fh"><span class="sm"><i data-lucide="wrench"></i></span><b>Scheduling &amp; inquiries</b><span class="sec-lk"><i data-lucide="lock"></i>Secure</span></div>
         <div class="fb" id="formBody">
           <!-- Submits via fetch to /api/appointment (see public/site.js #bkForm handler),
                which creates a Shopmonkey customer + unconfirmed appointment and emails
@@ -138,7 +138,7 @@ const CONTENT = `<!-- BREADCRUMB -->
                  /api/appointment + Shopmonkey contract is unchanged - only labels differ. -->
             <div class="intent">
               <label><input type="radio" name="intent" value="book" checked><i data-lucide="calendar-check"></i><span>Schedule an Appointment</span><small>Pick a date</small></label>
-              <label><input type="radio" name="intent" value="question"><i data-lucide="message-circle"></i><span>General Inquiries</span><small>No obligation</small></label>
+              <label><input type="radio" name="intent" value="question"><i data-lucide="message-circle"></i><span>General Inquiries</span></label>
             </div>
             <!-- Honeypot: hidden from humans; bots that fill it are silently rejected server-side. -->
             <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden;" tabindex="-1">
@@ -148,7 +148,13 @@ const CONTENT = `<!-- BREADCRUMB -->
               <div class="sm-field"><label>Full name</label><input type="text" name="name" required placeholder="Jordan Becker"></div>
               <div class="sm-field"><label>Phone</label><input type="tel" name="phone" required placeholder="(210) 555-0123"></div>
               <div class="sm-field full"><label>Email</label><input type="email" name="email" required placeholder="you@email.com"></div>
-              <div class="sm-field full appt-only"><label>VIN</label><input type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
+              <div class="sm-field full appt-only" id="custField"><label>Are you a current customer?</label>
+                <div class="cust-opts" style="display:flex;gap:22px;padding-top:6px;">
+                  <label style="display:inline-flex;align-items:center;gap:7px;font-weight:500;cursor:pointer;"><input type="radio" name="returning" value="yes" required> Yes</label>
+                  <label style="display:inline-flex;align-items:center;gap:7px;font-weight:500;cursor:pointer;"><input type="radio" name="returning" value="no" required> No</label>
+                </div>
+              </div>
+              <div class="sm-field full appt-only"><label>VIN <span class="dateline">— required for new customers</span></label><input type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
               <div class="sm-field appt-only"><label>Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
               <div class="sm-field appt-only"><label>Model &amp; year</label><input type="text" name="model" placeholder="e.g. 2019 Q5"></div>
               <div class="sm-field full"><label id="msgLabel">Services needed <span class="dateline">— symptoms or service requested</span></label><input type="text" name="message" id="msgInput" placeholder="e.g. oil service + check-engine light"></div>
