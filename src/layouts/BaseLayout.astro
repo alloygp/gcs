@@ -14,7 +14,7 @@ const { title, description, canonical, screenLabel = '', blog = false, defaultMa
 // hashed by Astro), and Vercel caches /assets immutably. Bump this when a CSS
 // change must reach already-cached browsers. Going forward the must-revalidate
 // header on *.css (vercel.json) keeps them fresh without bumping.
-const CSS_V = '3';
+const CSS_V = '4';
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // A page is indexable ONLY when it's the production build AND the real domain is live.
 // PUBLIC_ENV=production stays set on prod for app behavior (GA, etc.); indexability is
