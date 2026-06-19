@@ -234,6 +234,38 @@
       phoneEl.value = out;
     });
 
+    // Intent toggle. "Schedule an Appointment" (book) shows the full vehicle +
+    // scheduling fields; "General Inquiries" (question) shows a lean form.
+    // Field NAMES never change — only visibility — so the Shopmonkey push is
+    // unaffected. Hidden fields are DISABLED so they drop out of the POST (no
+    // bogus "Audi" vehicle on an inquiry), and VIN is required only on the
+    // appointment path (a hidden+required field would silently block submit).
+    var apptOnly = [].slice.call(form.querySelectorAll('.appt-only'));
+    var msgLabel = document.getElementById('msgLabel');
+    var msgInput = document.getElementById('msgInput');
+    function applyIntent() {
+      var checked = form.querySelector('[name="intent"]:checked');
+      var isAppt = !checked || checked.value === 'book';
+      apptOnly.forEach(function (el) {
+        el.style.display = isAppt ? '' : 'none';
+        [].slice.call(el.querySelectorAll('input, select, textarea')).forEach(function (f) {
+          f.disabled = !isAppt; // disabled fields are excluded from FormData
+        });
+      });
+      if (vinEl) vinEl.required = isAppt;
+      if (btnText) btnText.textContent = isAppt ? 'Request Appointment' : 'Send Inquiry';
+      if (msgLabel) msgLabel.innerHTML = isAppt
+        ? 'Services needed <span class="dateline">— symptoms or service requested</span>'
+        : 'How can we help? <span class="dateline">— your question</span>';
+      if (msgInput) msgInput.placeholder = isAppt
+        ? 'e.g. oil service + check-engine light'
+        : 'e.g. do you service the Audi RS line?';
+    }
+    [].slice.call(form.querySelectorAll('[name="intent"]')).forEach(function (r) {
+      r.addEventListener('change', applyIntent);
+    });
+    applyIntent();
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
