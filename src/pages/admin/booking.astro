@@ -191,7 +191,7 @@ export const prerender = true; // static shell; all values load/save via the API
               bo = Array.isArray(r.j.blackout) ? r.j.blackout.slice() : [];
               renderChips();
               var n = bo.length;
-              msg.textContent = 'Saved — open from ' + fmt(r.j.floor) + (n ? ', ' + n + ' closed date' + (n > 1 ? 's' : '') : '') + '. The website updates within a minute.';
+              msg.textContent = 'Saved — open from ' + fmt(r.j.floor) + (n ? ', ' + n + ' closed date' + (n > 1 ? 's' : '') : '') + '. The website updates within a few seconds.';
               msg.className = 'msg ok';
             } else if (r.status === 401) {
               // Password changed/expired — bounce back to login.

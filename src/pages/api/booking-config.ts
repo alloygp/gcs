@@ -12,9 +12,10 @@ export const GET: APIRoute = async () => {
     status: 200,
     headers: {
       'content-type': 'application/json',
-      // Date changes rarely; a short cache keeps the page snappy while still
-      // surfacing a shop edit within ~30s.
-      'cache-control': 'public, max-age=30',
+      // Short cache so a shop edit shows on the customer calendar within a few seconds
+      // (no build — saves write straight to Edge Config). stale-while-revalidate keeps
+      // the endpoint snappy under load while still refreshing in the background.
+      'cache-control': 'public, max-age=5, stale-while-revalidate=30',
     },
   });
 };

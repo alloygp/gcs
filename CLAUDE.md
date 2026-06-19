@@ -72,8 +72,9 @@ blocked on the `/appointments` calendar (past dates are always blocked too).
 
 - **Shop URL:** `mygermancarsa.com/admin/booking` — unlisted, `noindex`, kept out of the
   sitemap. Log in with the shop password → set the earliest date + any closed dates →
-  **Save changes**. Live on the site within ~30s. **Log out** clears the session (it also
-  clears when the browser tab is closed).
+  **Save changes**. Saving writes straight to Edge Config (no Vercel build) and is live on
+  the site within a few seconds. **Log out** clears the session (it also clears when the
+  browser tab is closed).
 - **Login:** client-side gate over a server-checked password (`POST` with `verify=1`). The
   session password lives in `sessionStorage` for that tab only. The real protection is
   server-side: every write re-checks the password, so the page being viewable without a
