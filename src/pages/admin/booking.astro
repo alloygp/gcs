@@ -24,6 +24,15 @@ export const prerender = true; // static shell; all values load/save via the API
     body::after{content:'';position:fixed;inset:0;z-index:-1;background:#0d1626;opacity:.30;transition:opacity .45s ease;}
     body.authed::after{opacity:.80;}
     .card{background:#fff;border:1px solid var(--fog);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.12);padding:30px;width:100%;max-width:440px;}
+    /* Logged-in panel is wider with the editor on the left, live preview on the right. */
+    .panel-wide{max-width:820px;}
+    .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;}
+    .panel-col{min-width:0;} /* let the calendar grid shrink inside the column */
+    @media(max-width:680px){
+      .panel-wide{max-width:440px;}
+      .panel-grid{grid-template-columns:1fr;gap:0;}
+      .panel-col + .panel-col{margin-top:24px;padding-top:24px;border-top:1px solid var(--fog);}
+    }
     h1{font-size:21px;margin:0 0 6px;}
     .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
     .panel-head h1{margin:0;}
@@ -70,41 +79,47 @@ export const prerender = true; // static shell; all values load/save via the API
   </main>
 
   <!-- SETTINGS (shown after login) -->
-  <main class="card" id="panel" hidden>
+  <main class="card panel-wide" id="panel" hidden>
     <div class="panel-head">
       <h1>Booking settings</h1>
       <button type="button" class="btn-ghost" id="logout">Log out</button>
     </div>
     <p class="sub">Control when customers can request a drop-off. Anything you block here — past dates, dates before you open, and closed dates — won’t be selectable on the website.</p>
-    <div class="cur">Currently open from: <strong id="cur">…</strong></div>
-    <form id="f">
-      <label>Earliest booking date
-        <div id="datePicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
-      </label>
+    <div class="panel-grid">
+      <!-- LEFT: editing -->
+      <div class="panel-col">
+        <div class="cur">Currently open from: <strong id="cur">…</strong></div>
+        <form id="f">
+          <label>Earliest booking date
+            <div id="datePicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
+          </label>
 
-      <hr class="rule" />
+          <hr class="rule" />
 
-      <label>Closed dates
-        <span class="hint">Holidays or days off — customers can’t book these.</span>
-      </label>
-      <div class="chips" id="boChips"></div>
-      <div class="bo-row">
-        <div id="boPicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
-        <button type="button" class="btn-add" id="boAdd">Add</button>
+          <label>Closed dates
+            <span class="hint">Holidays or days off — customers can’t book these.</span>
+          </label>
+          <div class="chips" id="boChips"></div>
+          <div class="bo-row">
+            <div id="boPicker" class="dp-mount"><!-- shared calendar (/date-picker.js) --></div>
+            <button type="button" class="btn-add" id="boAdd">Add</button>
+          </div>
+
+          <hr class="rule" />
+
+          <button type="submit" id="save">Save changes</button>
+        </form>
+        <div class="msg" id="msg"></div>
       </div>
 
-      <hr class="rule" />
-
-      <label>Preview
-        <span class="hint">What customers see — updates live as you change the dates above.</span>
-      </label>
-      <div id="previewCal" class="dp-mount"><!-- inline read-only calendar (/date-picker.js) --></div>
-
-      <hr class="rule" />
-
-      <button type="submit" id="save">Save changes</button>
-    </form>
-    <div class="msg" id="msg"></div>
+      <!-- RIGHT: live preview -->
+      <div class="panel-col">
+        <label>Preview
+          <span class="hint">What customers see — updates live as you edit.</span>
+        </label>
+        <div id="previewCal" class="dp-mount"><!-- inline read-only calendar (/date-picker.js) --></div>
+      </div>
+    </div>
   </main>
 
   <script is:inline src="/date-picker.js"></script>
