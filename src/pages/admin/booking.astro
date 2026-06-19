@@ -11,14 +11,18 @@ export const prerender = true; // static shell; all values load/save via the API
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Booking settings — German Car Specialists</title>
+  <title>German Car Specialists Admin</title>
   <!-- global (not scoped): the chips + picker are injected by JS at runtime, so
        scoped selectors wouldn't match them. Safe here — this page is standalone. -->
   <style is:global>
     :root{--navy:#16233b;--acc:#af0d19;--fog:#e3e7ee;--steel:#647084;--mist:#f4f6fa;}
     *{box-sizing:border-box;}
     [hidden]{display:none !important;}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--mist);color:var(--navy);min-height:100vh;display:grid;place-items:center;padding:24px;}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--navy);color:var(--navy);min-height:100vh;display:grid;place-items:center;padding:24px;}
+    /* Porsche shop photo behind the card; dark overlay 30% at login → 80% once signed in. */
+    body::before{content:'';position:fixed;inset:0;z-index:-2;background:url('/assets/porsche-bg.jpg') center/cover no-repeat;}
+    body::after{content:'';position:fixed;inset:0;z-index:-1;background:#0d1626;opacity:.30;transition:opacity .45s ease;}
+    body.authed::after{opacity:.80;}
     .card{background:#fff;border:1px solid var(--fog);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.12);padding:30px;width:100%;max-width:440px;}
     h1{font-size:21px;margin:0 0 6px;}
     .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
@@ -54,8 +58,8 @@ export const prerender = true; // static shell; all values load/save via the API
 <body>
   <!-- LOGIN -->
   <main class="card" id="login" hidden>
-    <h1>Booking settings</h1>
-    <p class="sub">Enter the shop password to manage online booking.</p>
+    <h1>German Car Specialists Admin</h1>
+    <p class="sub">This is for shop admins only.</p>
     <form id="loginForm">
       <label>Password
         <input type="password" id="loginPw" required autocomplete="current-password" placeholder="Shop password">
@@ -170,8 +174,8 @@ export const prerender = true; // static shell; all values load/save via the API
           .catch(function () { cur.textContent = '(couldn’t load)'; renderChips(); });
       }
 
-      function showPanel() { login.hidden = true; panel.hidden = false; initPanel(); loadConfig(); }
-      function showLogin() { panel.hidden = true; login.hidden = false; loginPw.value = ''; loginPw.focus(); }
+      function showPanel() { login.hidden = true; panel.hidden = false; document.body.classList.add('authed'); initPanel(); loadConfig(); }
+      function showLogin() { panel.hidden = true; login.hidden = false; document.body.classList.remove('authed'); loginPw.value = ''; loginPw.focus(); }
 
       function onSave(e) {
         e.preventDefault();
