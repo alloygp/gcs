@@ -404,11 +404,11 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 }
 /* ============ HERO · FULL-IMAGE + HIGHLIGHT CARDS ============ */
 .hero-fb{position:relative;overflow:hidden;background:var(--navy);}
-.hero-fb-bg{position:absolute;inset:0;overflow:hidden;background:url('/assets/photo-audi-r8-shop.webp') center 40%/cover no-repeat;}
+.hero-fb-bg{position:absolute;inset:0;overflow:hidden;background:var(--navy);}
+.hfb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;}
 .hfb-slide{position:absolute;inset:0;background-size:cover;background-repeat:no-repeat;
   opacity:0;will-change:transform,opacity;
   animation:gcsKenBurns 27s linear infinite;}
-.hfb-slide.hfb-1{background-image:url('/assets/photo-audi-r8-shop.webp');background-position:center 40%;transform-origin:60% 50%;opacity:1;animation-delay:-2s;}
 .hfb-slide.hfb-2{background-image:url('/assets/photo-911-service.webp');background-position:center 42%;transform-origin:35% 60%;animation-delay:7s;}
 .hfb-slide.hfb-3{background-image:url('/assets/photo-r8-engine.webp');background-position:center 45%;transform-origin:50% 35%;animation-delay:16s;}
 .hero-fb-scrim{position:absolute;inset:0;
@@ -499,14 +499,14 @@ h1,h2,h3{font-weight:900;letter-spacing:-.025em;line-height:1.02;color:var(--nav
 .hfm-icon b{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.15;}
 @media(max-width:980px){.hero-fb .hero-cta{display:none;}}
 @media (prefers-reduced-motion:reduce){.hfb-slide{animation:none;transform:none;}.hfb-slide.hfb-2,.hfb-slide.hfb-3{display:none;}}
-@media(max-width:860px){.hero-fb-grid{grid-template-columns:1fr;gap:36px;align-items:start;min-height:0;}.hfb-slide{background-position:center 32%;}.hero-fb-mosaic{max-width:560px;}.hero-fb-bg{background-image:url('/assets/photo-audi-r8-shop-m.webp');}.hfb-slide.hfb-1{background-image:url('/assets/photo-audi-r8-shop-m.webp');}.hfb-slide.hfb-2,.hfb-slide.hfb-3{display:none;background-image:none;}}
+@media(max-width:860px){.hero-fb-grid{grid-template-columns:1fr;gap:36px;align-items:start;min-height:0;}.hfb-img{object-position:center 32%;}.hero-fb-mosaic{max-width:560px;}.hfb-slide.hfb-2,.hfb-slide.hfb-3{display:none;}}
 @media(max-width:560px){.hero-fb-scrim{background:linear-gradient(0deg, rgba(15,17,20,.82) 0%, rgba(15,17,20,.55) 60%, rgba(15,17,20,.4) 100%);}.hfm-num{font-size:40px;}}
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease-emph),transform .6s var(--ease-emph);}
 .reveal.in{opacity:1;transform:none;}`;
 const CONTENT = `<!-- HERO -->
 <section class="hero-fb">
-  <div class="hero-fb-bg" role="img" aria-label="German Car Specialists service bay — Audi R8 V10 and a classic Porsche 911">
-    <div class="hfb-slide hfb-1"></div>
+  <div class="hero-fb-bg">
+    <img class="hfb-img" src="/assets/photo-audi-r8-shop.webp?v=hero2" srcset="/assets/photo-audi-r8-shop-m.webp?v=hero2 800w, /assets/photo-audi-r8-shop.webp?v=hero2 1800w" sizes="100vw" width="1800" height="1050" fetchpriority="high" decoding="async" alt="German Car Specialists service bay — Audi R8 V10 and a classic Porsche 911">
     <div class="hfb-slide hfb-2"></div>
     <div class="hfb-slide hfb-3"></div>
   </div>
@@ -838,8 +838,7 @@ const JSONLD = `<script type="application/ld+json">
 </script>`;
 ---
 <BaseLayout title={TITLE} description={DESC} canonical={CANON} screenLabel={SCREEN} blog={BLOG} defaultMake={DEFAULT_MAKE}>
-  <link slot="head" rel="preload" as="image" href="/assets/photo-audi-r8-shop-m.webp" media="(max-width:860px)" fetchpriority="high" />
-  <link slot="head" rel="preload" as="image" href="/assets/photo-audi-r8-shop.webp" media="(min-width:861px)" fetchpriority="high" />
+  <link slot="head" rel="preload" as="image" href="/assets/photo-audi-r8-shop.webp?v=hero2" imagesrcset="/assets/photo-audi-r8-shop-m.webp?v=hero2 800w, /assets/photo-audi-r8-shop.webp?v=hero2 1800w" imagesizes="100vw" fetchpriority="high" />
   <Fragment slot="head" set:html={STYLE ? ('<style>'+STYLE+'</style>') : ''} />
   <Fragment set:html={CONTENT} />
   <Fragment slot="end" set:html={JSONLD} />
