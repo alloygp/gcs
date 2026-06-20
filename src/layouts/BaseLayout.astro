@@ -63,7 +63,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
   <link rel="stylesheet" href={`/assets/base.css?v=${CSS_V}`} />
   <link rel="stylesheet" href={`/assets/make-page.css?v=${CSS_V}`} />
   {blog && <link rel="stylesheet" href={`/assets/blog.css?v=${CSS_V}`} />}
-  <script is:inline defer src="https://unpkg.com/lucide@latest"></script>
+  <script is:inline defer src="/assets/lucide.min.js"></script>
   <slot name="head" />
   <!-- Loaded LAST so its @media rules override make-page.css + per-page inline styles. -->
   <link rel="stylesheet" href={`/assets/mobile.css?v=${CSS_V}`} />
