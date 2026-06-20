@@ -42,6 +42,10 @@ export const POST: APIRoute = async ({ request }) => {
   const date = data.get('date')?.toString().trim() ?? '';
 
   if (!safeEqual(password, ADMIN_PASSWORD)) return json({ error: 'Incorrect password.' }, 401);
+
+  // Login check only — password is valid; don't write anything.
+  if (data.get('verify')) return json({ ok: true }, 200);
+
   if (!ISO_DATE.test(date)) return json({ error: 'Please choose a valid date.' }, 400);
 
   // Blackout dates arrive as a JSON array string. Keep only valid, de-duped, sorted ISO dates.

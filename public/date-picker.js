@@ -51,7 +51,11 @@
       + '.dp-day.sel{background:var(--acc,#af0d19);color:#fff;font-weight:700;}'
       + '.dp-foot{display:flex;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--fog,#e3e7ee);}'
       + '.dp-clear{background:none;border:none;color:var(--steel-400,#647084);font-size:13px;cursor:pointer;font-weight:600;padding:0;}'
-      + '.dp-clear:hover{color:var(--acc,#af0d19);}';
+      + '.dp-clear:hover{color:var(--acc,#af0d19);}'
+      // Inline (always-open) + read-only variants — used for the admin preview calendar.
+      + '.dp-inline{position:static;width:auto;max-width:none;box-shadow:none;border:1px solid var(--fog,#e3e7ee);}'
+      + '.dp-readonly .dp-day{cursor:default;}'
+      + '.dp-readonly .dp-day:hover:not(:disabled){background:none;}';
     var s = document.createElement('style');
     s.id = 'gcs-dp-styles';
     s.textContent = css;
@@ -78,6 +82,8 @@
     var name = opts.name || 'date';
     var placeholder = opts.placeholder || 'Choose a date';
     var allowClear = opts.allowClear !== false;
+    var inline = !!opts.inline;     // always-open calendar (no trigger/popover)
+    var readOnly = !!opts.readOnly; // display only — days aren't selectable (e.g. a preview)
     var extraDisabled = typeof opts.isDisabled === 'function' ? opts.isDisabled : function () { return false; };
     var onChange = typeof opts.onChange === 'function' ? opts.onChange : function () {};
 
@@ -90,23 +96,33 @@
     resetView();
 
     mount.classList.add('dp');
-    mount.innerHTML =
-      '<button type="button" class="dp-trigger" aria-haspopup="dialog" aria-expanded="false">'
-      + CAL + '<span class="dp-label">' + placeholder + '</span>'
-      + '<svg class="dp-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
-      + '</button>'
-      + '<input type="hidden" name="' + name + '">'
-      + '<div class="dp-pop" hidden></div>';
-    var trigger = mount.querySelector('.dp-trigger');
-    var labelEl = mount.querySelector('.dp-label');
-    var hidden = mount.querySelector('input[type="hidden"]');
-    var pop = mount.querySelector('.dp-pop');
+    var trigger = null, labelEl = null, hidden = null, pop;
+
+    if (inline) {
+      // Always-visible calendar embedded directly in the mount (no trigger/popover).
+      mount.innerHTML = '<div class="dp-pop dp-inline' + (readOnly ? ' dp-readonly' : '') + '"></div>';
+      pop = mount.querySelector('.dp-pop');
+    } else {
+      mount.innerHTML =
+        '<button type="button" class="dp-trigger" aria-haspopup="dialog" aria-expanded="false">'
+        + CAL + '<span class="dp-label">' + placeholder + '</span>'
+        + '<svg class="dp-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
+        + '</button>'
+        + '<input type="hidden" name="' + name + '">'
+        + '<div class="dp-pop" hidden></div>';
+      trigger = mount.querySelector('.dp-trigger');
+      labelEl = mount.querySelector('.dp-label');
+      hidden = mount.querySelector('input[type="hidden"]');
+      pop = mount.querySelector('.dp-pop');
+    }
 
     function dayDisabled(d) {
       return d.getTime() < floor.getTime() || d.getTime() > cap.getTime() || extraDisabled(d);
     }
+    function visible() { return inline || !pop.hidden; }
 
     function syncLabel() {
+      if (!labelEl) return;
       if (selected) { labelEl.textContent = fmt(selected); labelEl.classList.add('set'); hidden.value = iso(selected); }
       else { labelEl.textContent = placeholder; labelEl.classList.remove('set'); hidden.value = ''; }
     }
@@ -131,11 +147,15 @@
         var dis = dayDisabled(cur);
         var cls = 'dp-day';
         if (cur.getTime() === today.getTime()) cls += ' today';
-        if (selected && cur.getTime() === selected.getTime()) cls += ' sel';
-        html += '<button type="button" class="' + cls + '"' + (dis ? ' disabled' : ' data-day="' + iso(cur) + '"') + '>' + day + '</button>';
+        if (!readOnly && selected && cur.getTime() === selected.getTime()) cls += ' sel';
+        if (readOnly) {
+          html += '<button type="button" class="' + cls + '"' + (dis ? ' disabled' : '') + ' tabindex="-1">' + day + '</button>';
+        } else {
+          html += '<button type="button" class="' + cls + '"' + (dis ? ' disabled' : ' data-day="' + iso(cur) + '"') + '>' + day + '</button>';
+        }
       }
       html += '</div>';
-      if (allowClear && selected) html += '<div class="dp-foot"><button type="button" class="dp-clear" data-clear>Clear date</button></div>';
+      if (!readOnly && allowClear && selected) html += '<div class="dp-foot"><button type="button" class="dp-clear" data-clear>Clear date</button></div>';
       pop.innerHTML = html;
     }
 
@@ -152,19 +172,23 @@
     }
     function close() { pop.hidden = true; trigger.setAttribute('aria-expanded', 'false'); }
 
-    trigger.addEventListener('click', function () { if (pop.hidden) open(); else close(); });
+    if (inline) {
+      render(); // always visible
+    } else {
+      trigger.addEventListener('click', function () { if (pop.hidden) open(); else close(); });
+    }
 
     pop.addEventListener('click', function (ev) {
-      // Stop this click from reaching the document outside-click handler — render()
-      // replaces the clicked node, so its closest() check would later fail and the
-      // calendar would wrongly close when changing month.
-      ev.stopPropagation();
+      // For the popover: stop the click reaching the document outside-click handler —
+      // render() replaces the clicked node, so its closest() check would later fail.
+      if (!inline) ev.stopPropagation();
       var nav = ev.target.closest('[data-nav]');
       if (nav) {
         viewM += parseInt(nav.getAttribute('data-nav'), 10);
         if (viewM < 0) { viewM = 11; viewY--; } else if (viewM > 11) { viewM = 0; viewY++; }
         render(); return;
       }
+      if (readOnly) return; // preview — no day selection
       if (ev.target.closest('[data-clear]')) {
         selected = null; syncLabel(); close(); onChange(''); return;
       }
@@ -175,24 +199,25 @@
       }
     });
 
-    function onDocClick(ev) { if (!pop.hidden && !mount.contains(ev.target)) close(); }
-    function onKey(ev) { if (ev.key === 'Escape' && !pop.hidden) close(); }
-    document.addEventListener('click', onDocClick);
-    document.addEventListener('keydown', onKey);
+    if (!inline) {
+      document.addEventListener('click', function (ev) { if (!pop.hidden && !mount.contains(ev.target)) close(); });
+      document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && !pop.hidden) close(); });
+    }
 
     return {
       el: mount,
-      getValue: function () { return hidden.value || ''; },
+      getValue: function () { return hidden ? (hidden.value || '') : ''; },
       setValue: function (v) {
         selected = v ? midnight(parseISO(v)) : null;
-        resetView(); syncLabel(); if (!pop.hidden) render();
+        resetView(); syncLabel(); if (visible()) render();
       },
       setFloor: function (date) {
         floor = midnight(date);
         if (cap.getTime() < floor.getTime()) cap = new Date(floor.getFullYear() + 1, floor.getMonth(), floor.getDate());
         if (!selected) resetView();
-        if (!pop.hidden) render();
+        if (visible()) render();
       },
+      refresh: function () { if (visible()) render(); },
       open: open,
       close: close,
     };

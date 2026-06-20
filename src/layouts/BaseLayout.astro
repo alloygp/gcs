@@ -67,6 +67,10 @@ const headCss = baseCssRaw.split('../fonts/').join('/fonts/') + '\n' + makeCssRa
       <script is:inline define:vars={{ GA_ID }}>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',GA_ID);</script>
     </Fragment>
   )}
+  {/* Ahrefs Web Analytics — production only, so staging/preview/local traffic isn't counted. */}
+  {isProduction && (
+    <script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="yAIXuWPEZq7aUBDItOt2+Q" async></script>
+  )}
   <style is:inline set:html={headCss}></style>
   {blog && <style is:inline set:html={blogCssRaw}></style>}
   <script is:inline defer src="/assets/lucide.min.js"></script>
