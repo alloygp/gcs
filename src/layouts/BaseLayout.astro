@@ -14,7 +14,7 @@ const { title, description, canonical, screenLabel = '', blog = false, defaultMa
 // hashed by Astro), and Vercel caches /assets immutably. Bump this when a CSS
 // change must reach already-cached browsers. Going forward the must-revalidate
 // header on *.css (vercel.json) keeps them fresh without bumping.
-const CSS_V = '4';
+const CSS_V = '5';
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // A page is indexable ONLY when it's the production build AND the real domain is live.
 // PUBLIC_ENV=production stays set on prod for app behavior (GA, etc.); indexability is
@@ -33,6 +33,10 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Saira+Condensed:wght@500;600;700;800;900&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Saira+Condensed:wght@500;600;700;800;900&display=swap" /></noscript>
   {!indexable && <meta name="robots" content="noindex" />}
   <title>{title}</title>
   <meta name="description" content={description} />
@@ -59,7 +63,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
   <link rel="stylesheet" href={`/assets/base.css?v=${CSS_V}`} />
   <link rel="stylesheet" href={`/assets/make-page.css?v=${CSS_V}`} />
   {blog && <link rel="stylesheet" href={`/assets/blog.css?v=${CSS_V}`} />}
-  <script is:inline src="https://unpkg.com/lucide@latest"></script>
+  <script is:inline defer src="https://unpkg.com/lucide@latest"></script>
   <slot name="head" />
   <!-- Loaded LAST so its @media rules override make-page.css + per-page inline styles. -->
   <link rel="stylesheet" href={`/assets/mobile.css?v=${CSS_V}`} />
@@ -155,7 +159,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
   <!-- DRAWER -->
   <div class="drawer" id="drawer">
     <div class="dh"><a class="brand" href="/"><img src="/assets/logo-color.png" alt="German Car Specialists" /></a>
-    <button class="dx" id="dx"><i data-lucide="x"></i></button></div>
+    <button class="dx" id="dx" aria-label="Close menu"><i data-lucide="x"></i></button></div>
     <a href="/">Home</a><a href="/audi-repair-san-antonio">Audi Repair</a><a href="/bmw-repair-san-antonio">BMW Repair</a><a href="/mercedes-repair-san-antonio">Mercedes Repair</a><a href="/porsche-repair-san-antonio">Porsche Repair</a><a href="/shop-notes">Shop Notes</a><a href="/about">Our Shop</a><a href="/independent-vs-dealer-german-auto-service">Dealer vs. Independent</a><a href="/reviews">Reviews</a>
     <a class="btn btn-primary" href="/appointments"><i data-lucide="calendar-check"></i>Book / Contact</a>
   </div>
@@ -167,6 +171,6 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 
 <script is:inline src="/image-slot.js"></script>
 <script is:inline src="/date-picker.js"></script>
-<script is:inline src="/site.js"></script>
+<script is:inline defer src="/site.js"></script>
 </body>
 </html>
