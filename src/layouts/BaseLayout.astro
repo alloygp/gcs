@@ -1,4 +1,8 @@
 ---
+import baseCssRaw from '../../public/assets/base.css?raw';
+import makeCssRaw from '../../public/assets/make-page.css?raw';
+import mobileCssRaw from '../../public/assets/mobile.css?raw';
+import blogCssRaw from '../../public/assets/blog.css?raw';
 // German Car Specialists — base layout. Wraps every page with the shared
 // head, sticky header + nav, make-picker bar, mobile drawer, footer, and runtime.
 export interface Props {
@@ -27,6 +31,9 @@ const indexable = isProduction && import.meta.env.PUBLIC_SITE_LIVE === 'true';
 const ogImage = new URL('/assets/og.png', Astro.site).href;
 // GA4: set PUBLIC_GA_MEASUREMENT_ID (G-XXXXXXXXXX) in Vercel prod env. Only loads in production.
 const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+// Inlined (above, via ?raw) to remove render-blocking stylesheet requests.
+// base.css's relative ../fonts/ paths -> absolute /fonts/ (CSS now in document).
+const headCss = baseCssRaw.split('../fonts/').join('/fonts/') + '\n' + makeCssRaw;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -64,13 +71,12 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
   {isProduction && (
     <script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="yAIXuWPEZq7aUBDItOt2+Q" async></script>
   )}
-  <link rel="stylesheet" href={`/assets/base.css?v=${CSS_V}`} />
-  <link rel="stylesheet" href={`/assets/make-page.css?v=${CSS_V}`} />
-  {blog && <link rel="stylesheet" href={`/assets/blog.css?v=${CSS_V}`} />}
+  <style is:inline set:html={headCss}></style>
+  {blog && <style is:inline set:html={blogCssRaw}></style>}
   <script is:inline defer src="/assets/lucide.min.js"></script>
   <slot name="head" />
-  <!-- Loaded LAST so its @media rules override make-page.css + per-page inline styles. -->
-  <link rel="stylesheet" href={`/assets/mobile.css?v=${CSS_V}`} />
+  <!-- Inlined LAST so its @media rules override make-page + per-page inline styles. -->
+  <style is:inline set:html={mobileCssRaw}></style>
 </head>
 <body>
 <div class="wrap" data-screen-label={screenLabel}>
