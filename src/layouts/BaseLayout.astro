@@ -31,6 +31,7 @@ const indexable = isProduction && import.meta.env.PUBLIC_SITE_LIVE === 'true';
 const ogImage = new URL('/assets/og.png', Astro.site).href;
 // GA4: set PUBLIC_GA_MEASUREMENT_ID (G-XXXXXXXXXX) in Vercel prod env. Only loads in production.
 const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+const isHome = Astro.url.pathname === '/';
 // Inlined (above, via ?raw) to remove render-blocking stylesheet requests.
 // base.css's relative ../fonts/ paths -> absolute /fonts/ (CSS now in document).
 const headCss = baseCssRaw.split('../fonts/').join('/fonts/') + '\n' + makeCssRaw;
@@ -40,6 +41,8 @@ const headCss = baseCssRaw.split('../fonts/').join('/fonts/') + '\n' + makeCssRa
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {/* Homepage hero photo: desktop only (mobile uses a CSS gradient — no LCP image). Preloaded early so it isn't load-delayed. */}
+  {isHome && <link rel="preload" as="image" href="/assets/photo-audi-r8-shop.webp?v=hero2" media="(min-width:861px)" fetchpriority="high" />}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Saira+Condensed:wght@500;600;700;800;900&display=swap" media="print" onload="this.media='all'" />
