@@ -145,23 +145,23 @@ const CONTENT = `<!-- BREADCRUMB -->
               <label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
             </div>
             <div class="sm-form">
-              <div class="sm-field"><label>Full name</label><input type="text" name="name" required placeholder="Jordan Becker"></div>
-              <div class="sm-field"><label>Phone</label><input type="tel" name="phone" required placeholder="(210) 555-0123"></div>
-              <div class="sm-field full"><label>Email</label><input type="email" name="email" required placeholder="you@email.com"></div>
+              <div class="sm-field"><label for="f-name">Full name</label><input id="f-name" type="text" name="name" required placeholder="Jordan Becker"></div>
+              <div class="sm-field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" name="phone" required placeholder="(210) 555-0123"></div>
+              <div class="sm-field full"><label for="f-email">Email</label><input id="f-email" type="email" name="email" required placeholder="you@email.com"></div>
               <div class="sm-field full appt-only" id="custField"><label>Are you a current customer?</label>
                 <div class="cust-opts" style="display:flex;gap:22px;padding-top:6px;">
                   <label style="display:inline-flex;align-items:center;gap:7px;font-weight:500;cursor:pointer;"><input type="radio" name="returning" value="yes" required> Yes</label>
                   <label style="display:inline-flex;align-items:center;gap:7px;font-weight:500;cursor:pointer;"><input type="radio" name="returning" value="no" required> No</label>
                 </div>
               </div>
-              <div class="sm-field full appt-only"><label>VIN <span class="dateline">— required for new customers</span></label><input type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
-              <div class="sm-field appt-only"><label>Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
-              <div class="sm-field appt-only"><label>Model &amp; year</label><input type="text" name="model" placeholder="e.g. 2019 Q5"></div>
-              <div class="sm-field full"><label id="msgLabel">Services needed <span class="dateline">— symptoms or service requested</span></label><input type="text" name="message" id="msgInput" placeholder="e.g. oil service + check-engine light"></div>
+              <div class="sm-field full appt-only"><label for="f-vin">VIN <span class="dateline">— required for new customers</span></label><input id="f-vin" type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
+              <div class="sm-field appt-only"><label for="apptMake">Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
+              <div class="sm-field appt-only"><label for="f-model">Model &amp; year</label><input id="f-model" type="text" name="model" placeholder="e.g. 2019 Q5"></div>
+              <div class="sm-field full"><label id="msgLabel" for="msgInput">Services needed <span class="dateline">— symptoms or service requested</span></label><input type="text" name="message" id="msgInput" placeholder="e.g. oil service + check-engine light"></div>
               <div class="sm-field appt-only" id="dateField"><label>Preferred drop-off date <span class="dateline">(optional)</span></label>
                 <div id="datePicker"><!-- shared calendar mounts here (public/date-picker.js) --></div>
               </div>
-              <div class="sm-field appt-only"><label>Preferred drop-off time <span class="dateline">(optional)</span></label><select name="time"><option value="">No preference</option><option>Morning (9a–12p)</option><option>Late afternoon (4–5:30p · drop-off only)</option></select></div>
+              <div class="sm-field appt-only"><label for="f-time">Preferred drop-off time <span class="dateline">(optional)</span></label><select id="f-time" name="time"><option value="">No preference</option><option>Morning (9a–12p)</option><option>Late afternoon (4–5:30p · drop-off only)</option></select></div>
               <button class="btn btn-primary full" id="submitBtn"><i data-lucide="send"></i><span id="btnText">Request Appointment</span></button>
             </div>
           </form>

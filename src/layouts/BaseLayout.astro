@@ -14,7 +14,7 @@ const { title, description, canonical, screenLabel = '', blog = false, defaultMa
 // hashed by Astro), and Vercel caches /assets immutably. Bump this when a CSS
 // change must reach already-cached browsers. Going forward the must-revalidate
 // header on *.css (vercel.json) keeps them fresh without bumping.
-const CSS_V = '5';
+const CSS_V = '6';
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // A page is indexable ONLY when it's the production build AND the real domain is live.
 // PUBLIC_ENV=production stays set on prod for app behavior (GA, etc.); indexability is
@@ -134,7 +134,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
   </div>
 
   <!-- PAGE CONTENT -->
-  <slot />
+  <main id="content"><slot /></main>
 
   <!-- FOOTER -->
   <footer class="ftr"><div class="container">
@@ -143,10 +143,10 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
         <a class="brand" href="/"><img src="/assets/logo-white.png" alt="German Car Specialists" /></a>
         <p>The independent dealer alternative for German &amp; European cars in San Antonio. Audi, BMW, Mercedes &amp; Porsche — factory-trained, honestly run, fully warrantied. Carfax Top-Rated since 2010.</p>
       </div>
-      <div><h4>By Make</h4><ul><li><a href="/audi-repair-san-antonio">Audi Repair</a></li><li><a href="/bmw-repair-san-antonio">BMW Repair</a></li><li><a href="/mercedes-repair-san-antonio">Mercedes Repair</a></li><li><a href="/porsche-repair-san-antonio">Porsche Repair</a></li></ul></div>
-      <div><h4>Company</h4><ul><li><a href="/about">About Us</a></li><li><a href="/independent-vs-dealer-german-auto-service">Dealer vs. Independent</a></li><li><a href="/reviews">Reviews</a></li><li><a href="/shop-notes">Shop Notes</a></li><li><a href="/appointments">Book / Contact</a></li></ul></div>
+      <div><h3>By Make</h3><ul><li><a href="/audi-repair-san-antonio">Audi Repair</a></li><li><a href="/bmw-repair-san-antonio">BMW Repair</a></li><li><a href="/mercedes-repair-san-antonio">Mercedes Repair</a></li><li><a href="/porsche-repair-san-antonio">Porsche Repair</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/about">About Us</a></li><li><a href="/independent-vs-dealer-german-auto-service">Dealer vs. Independent</a></li><li><a href="/reviews">Reviews</a></li><li><a href="/shop-notes">Shop Notes</a></li><li><a href="/appointments">Book / Contact</a></li></ul></div>
       <div>
-        <h4>Visit the shop</h4>
+        <h3>Visit the shop</h3>
         <div class="ct"><i data-lucide="map-pin"></i>15555 Tradesman Dr, Ste 500, San Antonio, TX 78249</div>
         <div class="ct"><i data-lucide="phone"></i>(210) 399-1172</div>
         <div class="ct"><i data-lucide="clock"></i>Mon–Thu 7:30a–5:30p · Fri 7:30a–5p</div>
