@@ -159,6 +159,23 @@ async function findExistingCustomer(req: LeadRequest): Promise<ExistingCustomer 
 }
 
 /**
+ * Find an existing vehicle by VIN. Required because Shopmonkey REJECTS creating a
+ * vehicle whose VIN already exists — and a returning customer's car is already in
+ * the system — so we reuse it (same physical car) instead of failing the create.
+ * Never throws.
+ */
+async function findExistingVehicle(vin: string): Promise<string | null> {
+  if (!vin) return null;
+  try {
+    const found = await smGet(`/vehicle?limit=1&${whereParam({ vin })}`);
+    if (Array.isArray(found) && found.length) return found[0]?.id ?? null;
+  } catch (err) {
+    console.error('Vehicle lookup failed (will create new):', err);
+  }
+  return null;
+}
+
+/**
  * Create a customer + vehicle, then an order on the Workflow board.
  * Reuses an existing customer/vehicle when one matches (by email/phone, VIN) so
  * repeat leads don't pile up duplicates. Returns a structured result; never throws.
@@ -234,15 +251,16 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
     }
   }
 
-  // 2. Vehicle — created with `customerId` so this customer becomes the OWNER (that's
-  //    how Shopmonkey shows it under the customer; vehicles have owners, not a
-  //    customerId field). Shopmonkey VIN-decodes it (submodel/engine/transmission/etc).
-  //    We deliberately do NOT reuse a vehicle by VIN: a VIN match can belong to a
-  //    different customer, which would attach their car and leave this customer's
-  //    record empty. `size` is required.
+  // 2. Vehicle. Reuse the existing vehicle for this VIN (Shopmonkey rejects duplicate
+  //    VINs, and a returning customer's car is already on file). Otherwise create it
+  //    with `customerId` so this customer becomes the OWNER — that's how Shopmonkey
+  //    shows the car under the customer (vehicles have owners, not a customerId field).
+  //    A newly-created vehicle is VIN-decoded by Shopmonkey (submodel/engine/etc).
+  //    `size` is required.
   let vehicleId: string | undefined;
   let vehicleError: string | undefined;
-  if (req.vin || req.make || req.model) {
+  if (req.vin) vehicleId = (await findExistingVehicle(req.vin)) ?? undefined;
+  if (!vehicleId && (req.vin || req.make || req.model)) {
     try {
       const vehicle = await smFetch('/vehicle', {
         ...locationField,
