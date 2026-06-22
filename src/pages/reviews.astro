@@ -7,6 +7,13 @@ const CANON = `https://mygermancarsa.com/reviews`;
 const SCREEN = `Reviews`;
 const BLOG = false;
 const DEFAULT_MAKE = undefined;
+// Live Google reviews: set these in Vercel env to activate the widget.
+// Without them, the section gracefully shows the read/leave-a-review CTA.
+const GOOGLE_PLACE_ID = import.meta.env.PUBLIC_GOOGLE_PLACE_ID || 'ChIJG9XmvbhdXIYR2fUq34LMeWE';
+const GOOGLE_MAPS_KEY = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY || '';
+const GMAPS_SEARCH = 'https://www.google.com/maps?q=German+Car+Specialists+San+Antonio';
+const GOOGLE_REVIEWS_URL = GOOGLE_PLACE_ID ? ('https://search.google.com/local/reviews?placeid=' + GOOGLE_PLACE_ID) : GMAPS_SEARCH;
+const GOOGLE_WRITE_URL = GOOGLE_PLACE_ID ? ('https://search.google.com/local/writereview?placeid=' + GOOGLE_PLACE_ID) : GMAPS_SEARCH;
 const STYLE = `/* reviews-page specifics */
 .hero.rev .container{grid-template-columns:1.05fr .95fr;}
 .ratingbox{background:#fff;border:1px solid var(--fog);border-radius:16px;box-shadow:0 24px 56px rgba(12,14,18,.12);padding:clamp(28px,3.4vw,40px);}
@@ -46,8 +53,15 @@ const STYLE = `/* reviews-page specifics */
 .gembed .gbar b{font-size:15px;font-weight:800;color:var(--navy);}
 .gembed .gbar .lk{margin-left:auto;font-size:12px;color:var(--steel-400);display:inline-flex;align-items:center;gap:6px;}
 .gembed .gbar .lk svg{width:13px;height:13px;}
-.gembed .gbody{padding:48px 32px;text-align:center;color:var(--steel-400);font-family:var(--mono);font-size:13px;letter-spacing:.04em;}
-.gembed .gbody i{display:block;margin:0 auto 12px;}`;
+.gembed .gbody{padding:36px 32px;}
+.gembed .g-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.gembed .g-live{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;text-align:left;margin-bottom:24px;}
+.gembed .g-live .grev{border:1px solid var(--fog);border-radius:10px;padding:16px;background:#fff;}
+.gembed .g-live .grev .gh{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.gembed .g-live .grev .ga{width:34px;height:34px;border-radius:50%;background:var(--mist);display:grid;place-items:center;font-weight:800;color:var(--navy);font-size:13px;flex:none;}
+.gembed .g-live .grev b{display:block;font-size:14px;color:var(--navy);line-height:1.2;}
+.gembed .g-live .grev .grs{color:var(--star);font-size:12px;letter-spacing:1px;}
+.gembed .g-live .grev p{font-size:13.5px;color:var(--steel-500);line-height:1.55;margin:0;}`;
 const CONTENT = `<!-- BREADCRUMB -->
 <div class="crumbbar"><div class="container"><div class="crumb"><a href="/">Home</a><i data-lucide="chevron-right"></i><span class="cur">Reviews</span></div></div></div>
 
@@ -169,24 +183,61 @@ const CONTENT = `<!-- BREADCRUMB -->
   </div>
 </section>
 
-<!-- GOOGLE EMBED -->
+<!-- GOOGLE REVIEWS -->
 <section class="sec alt">
   <div class="container">
     <div class="sec-head reveal">
       <span class="eyebrow">Straight from Google</span>
       <h2 class="h2">See all our reviews.</h2>
-      <p class="lead">We don't cherry-pick. Read every review, unfiltered, on our Google Business profile.</p>
+      <p class="lead">We don't cherry-pick. Read every review, unfiltered, on our Google Business profile — or leave one after your next visit.</p>
     </div>
     <div class="gembed reveal">
       <div class="gbar">
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.5 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.4-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.8 8.9 4.8 12 4.8z"/></svg>
         <b>German Car Specialists · 4.9 ★ on Google</b>
-        <a class="lk" href="https://www.google.com/maps?q=German+Car+Specialists+San+Antonio" target="_blank" rel="noopener">Open in Google <i data-lucide="external-link"></i></a>
+        <a class="lk" href="${GOOGLE_REVIEWS_URL}" target="_blank" rel="noopener">Open in Google <i data-lucide="external-link"></i></a>
       </div>
-      <div class="gbody"><i data-lucide="messages-square"></i>↑ Embed your live Google Reviews widget here</div>
+      <div class="gbody">
+        <div id="g-reviews" class="g-live" hidden></div>
+        <div id="g-cta" class="g-cta">
+          <a class="btn btn-primary" href="${GOOGLE_WRITE_URL}" target="_blank" rel="noopener"><i data-lucide="star"></i>Leave a Google review</a>
+          <a class="btn btn-ghost" href="${GOOGLE_REVIEWS_URL}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>Read all on Google</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+<script>
+(function(){
+  var KEY="${GOOGLE_MAPS_KEY}", PID="${GOOGLE_PLACE_ID}";
+  if(!KEY||!PID) return;
+  var mount=document.getElementById('g-reviews');
+  if(!mount) return;
+  var esc=function(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;};
+  var tag=document.createElement('script');
+  tag.src="https://maps.googleapis.com/maps/api/js?key="+encodeURIComponent(KEY)+"&v=weekly&loading=async";
+  tag.async=true;
+  tag.onload=async function(){
+    try{
+      var lib=await google.maps.importLibrary("places");
+      var place=new lib.Place({id:PID});
+      await place.fetchFields({fields:["reviews","rating","userRatingCount"]});
+      var revs=(place.reviews||[]).slice(0,6);
+      if(!revs.length) return;
+      mount.innerHTML=revs.map(function(r){
+        var name=(r.authorAttribution&&r.authorAttribution.displayName)||"Google reviewer";
+        var init=name.split(" ").filter(Boolean).map(function(w){return w[0];}).join("").slice(0,2).toUpperCase();
+        var n=Math.round(r.rating||5);
+        var stars=new Array(n+1).join("★");
+        var txt=r.text&&r.text.text?r.text.text:(typeof r.text==="string"?r.text:"");
+        return '<div class="grev"><div class="gh"><span class="ga">'+esc(init)+'</span><div><b>'+esc(name)+'</b><div class="grs">'+stars+'</div></div></div><p>'+esc(txt)+'</p></div>';
+      }).join("");
+      mount.hidden=false;
+    }catch(e){/* leave the read/leave-a-review CTA in place */}
+  };
+  document.head.appendChild(tag);
+})();
+</script>
 
 <!-- BOOKING -->
 <section class="sec book" id="book">
