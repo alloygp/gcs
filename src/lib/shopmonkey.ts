@@ -101,9 +101,82 @@ async function smFetch(path: string, body: unknown): Promise<any> {
   return json?.data ?? json;
 }
 
+async function smGet(path: string): Promise<any> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: { Authorization: `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+  });
+  const text = await res.text();
+  let json: any;
+  try { json = text ? JSON.parse(text) : undefined; } catch { /* keep raw */ }
+  if (!res.ok) {
+    const msg = json?.message ?? json?.error ?? text ?? `HTTP ${res.status}`;
+    throw new Error(`Shopmonkey GET ${path} → ${res.status}: ${msg}`);
+  }
+  return json?.data ?? json;
+}
+
+// Shopmonkey's `where` query param is Prisma-style and filters on SCALAR fields
+// (equals/contains work), but relation filters on emails[]/phoneNumbers[] are NOT
+// honored. So to find an existing customer we narrow by a scalar (last/first name)
+// and then confirm the match client-side by email or phone.
+function whereParam(obj: unknown): string {
+  return `where=${encodeURIComponent(JSON.stringify(obj))}`;
+}
+
+interface ExistingCustomer { id: string; phoneNumberId?: string; emailId?: string }
+
+/** Find an existing customer by name, confirmed by a matching email or phone. Null if none. Never throws. */
+async function findExistingCustomer(req: LeadRequest): Promise<ExistingCustomer | null> {
+  const wantEmail = req.email.trim().toLowerCase();
+  const wantPhone = normalizePhone(req.phone);
+  if (!wantEmail && !wantPhone) return null; // nothing to confirm a match against
+  const last = req.lastName?.trim();
+  const first = req.firstName?.trim();
+  const field = last ? 'lastName' : first ? 'firstName' : '';
+  const value = last || first;
+  if (!field || !value) return null;
+
+  let candidates: any[] = [];
+  try {
+    candidates = await smGet(`/customer?limit=100&${whereParam({ [field]: value })}`);
+  } catch (err) {
+    console.error('Customer lookup failed (will create new):', err);
+    return null;
+  }
+  if (!Array.isArray(candidates) || !candidates.length) return null;
+
+  const primaryOr = (arr: any[]) => arr?.find((x) => x.primary) ?? arr?.[0];
+  // Prefer an email match (most unique), then a phone match.
+  for (const c of candidates) {
+    const em = wantEmail && (c.emails || []).find((e: any) => (e.email || '').trim().toLowerCase() === wantEmail);
+    if (em) return { id: c.id, emailId: em.id, phoneNumberId: primaryOr(c.phoneNumbers || [])?.id };
+  }
+  for (const c of candidates) {
+    const ph = wantPhone && (c.phoneNumbers || []).find((p: any) => normalizePhone(p.number || '') === wantPhone);
+    if (ph) return { id: c.id, phoneNumberId: ph.id, emailId: primaryOr(c.emails || [])?.id };
+  }
+  return null;
+}
+
+/** Find an existing vehicle by VIN (scalar filter works), preferring one already on this customer. */
+async function findExistingVehicle(vin: string, customerId?: string): Promise<string | null> {
+  if (!vin) return null;
+  try {
+    const found = await smGet(`/vehicle?limit=20&${whereParam({ vin })}`);
+    if (Array.isArray(found) && found.length) {
+      const match = (customerId && found.find((v: any) => v.customerId === customerId)) || found[0];
+      return match?.id ?? null;
+    }
+  } catch (err) {
+    console.error('Vehicle lookup failed (will create new):', err);
+  }
+  return null;
+}
+
 /**
  * Create a customer + vehicle, then an order on the Workflow board.
- * Returns a structured result; never throws — failures are reported in `detail`.
+ * Reuses an existing customer/vehicle when one matches (by email/phone, VIN) so
+ * repeat leads don't pile up duplicates. Returns a structured result; never throws.
  */
 export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
   if (!shopmonkeyConfigured) {
@@ -125,6 +198,18 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
   let customerPhoneId: string | undefined; // set on the order so the card shows the phone
   let customerEmailId: string | undefined;
   let customerError: string | undefined;
+  let matchedExisting = false;
+
+  // 1a. First try to LINK to an existing customer (by name + email/phone) so repeat
+  //     leads don't create duplicate customers. Falls through to create if no match.
+  const existing = await findExistingCustomer(req);
+  if (existing) {
+    customerId = existing.id;
+    customerPhoneId = existing.phoneNumberId;
+    customerEmailId = existing.emailId;
+    matchedExisting = true;
+  }
+
   const emails = req.email
     ? [{ email: req.email, primary: true, subscribed: false, marketingOptIn: false }]
     : [];
@@ -147,24 +232,29 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
   if (phoneNumbers.length) variants.push({ emails, phoneNumbers: [] });          // drop phone, keep email
   if (emails.length && phoneNumbers.length) variants.push({ emails: [], phoneNumbers }); // drop email, keep phone
   if (emails.length || phoneNumbers.length) variants.push({ emails: [], phoneNumbers: [] }); // name only
-  for (const contacts of variants) {
-    try {
-      const customer = await smFetch('/customer', { ...customerBase, ...contacts });
-      customerId = customer?.id;
-      customerPhoneId = customer?.phoneNumbers?.[0]?.id;
-      customerEmailId = customer?.emails?.[0]?.id;
-      customerError = undefined;
-      break;
-    } catch (err) {
-      customerError = err instanceof Error ? err.message : String(err);
-      console.error('Customer create attempt failed; trying with fewer contacts:', err);
+  // 1b. No existing match → create a new customer.
+  if (!matchedExisting) {
+    for (const contacts of variants) {
+      try {
+        const customer = await smFetch('/customer', { ...customerBase, ...contacts });
+        customerId = customer?.id;
+        customerPhoneId = customer?.phoneNumbers?.[0]?.id;
+        customerEmailId = customer?.emails?.[0]?.id;
+        customerError = undefined;
+        break;
+      } catch (err) {
+        customerError = err instanceof Error ? err.message : String(err);
+        console.error('Customer create attempt failed; trying with fewer contacts:', err);
+      }
     }
   }
 
-  // 2. Vehicle (linked to the customer). `size` is required.
+  // 2. Vehicle (linked to the customer). Reuse an existing vehicle with the same VIN
+  //    (so repeat leads don't duplicate the car); otherwise create. `size` is required.
   let vehicleId: string | undefined;
   let vehicleError: string | undefined;
-  if (req.vin || req.make || req.model) {
+  if (req.vin) vehicleId = (await findExistingVehicle(req.vin, customerId)) ?? undefined;
+  if (!vehicleId && (req.vin || req.make || req.model)) {
     try {
       const vehicle = await smFetch('/vehicle', {
         ...locationField,
@@ -192,6 +282,7 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
     vehicleLine ? `Vehicle: ${vehicleLine}` : '',
     req.message ? req.message : '',
     contact ? `Contact: ${contact}` : '',
+    matchedExisting ? '(Linked to existing customer.)' : '',
     customerId ? '' : `(Customer not auto-linked${customerError ? ` — ${customerError}` : ''})`,
     (req.vin || req.make || req.model) && !vehicleId
       ? `(Vehicle not auto-linked${vehicleError ? ` — ${vehicleError}` : ''})`
@@ -215,7 +306,7 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
 
     const okBits: string[] = [];
     const failBits: string[] = [];
-    if (customerId) okBits.push('customer'); else failBits.push('customer');
+    if (customerId) okBits.push(matchedExisting ? 'existing customer' : 'new customer'); else failBits.push('customer');
     if (vehicleId) okBits.push('vehicle');
     else if (req.vin || req.make || req.model) failBits.push('vehicle');
     let linked = okBits.length ? `${okBits.join(' + ')} linked` : '';
