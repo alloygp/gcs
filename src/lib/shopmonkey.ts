@@ -158,21 +158,6 @@ async function findExistingCustomer(req: LeadRequest): Promise<ExistingCustomer 
   return null;
 }
 
-/** Find an existing vehicle by VIN (scalar filter works), preferring one already on this customer. */
-async function findExistingVehicle(vin: string, customerId?: string): Promise<string | null> {
-  if (!vin) return null;
-  try {
-    const found = await smGet(`/vehicle?limit=20&${whereParam({ vin })}`);
-    if (Array.isArray(found) && found.length) {
-      const match = (customerId && found.find((v: any) => v.customerId === customerId)) || found[0];
-      return match?.id ?? null;
-    }
-  } catch (err) {
-    console.error('Vehicle lookup failed (will create new):', err);
-  }
-  return null;
-}
-
 /**
  * Create a customer + vehicle, then an order on the Workflow board.
  * Reuses an existing customer/vehicle when one matches (by email/phone, VIN) so
@@ -249,12 +234,15 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
     }
   }
 
-  // 2. Vehicle (linked to the customer). Reuse an existing vehicle with the same VIN
-  //    (so repeat leads don't duplicate the car); otherwise create. `size` is required.
+  // 2. Vehicle — created with `customerId` so this customer becomes the OWNER (that's
+  //    how Shopmonkey shows it under the customer; vehicles have owners, not a
+  //    customerId field). Shopmonkey VIN-decodes it (submodel/engine/transmission/etc).
+  //    We deliberately do NOT reuse a vehicle by VIN: a VIN match can belong to a
+  //    different customer, which would attach their car and leave this customer's
+  //    record empty. `size` is required.
   let vehicleId: string | undefined;
   let vehicleError: string | undefined;
-  if (req.vin) vehicleId = (await findExistingVehicle(req.vin, customerId)) ?? undefined;
-  if (!vehicleId && (req.vin || req.make || req.model)) {
+  if (req.vin || req.make || req.model) {
     try {
       const vehicle = await smFetch('/vehicle', {
         ...locationField,
