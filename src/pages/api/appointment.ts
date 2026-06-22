@@ -34,6 +34,13 @@ const INTENT_LABEL: Record<string, string> = {
   question: 'General inquiry',
 }
 
+// Email/heading per intent so a general inquiry doesn't read as an appointment.
+const INTENT_HEADING: Record<string, string> = {
+  book: 'New Appointment Request',
+  estimate: 'New Estimate Request',
+  question: 'New General Inquiry',
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.formData();
@@ -118,17 +125,18 @@ export const POST: APIRoute = async ({ request }) => {
             to: EMAIL_CONFIG.notify,
             subject: `New ${intentLabel.toLowerCase()}: ${name}${vehicle ? ` (${vehicle})` : ''}`,
             html: `
-              <h2>New Appointment Request</h2>
+              <h2>${INTENT_HEADING[intent] || 'New Request'}</h2>
               <p><strong>Intent:</strong> ${intentLabel}</p>
               <p><strong>Name:</strong> ${name}</p>
               <p><strong>Phone:</strong> ${phone}</p>
               <p><strong>Email:</strong> ${email}</p>
               ${customerStatus ? `<p><strong>Customer:</strong> ${customerStatus}</p>` : ''}
+              ${intent === 'book' ? `
               <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
               ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
               <p><strong>Preferred drop-off date:</strong> ${date || '— (none given)'}</p>
-              <p><strong>Preferred drop-off time:</strong> ${time || '— (no preference)'}</p>
-              ${message ? `<p><strong>What it needs:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
+              <p><strong>Preferred drop-off time:</strong> ${time || '— (no preference)'}</p>` : (vehicle ? `<p><strong>Vehicle:</strong> ${vehicle}</p>` : '')}
+              ${message ? `<p><strong>${intent === 'book' ? 'What it needs' : 'Message'}:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
               ${smLine}
             `,
           })
