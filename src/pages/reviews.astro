@@ -32,6 +32,9 @@ const STYLE = `/* reviews-page specifics */
 @media(max-width:920px){.hero.rev .container{grid-template-columns:1fr;}}
 
 .rev-grid.wide{grid-template-columns:repeat(3,1fr);}
+.rev-grid.wide .rcard{min-width:0;}
+@media(max-width:980px){.rev-grid.wide{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.rev-grid.wide{grid-template-columns:1fr;}}
 .rcard .rsrc{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--steel-400);margin-left:auto;}
 .rcard .rsrc svg{width:13px;height:13px;}
 .rcard .rtop{display:flex;align-items:center;gap:10px;}
