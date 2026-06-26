@@ -241,17 +241,20 @@
     // bogus "Audi" vehicle on an inquiry), and VIN is required only on the
     // appointment path (a hidden+required field would silently block submit).
     var apptOnly = [].slice.call(form.querySelectorAll('.appt-only'));
+    var newOnly = [].slice.call(form.querySelectorAll('.new-only'));
     var msgLabel = document.getElementById('msgLabel');
     var msgInput = document.getElementById('msgInput');
-    // VIN is required only for NEW customers on the appointment path. Current
-    // customers (Berk looks them up by record) and the inquiry form skip it.
-    function syncVinRequired() {
-      if (!vinEl) return;
-      var ci = form.querySelector('[name="intent"]:checked');
-      var isAppt = !ci || ci.value === 'book';
+    // "How did you hear about us?" shows + is required only for NEW customers
+    // (returning = No). Hidden + disabled otherwise so it never blocks submit.
+    function syncNewOnly() {
       var ret = form.querySelector('[name="returning"]:checked');
-      var isNew = !ret || ret.value !== 'yes';
-      vinEl.required = isAppt && isNew && !vinEl.disabled;
+      var isNew = ret && ret.value === 'no';
+      newOnly.forEach(function (el) {
+        el.style.display = isNew ? '' : 'none';
+        [].slice.call(el.querySelectorAll('input, select, textarea')).forEach(function (f) {
+          f.disabled = !isNew; // disabled fields are excluded from FormData + validation
+        });
+      });
     }
     function applyIntent() {
       var checked = form.querySelector('[name="intent"]:checked');
@@ -269,15 +272,15 @@
       if (msgInput) msgInput.placeholder = isAppt
         ? 'e.g. oil service + check-engine light'
         : 'e.g. do you service the Audi RS line?';
-      syncVinRequired();
     }
     [].slice.call(form.querySelectorAll('[name="intent"]')).forEach(function (r) {
       r.addEventListener('change', applyIntent);
     });
     [].slice.call(form.querySelectorAll('[name="returning"]')).forEach(function (r) {
-      r.addEventListener('change', syncVinRequired);
+      r.addEventListener('change', syncNewOnly);
     });
     applyIntent();
+    syncNewOnly();
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();

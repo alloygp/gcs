@@ -62,6 +62,7 @@ export const POST: APIRoute = async ({ request }) => {
     const time    = data.get('time')?.toString().trim()    ?? '';
     const intentRaw = data.get('intent')?.toString().trim() ?? 'book';
     const returning = data.get('returning')?.toString().trim() ?? '';
+    const referral  = data.get('referral')?.toString().trim()  ?? ''; // "How did you hear" — new customers only
 
     // Split a 4-digit year out of the combined "Model & year" field.
     const yearMatch = modelYear.match(/\b(19|20)\d{2}\b/);
@@ -104,7 +105,7 @@ export const POST: APIRoute = async ({ request }) => {
         vin,
         preferredDate: date,
         preferredTime: time,
-        message: `Intent: ${intentLabel}${customerStatus ? `\nCustomer: ${customerStatus}` : ''}${message ? `\n${message}` : ''}`,
+        message: `Intent: ${intentLabel}${customerStatus ? `\nCustomer: ${customerStatus}` : ''}${referral ? `\nHeard about us: ${referral}` : ''}${message ? `\n${message}` : ''}`,
       });
     }
 
@@ -131,6 +132,7 @@ export const POST: APIRoute = async ({ request }) => {
               <p><strong>Phone:</strong> ${phone}</p>
               <p><strong>Email:</strong> ${email}</p>
               ${customerStatus ? `<p><strong>Customer:</strong> ${customerStatus}</p>` : ''}
+              ${referral ? `<p><strong>How they heard about us:</strong> ${referral}</p>` : ''}
               ${intent === 'book' ? `
               <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
               ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
