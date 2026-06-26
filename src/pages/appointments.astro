@@ -55,6 +55,7 @@ const STYLE = `/* booking/contact page specifics */
 .bkform .reassure b{color:var(--navy);font-weight:700;}
 .bkform .note{text-align:center;font-size:12px;color:var(--steel-400);padding:0 28px 22px;}
 .dateline{font-size:11.5px;color:var(--steel-400);font-weight:500;}
+.req{color:var(--acc);font-weight:700;}/* red * on required-field labels */
 /* Drop-off date uses the shared calendar component; its styles are injected by
    public/date-picker.js. Override only the title font to match the form. */
 #datePicker .dp-title{font-family:var(--font-display);}
@@ -145,16 +146,18 @@ const CONTENT = `<!-- BREADCRUMB -->
               <label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
             </div>
             <div class="sm-form">
-              <div class="sm-field"><label for="f-name">Full name</label><input id="f-name" type="text" name="name" required placeholder="Jordan Becker"></div>
-              <div class="sm-field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" name="phone" required placeholder="(210) 555-0123"></div>
-              <div class="sm-field full"><label for="f-email">Email</label><input id="f-email" type="email" name="email" required placeholder="you@email.com"></div>
-              <div class="sm-field full" id="custField"><label>Are you a current customer?</label>
+              <div class="sm-field"><label for="f-name">Full name <span class="req" aria-hidden="true">*</span></label><input id="f-name" type="text" name="name" required placeholder="Jordan Becker"></div>
+              <div class="sm-field"><label for="f-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="f-phone" type="tel" name="phone" required placeholder="(210) 555-0123"></div>
+              <div class="sm-field full"><label for="f-email">Email <span class="req" aria-hidden="true">*</span></label><input id="f-email" type="email" name="email" required placeholder="you@email.com"></div>
+              <div class="sm-field full" id="custField"><label>Are you a current customer? <span class="req" aria-hidden="true">*</span></label>
                 <div class="cust-opts" style="display:flex;gap:22px;padding-top:6px;">
                   <label style="display:inline-flex;align-items:center;gap:7px;font-weight:500;cursor:pointer;"><input type="radio" name="returning" value="yes" required> Yes</label>
                   <label style="display:inline-flex;align-items:center;gap:7px;font-weight:500;cursor:pointer;"><input type="radio" name="returning" value="no" required> No</label>
                 </div>
               </div>
-              <div class="sm-field full appt-only"><label for="f-vin">VIN <span class="dateline">— required for new customers</span></label><input id="f-vin" type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
+              <!-- New-customer only: how they found the shop. Shown + required when "current customer?" = No. -->
+              <div class="sm-field full new-only" id="referralField"><label for="f-referral">How did you hear about us? <span class="req" aria-hidden="true">*</span></label><select id="f-referral" name="referral" required><option value="">— select one —</option><option>Google search</option><option>Google Maps</option><option>Referral (friend or family)</option><option>Social media</option><option>Yelp</option><option>Carfax</option><option>Drove by / saw the shop</option><option>Other</option></select></div>
+              <div class="sm-field full"><label for="f-vin">VIN <span class="req" aria-hidden="true">*</span> <span class="dateline">— 17-character vehicle ID</span></label><input id="f-vin" type="text" name="vin" required minlength="17" maxlength="17" pattern="[A-Za-z0-9]{17}" autocapitalize="characters" placeholder="17-character VIN" title="Enter the full 17-character VIN"></div>
               <div class="sm-field appt-only"><label for="apptMake">Make</label><select id="apptMake" name="make"><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Porsche</option><option>Other German make</option></select></div>
               <div class="sm-field appt-only"><label for="f-model">Model &amp; year</label><input id="f-model" type="text" name="model" placeholder="e.g. 2019 Q5"></div>
               <div class="sm-field full"><label id="msgLabel" for="msgInput">Services needed <span class="dateline">— symptoms or service requested</span></label><input type="text" name="message" id="msgInput" placeholder="e.g. oil service + check-engine light"></div>
