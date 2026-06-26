@@ -11,7 +11,7 @@ const STYLE = `/* booking/contact page specifics */
 .hero.bk{background:linear-gradient(90deg,rgba(16,23,38,.94) 0%,rgba(16,23,38,.80) 52%,rgba(16,23,38,.66) 100%),url('/assets/porsche-bg.webp') center/cover no-repeat;background-color:var(--navy);color:#fff;padding:clamp(40px,5vw,68px) 0 clamp(48px,6vw,80px);}
 /* Desktop: head + aside stack in the left column, form spans the right.
    (Split into bk-head/bk-aside so mobile can slot the form between them.) */
-.hero.bk .container{grid-template-columns:.92fr 1.08fr;grid-template-areas:"head form" "aside form";align-items:start;gap:0 54px;}
+.hero.bk .container{grid-template-columns:.92fr 1.08fr;grid-template-areas:"head form" "aside form";grid-template-rows:auto 1fr;align-items:start;gap:0 54px;}
 .hero.bk .bk-head{grid-area:head;}
 .hero.bk .bk-aside{grid-area:aside;}
 .hero.bk .hero-vis{grid-area:form;}
