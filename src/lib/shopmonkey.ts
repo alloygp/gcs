@@ -175,6 +175,48 @@ async function findExistingVehicle(vin: string): Promise<string | null> {
   return null;
 }
 
+/** Normalize a VIN for comparison: uppercase, alphanumeric only. */
+function normVin(v?: string): string {
+  return (v || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+/**
+ * Find THIS customer's existing vehicle that matches the request, so a repeat lead
+ * reuses the car that already holds their service history + photos instead of creating
+ * a duplicate. Matches by exact VIN first, then by make + year + model — which catches
+ * VIN typos (same car, one mistyped character, e.g. WAUF… vs WAYF…). Never throws.
+ */
+async function findCustomerVehicle(customerId: string, req: LeadRequest): Promise<string | null> {
+  try {
+    const list = await smGet(`/customer/${customerId}/vehicle?limit=50`);
+    if (!Array.isArray(list) || !list.length) return null;
+
+    const evin = normVin(req.vin);
+    if (evin) {
+      const byVin = list.find((v: any) => normVin(v.vin) === evin);
+      if (byVin) return byVin.id ?? null;
+    }
+
+    const make = (req.make || '').toLowerCase().trim();
+    const model = (req.model || '').toLowerCase().trim();
+    if (make || model || req.year) {
+      const byYmm = list.find((v: any) => {
+        const vm = (v.make || '').toLowerCase();
+        const vmod = (v.model || '').toLowerCase();
+        const makeOk = !make || vm === make;
+        const yearOk = !req.year || v.year === req.year;
+        const modelOk = !model || (!!vmod && (vmod.indexOf(model) > -1 || model.indexOf(vmod) > -1));
+        return makeOk && yearOk && modelOk;
+      });
+      if (byYmm) return byYmm.id ?? null;
+    }
+    return null;
+  } catch (err) {
+    console.error('Customer vehicle lookup failed (will fall back):', err);
+    return null;
+  }
+}
+
 /**
  * Create a customer + vehicle, then an order on the Workflow board.
  * Reuses an existing customer/vehicle when one matches (by email/phone, VIN) so
@@ -259,7 +301,11 @@ export async function createLead(req: LeadRequest): Promise<ShopmonkeyResult> {
   //    `size` is required.
   let vehicleId: string | undefined;
   let vehicleError: string | undefined;
-  if (req.vin) vehicleId = (await findExistingVehicle(req.vin)) ?? undefined;
+  // Prefer THIS customer's existing car (keeps history; tolerates VIN typos)…
+  if (customerId) vehicleId = (await findCustomerVehicle(customerId, req)) ?? undefined;
+  // …then any vehicle with this exact VIN (Shopmonkey rejects duplicate VINs on create)…
+  if (!vehicleId && req.vin) vehicleId = (await findExistingVehicle(req.vin)) ?? undefined;
+  // …otherwise create a new one (genuinely new car / new customer).
   if (!vehicleId && (req.vin || req.make || req.model)) {
     try {
       const vehicle = await smFetch('/vehicle', {
