@@ -132,30 +132,51 @@ async function findExistingCustomer(req: LeadRequest): Promise<ExistingCustomer 
   if (!wantEmail && !wantPhone) return null; // nothing to confirm a match against
   const last = req.lastName?.trim();
   const first = req.firstName?.trim();
-  const field = last ? 'lastName' : first ? 'firstName' : '';
-  const value = last || first;
-  if (!field || !value) return null;
 
-  let candidates: any[] = [];
-  try {
-    candidates = await smGet(`/customer?limit=100&${whereParam({ [field]: value })}`);
-  } catch (err) {
-    console.error('Customer lookup failed (will create new):', err);
-    return null;
+  // The API can't filter by email/phone (nested arrays), so narrow by name then confirm
+  // by email/phone. Query BOTH last AND first name and union the results — a changed
+  // surname (e.g. marriage: "Smith" → "Smith Fernandez") still matches via the unchanged
+  // first name, so we reuse the existing record instead of creating a duplicate.
+  const queries: Record<string, string>[] = [];
+  if (last) queries.push({ lastName: last });
+  if (first) queries.push({ firstName: first });
+  if (!queries.length) return null;
+
+  const byId = new Map<string, any>();
+  for (const q of queries) {
+    try {
+      const found = await smGet(`/customer?limit=100&${whereParam(q)}`);
+      if (Array.isArray(found)) for (const c of found) if (c?.id && !byId.has(c.id)) byId.set(c.id, c);
+    } catch (err) {
+      console.error('Customer lookup failed (will try other keys / create new):', err);
+    }
   }
-  if (!Array.isArray(candidates) || !candidates.length) return null;
+  const candidates = [...byId.values()];
+  if (!candidates.length) return null;
 
   const primaryOr = (arr: any[]) => arr?.find((x) => x.primary) ?? arr?.[0];
-  // Prefer an email match (most unique), then a phone match.
-  for (const c of candidates) {
-    const em = wantEmail && (c.emails || []).find((e: any) => (e.email || '').trim().toLowerCase() === wantEmail);
-    if (em) return { id: c.id, emailId: em.id, phoneNumberId: primaryOr(c.phoneNumbers || [])?.id };
-  }
-  for (const c of candidates) {
-    const ph = wantPhone && (c.phoneNumbers || []).find((p: any) => normalizePhone(p.number || '') === wantPhone);
-    if (ph) return { id: c.id, phoneNumberId: ph.id, emailId: primaryOr(c.emails || [])?.id };
-  }
-  return null;
+  const emailMatches = wantEmail
+    ? candidates.filter((c) => (c.emails || []).some((e: any) => (e.email || '').trim().toLowerCase() === wantEmail))
+    : [];
+  const phoneMatches = wantPhone
+    ? candidates.filter((c) => (c.phoneNumbers || []).some((p: any) => normalizePhone(p.number || '') === wantPhone))
+    : [];
+  // Prefer email matches (most unique) over phone. If a duplicate already exists, pick the
+  // record with the most orders (the one holding the service history), then the oldest.
+  const pool = emailMatches.length ? emailMatches : phoneMatches;
+  if (!pool.length) return null;
+  pool.sort((a, b) =>
+    (b.orderCount || 0) - (a.orderCount || 0) ||
+    String(a.createdDate || '').localeCompare(String(b.createdDate || ''))
+  );
+  const c = pool[0];
+  const em = (c.emails || []).find((e: any) => (e.email || '').trim().toLowerCase() === wantEmail);
+  const ph = (c.phoneNumbers || []).find((p: any) => normalizePhone(p.number || '') === wantPhone);
+  return {
+    id: c.id,
+    emailId: em?.id ?? primaryOr(c.emails || [])?.id,
+    phoneNumberId: ph?.id ?? primaryOr(c.phoneNumbers || [])?.id,
+  };
 }
 
 /**
