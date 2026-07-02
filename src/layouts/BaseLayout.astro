@@ -74,6 +74,13 @@ const headCss = baseCssRaw.split('../fonts/').join('/fonts/') + '\n' + makeCssRa
   {isProduction && (
     <script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="yAIXuWPEZq7aUBDItOt2+Q" async></script>
   )}
+  {/* WhatConverts lead tracking (profile 148045) — production only. Kept as WhatConverts ships it. */}
+  {isProduction && (
+    <Fragment>
+      <script is:inline>{`var $wc_load=function(a){return JSON.parse(JSON.stringify(a))},$wc_leads=$wc_leads||{doc:{url:$wc_load(document.URL),ref:$wc_load(document.referrer),search:$wc_load(location.search),hash:$wc_load(location.hash)}};`}</script>
+      <script is:inline src="//s.ksrndkehqnwntyxlhgto.com/148045.js"></script>
+    </Fragment>
+  )}
   <style is:inline set:html={headCss}></style>
   {blog && <style is:inline set:html={blogCssRaw}></style>}
   <script is:inline defer src="/assets/lucide.min.js"></script>
