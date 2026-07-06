@@ -125,8 +125,10 @@ function whereParam(obj: unknown): string {
 
 interface ExistingCustomer { id: string; phoneNumberId?: string; emailId?: string }
 
+export interface ContactQuery { firstName?: string; lastName?: string; email: string; phone: string }
+
 /** Find an existing customer by name, confirmed by a matching email or phone. Null if none. Never throws. */
-async function findExistingCustomer(req: LeadRequest): Promise<ExistingCustomer | null> {
+export async function findExistingCustomer(req: ContactQuery): Promise<ExistingCustomer | null> {
   const wantEmail = req.email.trim().toLowerCase();
   const wantPhone = normalizePhone(req.phone);
   if (!wantEmail && !wantPhone) return null; // nothing to confirm a match against
@@ -235,6 +237,31 @@ async function findCustomerVehicle(customerId: string, req: LeadRequest): Promis
   } catch (err) {
     console.error('Customer vehicle lookup failed (will fall back):', err);
     return null;
+  }
+}
+
+/**
+ * Sum a customer's PAID order totals (in cents), optionally only orders fully paid on or
+ * after `sinceISO` (for lead-attributed revenue). Never throws → 0 on error.
+ */
+export async function getCustomerPaidCentsSince(customerId: string, sinceISO?: string): Promise<number> {
+  try {
+    const orders = await smGet(`/customer/${customerId}/order?limit=100`);
+    if (!Array.isArray(orders)) return 0;
+    const since = sinceISO ? sinceISO.slice(0, 10) : '';
+    let cents = 0;
+    for (const o of orders) {
+      if (!o?.paid) continue;
+      if (since) {
+        const paidDate = String(o.fullyPaidDate || o.invoicedDate || o.updatedDate || '').slice(0, 10);
+        if (paidDate && paidDate < since) continue;
+      }
+      cents += o.paidCostCents || 0;
+    }
+    return cents;
+  } catch (err) {
+    console.error('getCustomerPaidCentsSince failed:', err);
+    return 0;
   }
 }
 

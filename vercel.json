@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/cron/whatconverts-sync", "schedule": "0 8 * * *" }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)\\.css",
