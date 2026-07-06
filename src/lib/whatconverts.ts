@@ -49,6 +49,9 @@ export async function listGcsLeads(days = 120): Promise<WcLead[]> {
     }
     const leads: any[] = Array.isArray(json?.leads) ? json.leads : [];
     for (const l of leads) {
+      // HARD SCOPE GUARD: the token is agency-wide — never accept a lead that isn't
+      // GCS's account+profile, even if the query param were ever ignored server-side.
+      if (String(l.account_id) !== ACCOUNT_ID || String(l.profile_id) !== PROFILE_ID) continue;
       const af = l.additional_fields || {};
       out.push({
         lead_id: l.lead_id,
@@ -64,9 +67,28 @@ export async function listGcsLeads(days = 120): Promise<WcLead[]> {
   return out;
 }
 
+/** Fetch a single lead (with account_id/profile_id) to verify scope. Null on error. */
+async function fetchLead(leadId: number): Promise<any | null> {
+  try {
+    const res = await fetch(`${WC_BASE}/leads/${leadId}`, { headers: { Authorization: authHeader() } });
+    if (!res.ok) return null;
+    const j = await res.json();
+    return Array.isArray(j?.leads) ? j.leads[0] : j;
+  } catch {
+    return null;
+  }
+}
+
 /** Set a lead's sales value (form-encoded; JSON is ignored by the API). Returns ok. */
 export async function setLeadSalesValue(leadId: number, salesValue: number): Promise<boolean> {
   if (!whatconvertsConfigured) return false;
+  // HARD WRITE GUARD: re-verify the lead belongs to the GCS account+profile before ANY
+  // write. The token can reach 17 accounts; this makes it impossible to write elsewhere.
+  const lead = await fetchLead(leadId);
+  if (!lead || String(lead.account_id) !== ACCOUNT_ID || String(lead.profile_id) !== PROFILE_ID) {
+    console.error(`WhatConverts: REFUSING to update lead ${leadId} — not in GCS account/profile.`);
+    return false;
+  }
   try {
     const body = new URLSearchParams({ sales_value: String(salesValue), quotable: 'yes' });
     const res = await fetch(`${WC_BASE}/leads/${leadId}`, {
