@@ -12,10 +12,22 @@
 const WC_BASE = 'https://app.whatconverts.com/api/v1';
 const TOKEN = import.meta.env.WHATCONVERTS_TOKEN?.toString() ?? '';
 const SECRET = import.meta.env.WHATCONVERTS_SECRET?.toString() ?? '';
-const ACCOUNT_ID = import.meta.env.WHATCONVERTS_ACCOUNT_ID?.toString() ?? '';
-const PROFILE_ID = import.meta.env.WHATCONVERTS_PROFILE_ID?.toString() ?? '';
 
-export const whatconvertsConfigured = Boolean(TOKEN && SECRET && ACCOUNT_ID && PROFILE_ID);
+// FAIL-SAFE: German Car Specialists' account/profile are HARD-CODED here and are the only
+// values this module will ever read or write. The env vars may set them, but must MATCH —
+// if the env is ever pointed at a different account/profile, the sync refuses to run
+// (whatconvertsConfigured = false) rather than risk touching another agency client.
+const GCS_ACCOUNT_ID = '99459';
+const GCS_PROFILE_ID = '148045';
+const ACCOUNT_ID = import.meta.env.WHATCONVERTS_ACCOUNT_ID?.toString() ?? GCS_ACCOUNT_ID;
+const PROFILE_ID = import.meta.env.WHATCONVERTS_PROFILE_ID?.toString() ?? GCS_PROFILE_ID;
+
+const scopeMatchesGcs = ACCOUNT_ID === GCS_ACCOUNT_ID && PROFILE_ID === GCS_PROFILE_ID;
+if ((ACCOUNT_ID || PROFILE_ID) && !scopeMatchesGcs) {
+  console.error(`WhatConverts: DISABLED — env account/profile (${ACCOUNT_ID}/${PROFILE_ID}) ≠ GCS (${GCS_ACCOUNT_ID}/${GCS_PROFILE_ID}). Refusing to run.`);
+}
+
+export const whatconvertsConfigured = Boolean(TOKEN && SECRET && scopeMatchesGcs);
 
 function authHeader(): string {
   return 'Basic ' + Buffer.from(`${TOKEN}:${SECRET}`).toString('base64');
@@ -39,7 +51,7 @@ export async function listGcsLeads(days = 120): Promise<WcLead[]> {
   for (let page = 1; page <= 25; page++) {
     let json: any;
     try {
-      const url = `${WC_BASE}/leads?account_id=${ACCOUNT_ID}&profile_id=${PROFILE_ID}`
+      const url = `${WC_BASE}/leads?account_id=${GCS_ACCOUNT_ID}&profile_id=${GCS_PROFILE_ID}`
         + `&leads_per_page=100&page_number=${page}&start_date=${start}&end_date=${end}`;
       const res = await fetch(url, { headers: { Authorization: authHeader() } });
       if (!res.ok) break;
@@ -51,7 +63,7 @@ export async function listGcsLeads(days = 120): Promise<WcLead[]> {
     for (const l of leads) {
       // HARD SCOPE GUARD: the token is agency-wide — never accept a lead that isn't
       // GCS's account+profile, even if the query param were ever ignored server-side.
-      if (String(l.account_id) !== ACCOUNT_ID || String(l.profile_id) !== PROFILE_ID) continue;
+      if (String(l.account_id) !== GCS_ACCOUNT_ID || String(l.profile_id) !== GCS_PROFILE_ID) continue;
       const af = l.additional_fields || {};
       out.push({
         lead_id: l.lead_id,
@@ -85,7 +97,7 @@ export async function setLeadSalesValue(leadId: number, salesValue: number): Pro
   // HARD WRITE GUARD: re-verify the lead belongs to the GCS account+profile before ANY
   // write. The token can reach 17 accounts; this makes it impossible to write elsewhere.
   const lead = await fetchLead(leadId);
-  if (!lead || String(lead.account_id) !== ACCOUNT_ID || String(lead.profile_id) !== PROFILE_ID) {
+  if (!lead || String(lead.account_id) !== GCS_ACCOUNT_ID || String(lead.profile_id) !== GCS_PROFILE_ID) {
     console.error(`WhatConverts: REFUSING to update lead ${leadId} — not in GCS account/profile.`);
     return false;
   }
