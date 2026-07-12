@@ -11,8 +11,8 @@
 // Attribution: revenue PAID on/after the lead date (true lead ROI, not lifetime).
 
 import type { APIRoute } from 'astro';
-import { listGcsLeads, setLeadSalesValue, whatconvertsConfigured } from '~/lib/whatconverts';
-import { findExistingCustomer, getCustomerPaidCentsSince, shopmonkeyConfigured } from '~/lib/shopmonkey';
+import { listGcsLeads, setLeadValues, whatconvertsConfigured } from '~/lib/whatconverts';
+import { findExistingCustomer, getCustomerValueSince, shopmonkeyConfigured } from '~/lib/shopmonkey';
 import { edgeGet, edgeSet } from '~/lib/edge-config';
 
 export const prerender = false;
@@ -62,14 +62,16 @@ export const GET: APIRoute = async ({ request, url }) => {
     const cust = await findExistingCustomer({ firstName, lastName, email: lead.email, phone: lead.phone });
     if (!cust) { results.push({ lead: lead.lead_id, name: lead.name, matched: false }); continue; }
 
-    const cents = await getCustomerPaidCentsSince(cust.id, lead.date_created);
-    const dollars = Math.round(cents) / 100;
-    const current = lead.sales_value ?? 0;
-    const willUpdate = dollars > 0 && dollars !== current;
+    const { paidCents, quoteCents } = await getCustomerValueSince(cust.id, lead.date_created);
+    const sales = Math.round(paidCents) / 100;
+    const quote = Math.round(quoteCents) / 100;
+    const curSales = lead.sales_value ?? 0;
+    const curQuote = lead.quote_value ?? 0;
+    const willUpdate = (sales !== curSales || quote !== curQuote) && (sales > 0 || quote > 0 || curSales > 0 || curQuote > 0);
     let updated = false;
-    if (willUpdate && !dry) updated = await setLeadSalesValue(lead.lead_id, dollars);
+    if (willUpdate && !dry) updated = await setLeadValues(lead.lead_id, sales, quote);
 
-    results.push({ lead: lead.lead_id, name: lead.name, matched: true, customerId: cust.id, current, sales: dollars, updated: dry ? `${willUpdate ? 'would-update' : 'no-change'} (dry)` : updated });
+    results.push({ lead: lead.lead_id, name: lead.name, matched: true, customerId: cust.id, sales, quote, curSales, curQuote, updated: dry ? `${willUpdate ? 'would-update' : 'no-change'} (dry)` : updated });
   }
 
   const matched = results.filter((r) => r.matched).length;
