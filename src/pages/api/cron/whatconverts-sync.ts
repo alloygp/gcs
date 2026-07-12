@@ -13,11 +13,13 @@
 import type { APIRoute } from 'astro';
 import { listGcsLeads, setLeadSalesValue, whatconvertsConfigured } from '~/lib/whatconverts';
 import { findExistingCustomer, getCustomerPaidCentsSince, shopmonkeyConfigured } from '~/lib/shopmonkey';
+import { edgeGet, edgeSet } from '~/lib/edge-config';
 
 export const prerender = false;
 
 const CRON_SECRET = import.meta.env.CRON_SECRET?.toString() ?? '';
 const WINDOW_DAYS = 120;
+const STATUS_KEY = 'wcSyncLastRun'; // heartbeat: {at, leads, named, matched, updated}
 
 function splitName(full = ''): { firstName: string; lastName: string } {
   const parts = full.trim().split(/\s+/).filter(Boolean);
@@ -31,6 +33,13 @@ export const GET: APIRoute = async ({ request, url }) => {
   if (!CRON_SECRET || (!bearer && !keyOk)) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'content-type': 'application/json' } });
   }
+
+  // Heartbeat view: last-run status so you can confirm the nightly cron is alive.
+  if (url.searchParams.get('status') === '1') {
+    const last = await edgeGet(STATUS_KEY);
+    return new Response(JSON.stringify({ lastRun: last ?? null }, null, 2), { headers: { 'content-type': 'application/json' } });
+  }
+
   if (!whatconvertsConfigured || !shopmonkeyConfigured) {
     return new Response(JSON.stringify({ error: 'WhatConverts or Shopmonkey not configured.' }), { status: 503, headers: { 'content-type': 'application/json' } });
   }
@@ -39,9 +48,16 @@ export const GET: APIRoute = async ({ request, url }) => {
   const leads = await listGcsLeads(WINDOW_DAYS);
 
   const results: any[] = [];
+  let named = 0;
   for (const lead of leads) {
     const { firstName, lastName } = splitName(lead.name);
-    if (!lead.email && !lead.phone) { results.push({ lead: lead.lead_id, matched: false, reason: 'no email/phone' }); continue; }
+    // Speed: a lead with no name (most phone calls) can't be matched to a Shopmonkey
+    // customer (the API only looks up by name), so skip the lookups entirely.
+    if (!lead.name.trim() || (!lead.email && !lead.phone)) {
+      results.push({ lead: lead.lead_id, matched: false, reason: 'no name / no email+phone' });
+      continue;
+    }
+    named++;
 
     const cust = await findExistingCustomer({ firstName, lastName, email: lead.email, phone: lead.phone });
     if (!cust) { results.push({ lead: lead.lead_id, name: lead.name, matched: false }); continue; }
@@ -56,13 +72,15 @@ export const GET: APIRoute = async ({ request, url }) => {
     results.push({ lead: lead.lead_id, name: lead.name, matched: true, customerId: cust.id, current, sales: dollars, updated: dry ? `${willUpdate ? 'would-update' : 'no-change'} (dry)` : updated });
   }
 
-  const summary = {
-    dry,
-    window_days: WINDOW_DAYS,
-    leads: leads.length,
-    matched: results.filter((r) => r.matched).length,
-    updated: results.filter((r) => r.updated === true).length,
-    results,
-  };
+  const matched = results.filter((r) => r.matched).length;
+  const updated = results.filter((r) => r.updated === true).length;
+
+  // Heartbeat: record this run so /api/cron/whatconverts-sync?status=1&key=… shows it ran.
+  if (!dry) {
+    await edgeSet(STATUS_KEY, { at: new Date().toISOString(), leads: leads.length, named, matched, updated });
+  }
+  console.log(`[wc-sync] dry=${dry} leads=${leads.length} named=${named} matched=${matched} updated=${updated}`);
+
+  const summary = { dry, window_days: WINDOW_DAYS, leads: leads.length, named, matched, updated, results };
   return new Response(JSON.stringify(summary, null, 2), { headers: { 'content-type': 'application/json' } });
 };
