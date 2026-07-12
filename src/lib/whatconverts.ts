@@ -40,6 +40,7 @@ export interface WcLead {
   email: string;
   phone: string;
   sales_value: number | null;
+  quote_value: number | null;
 }
 
 /** List GCS leads created within the last `days`. Paginates. Never throws → [] on error. */
@@ -72,6 +73,7 @@ export async function listGcsLeads(days = 120): Promise<WcLead[]> {
         email: (l.contact_email_address || l.email_address || '').trim(),
         phone: (l.contact_phone_number || l.phone_number || '').trim(),
         sales_value: l.sales_value ?? null,
+        quote_value: l.quote_value ?? null,
       });
     }
     if (!leads.length || page >= (json?.total_pages ?? 1)) break;
@@ -91,8 +93,8 @@ async function fetchLead(leadId: number): Promise<any | null> {
   }
 }
 
-/** Set a lead's sales value (form-encoded; JSON is ignored by the API). Returns ok. */
-export async function setLeadSalesValue(leadId: number, salesValue: number): Promise<boolean> {
+/** Set a lead's sales + quote values (form-encoded; JSON is ignored by the API). Returns ok. */
+export async function setLeadValues(leadId: number, salesValue: number, quoteValue: number): Promise<boolean> {
   if (!whatconvertsConfigured) return false;
   // HARD WRITE GUARD: re-verify the lead belongs to the GCS account+profile before ANY
   // write. The token can reach 17 accounts; this makes it impossible to write elsewhere.
@@ -102,7 +104,7 @@ export async function setLeadSalesValue(leadId: number, salesValue: number): Pro
     return false;
   }
   try {
-    const body = new URLSearchParams({ sales_value: String(salesValue), quotable: 'yes' });
+    const body = new URLSearchParams({ sales_value: String(salesValue), quote_value: String(quoteValue), quotable: 'yes' });
     const res = await fetch(`${WC_BASE}/leads/${leadId}`, {
       method: 'POST',
       headers: { Authorization: authHeader(), 'Content-Type': 'application/x-www-form-urlencoded' },

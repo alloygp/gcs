@@ -240,28 +240,39 @@ async function findCustomerVehicle(customerId: string, req: LeadRequest): Promis
   }
 }
 
+export interface CustomerValue {
+  /** Paid orders → WhatConverts sales_value. */
+  paidCents: number;
+  /** Priced-but-unpaid orders (in-progress / estimates) → WhatConverts quote_value. */
+  quoteCents: number;
+}
+
 /**
- * Sum a customer's PAID order totals (in cents), optionally only orders fully paid on or
- * after `sinceISO` (for lead-attributed revenue). Never throws → 0 on error.
+ * A customer's order value split into PAID (sales) and PRICED-BUT-UNPAID (quote), for
+ * orders dated on/after `sinceISO` (lead attribution). Paid orders are dated by paid/
+ * invoiced date; open orders by created date. Skips deleted + zero-total orders.
+ * Never throws → zeros on error.
  */
-export async function getCustomerPaidCentsSince(customerId: string, sinceISO?: string): Promise<number> {
+export async function getCustomerValueSince(customerId: string, sinceISO?: string): Promise<CustomerValue> {
   try {
     const orders = await smGet(`/customer/${customerId}/order?limit=100`);
-    if (!Array.isArray(orders)) return 0;
+    if (!Array.isArray(orders)) return { paidCents: 0, quoteCents: 0 };
     const since = sinceISO ? sinceISO.slice(0, 10) : '';
-    let cents = 0;
+    let paidCents = 0;
+    let quoteCents = 0;
     for (const o of orders) {
-      if (!o?.paid) continue;
-      if (since) {
-        const paidDate = String(o.fullyPaidDate || o.invoicedDate || o.updatedDate || '').slice(0, 10);
-        if (paidDate && paidDate < since) continue;
-      }
-      cents += o.paidCostCents || 0;
+      if (o?.deleted) continue;
+      const total = o.totalCostCents || 0;
+      if (total <= 0) continue;
+      const dateStr = String((o.paid ? (o.fullyPaidDate || o.invoicedDate) : '') || o.createdDate || '').slice(0, 10);
+      if (since && dateStr && dateStr < since) continue;
+      if (o.paid) paidCents += total;
+      else quoteCents += total;
     }
-    return cents;
+    return { paidCents, quoteCents };
   } catch (err) {
-    console.error('getCustomerPaidCentsSince failed:', err);
-    return 0;
+    console.error('getCustomerValueSince failed:', err);
+    return { paidCents: 0, quoteCents: 0 };
   }
 }
 
