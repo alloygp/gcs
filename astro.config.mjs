@@ -41,7 +41,9 @@ export default defineConfig({
     '/audi-service': '/audi-repair-san-antonio',
     '/news': '/shop-notes',
     '/porsche-service': '/porsche-repair-san-antonio',
-    '/lost-keys-and-wheel-locks-for-a-luxury-car-its-not-the-challenge-you-think': '/german-car-key-replacement-san-antonio',
+    '/lost-keys-and-wheel-locks-for-a-luxury-car-its-not-the-challenge-you-think': '/',
+    // Key & fob replacement service removed per client — 301 the old page to home.
+    '/german-car-key-replacement-san-antonio': '/',
     '/dealership-service-vs-repair-shop': '/independent-vs-dealer-german-auto-service',
     '/service-announcement': '/shop-notes',
     '/texas-winter-weather-update-we-are-closed': '/shop-notes',
