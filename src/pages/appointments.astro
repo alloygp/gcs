@@ -56,6 +56,9 @@ const STYLE = `/* booking/contact page specifics */
 .bkform .note{text-align:center;font-size:12px;color:var(--steel-400);padding:0 28px 22px;}
 .dateline{font-size:11.5px;color:var(--steel-400);font-weight:500;}
 .req{color:var(--acc);font-weight:700;}/* red * on required-field labels */
+/* Appointment-request acknowledgment checkbox */
+.bkform .ack{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;font-weight:500;color:var(--steel-700);line-height:1.5;cursor:pointer;margin-top:4px;}
+.bkform .ack input[type="checkbox"]{width:17px;height:17px;min-width:17px;margin:2px 0 0;flex:none;accent-color:var(--acc);cursor:pointer;}
 /* Drop-off date uses the shared calendar component; its styles are injected by
    public/date-picker.js. Override only the title font to match the form. */
 #datePicker .dp-title{font-family:var(--font-display);}
@@ -165,6 +168,7 @@ const CONTENT = `<!-- BREADCRUMB -->
                 <div id="datePicker"><!-- shared calendar mounts here (public/date-picker.js) --></div>
               </div>
               <div class="sm-field appt-only"><label for="f-time">Preferred drop-off time <span class="dateline">(optional)</span></label><select id="f-time" name="time"><option value="">No preference</option><option>Morning (9a–12p)</option><option>Late afternoon (4–5:30p · drop-off only)</option></select></div>
+              <div class="sm-field full appt-only" id="ackField"><label class="ack"><input type="checkbox" name="ack" value="yes" required><span>I acknowledge that this is an appointment request only. The appointment is not confirmed until I receive written confirmation from German Car Specialists LLC. German Car Specialists LLC reserves the right to accept or decline any request based on availability, vehicle needs, and other factors.</span></label></div>
               <button class="btn btn-primary full" id="submitBtn"><i data-lucide="send"></i><span id="btnText">Request Appointment</span></button>
             </div>
           </form>
