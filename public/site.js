@@ -179,7 +179,8 @@
         name: 'date',
         placeholder: 'Choose a date',
         floor: new Date(2026, 5, 24), // fallback (June 24, 2026) until the live config loads
-        isDisabled: function (d) { return !!blackout[isoOf(d)]; },
+        // Shop is closed weekends — block Saturday (6) and Sunday (0), plus blackout dates.
+        isDisabled: function (d) { var day = d.getDay(); return day === 0 || day === 6 || !!blackout[isoOf(d)]; },
       });
       fetch('/api/booking-config').then(function (r) { return r.json(); }).then(function (j) {
         if (!dp || !j) return;
