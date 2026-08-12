@@ -6,11 +6,15 @@ import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import { EMAIL_CONFIG } from '~/lib/email.config';
-import { sendWithAlert } from '~/lib/form-alert';
+import { sendWithAlert , notifySubmission, fieldsFromFormData } from '~/lib/form-alert';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 // Astro reads env via import.meta.env, so pass the Slack URL explicitly.
-const FORM_ALERT_SLACK_URL = import.meta.env.FORM_ALERT_SLACK_URL;
+// Slack destination. FORM_SLACK_WEBHOOK is this client's own channel and takes
+// precedence for BOTH submissions and failures; SLACK_WEBHOOK is the
+// shared fallback for clients without a channel of their own.
+const SLACK_WEBHOOK =
+  import.meta.env.FORM_SLACK_WEBHOOK || import.meta.env.FORM_ALERT_SLACK_URL;
 
 if (EMAIL_CONFIG.mailchimp.enabled) {
   mailchimp.setConfig({
@@ -35,23 +39,43 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Internal notification
     try {
-      await sendWithAlert(
-        { client: EMAIL_CONFIG.brand.name, formName: 'Lead form — notification', slackWebhookUrl: FORM_ALERT_SLACK_URL },
-        () => resend.emails.send({
-          from: EMAIL_CONFIG.from.notifications,
-          to: EMAIL_CONFIG.notify,
-          subject: `New lead: ${company || name}`,
-          html: `
-            <h2>New Lead Form Submission</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
-            ${phone   ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
-            ${goal    ? `<p><strong>Goal:</strong> ${goal}</p>` : ''}
-            ${source  ? `<hr><p style="color:#888;font-size:13px"><strong>Source</strong><br>${source.replace(/\n/g, '<br>')}</p>` : ''}
-          `,
-        })
-      );
+      // The error is held rather than thrown so the Slack log below still runs;
+      // it is re-thrown straight after, so the caller behaves exactly as before.
+      let notifyError: unknown = null;
+      try {
+        await sendWithAlert(
+          { client: EMAIL_CONFIG.brand.name, formName: 'Lead form — notification', slackWebhookUrl: SLACK_WEBHOOK },
+          () => resend.emails.send({
+            from: EMAIL_CONFIG.from.notifications,
+            to: EMAIL_CONFIG.notify,
+            subject: `New lead: ${company || name}`,
+            html: `
+              <h2>New Lead Form Submission</h2>
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
+              ${phone   ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+              ${goal    ? `<p><strong>Goal:</strong> ${goal}</p>` : ''}
+              ${source  ? `<hr><p style="color:#888;font-size:13px"><strong>Source</strong><br>${source.replace(/\n/g, '<br>')}</p>` : ''}
+            `,
+          })
+        );
+      } catch (err) {
+        notifyError = err;
+      }
+
+      // Log the submission to the client's Slack channel, whether or not the
+      // email went out. When the send failed this is the *only* surviving copy
+      // of what someone typed, so it posts either way and says which it is.
+      await notifySubmission({
+        client: EMAIL_CONFIG.brand.name,
+        slackWebhookUrl: SLACK_WEBHOOK,
+        route: 'Lead form',
+        delivered: !notifyError,
+        fields: fieldsFromFormData(data),
+      });
+
+      if (notifyError) throw notifyError;
     } catch (err) {
       console.error('Resend notify error:', err);
     }
@@ -59,7 +83,7 @@ export const POST: APIRoute = async ({ request }) => {
     // Confirmation to sender
     try {
       await sendWithAlert(
-        { client: EMAIL_CONFIG.brand.name, formName: 'Lead form — confirmation', slackWebhookUrl: FORM_ALERT_SLACK_URL },
+        { client: EMAIL_CONFIG.brand.name, formName: 'Lead form — confirmation', slackWebhookUrl: SLACK_WEBHOOK },
         () => resend.emails.send({
           from: EMAIL_CONFIG.from.hello,
           to: email,
