@@ -6,11 +6,15 @@ import type { APIRoute } from 'astro';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import { Resend } from 'resend';
 import { EMAIL_CONFIG } from '~/lib/email.config';
-import { sendWithAlert } from '~/lib/form-alert';
+import { sendWithAlert , notifySubmission, fieldsFromFormData } from '~/lib/form-alert';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 // Astro reads env via import.meta.env, so pass the Slack URL explicitly.
-const FORM_ALERT_SLACK_URL = import.meta.env.FORM_ALERT_SLACK_URL;
+// Slack destination. FORM_SLACK_WEBHOOK is this client's own channel and takes
+// precedence for BOTH submissions and failures; SLACK_WEBHOOK is the
+// shared fallback for clients without a channel of their own.
+const SLACK_WEBHOOK =
+  import.meta.env.FORM_SLACK_WEBHOOK || import.meta.env.FORM_ALERT_SLACK_URL;
 
 if (EMAIL_CONFIG.mailchimp.enabled) {
   mailchimp.setConfig({
@@ -42,6 +46,16 @@ export const POST: APIRoute = async ({ request }) => {
         const alreadyExists = err?.response?.body?.title === 'Member Exists';
         if (!alreadyExists) {
           console.error('Mailchimp subscribe error:', err?.response?.body ?? err);
+          // Post it anyway or the address is gone: Mailchimp never took it and
+          // we return here, before the notification email is sent.
+          await notifySubmission({
+            client: EMAIL_CONFIG.brand.name,
+            slackWebhookUrl: SLACK_WEBHOOK,
+            route: 'Newsletter sign-up',
+            formName: 'Mailchimp rejected the add',
+            delivered: false,
+            fields: fieldsFromFormData(data),
+          });
           return new Response(JSON.stringify({ error: 'Could not subscribe. Please try again.' }), { status: 500 });
         }
       }
@@ -49,15 +63,35 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Welcome email
     try {
-      await sendWithAlert(
-        { client: EMAIL_CONFIG.brand.name, formName: 'Subscribe form — welcome', slackWebhookUrl: FORM_ALERT_SLACK_URL },
-        () => resend.emails.send({
-          from: EMAIL_CONFIG.from.hello,
-          to: email,
-          subject: EMAIL_CONFIG.copy.subscribe.confirmSubject,
-          html: EMAIL_CONFIG.copy.subscribe.confirmBody(firstName),
-        })
-      );
+      // The error is held rather than thrown so the Slack log below still runs;
+      // it is re-thrown straight after, so the caller behaves exactly as before.
+      let notifyError: unknown = null;
+      try {
+        await sendWithAlert(
+          { client: EMAIL_CONFIG.brand.name, formName: 'Subscribe form — welcome', slackWebhookUrl: SLACK_WEBHOOK },
+          () => resend.emails.send({
+            from: EMAIL_CONFIG.from.hello,
+            to: email,
+            subject: EMAIL_CONFIG.copy.subscribe.confirmSubject,
+            html: EMAIL_CONFIG.copy.subscribe.confirmBody(firstName),
+          })
+        );
+      } catch (err) {
+        notifyError = err;
+      }
+
+      // Log the submission to the client's Slack channel, whether or not the
+      // email went out. When the send failed this is the *only* surviving copy
+      // of what someone typed, so it posts either way and says which it is.
+      await notifySubmission({
+        client: EMAIL_CONFIG.brand.name,
+        slackWebhookUrl: SLACK_WEBHOOK,
+        route: 'Newsletter sign-up',
+        delivered: !notifyError,
+        fields: fieldsFromFormData(data),
+      });
+
+      if (notifyError) throw notifyError;
     } catch (err) {
       console.error('Resend welcome error:', err);
     }

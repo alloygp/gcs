@@ -2,6 +2,18 @@
 // The only file you edit per client for email setup.
 // All API routes (contact.ts, lead.ts, subscribe.ts) read from here.
 
+/**
+ * Alloy's copy of every form notification — the reason an Alloy inbox received
+ * one of everything this site takes. Empty once the site has somewhere in Slack
+ * to log submissions, which is a better record anyway; kept until then, so
+ * monitoring is never dropped silently.
+ */
+const ALLOY_MONITORING: string[] = Boolean(
+  import.meta.env.FORM_SLACK_WEBHOOK || import.meta.env.FORM_ALERT_SLACK_URL
+)
+  ? []
+  : ['skyler@alloygp.co'];
+
 export const EMAIL_CONFIG = {
 
   brand: {
@@ -20,7 +32,7 @@ export const EMAIL_CONFIG = {
   notify: [
     'customer@mygermancarsa.com',
     'contact@mygermancarsa.com',
-    'skyler@alloygp.co',
+    ...ALLOY_MONITORING,
   ],
 
   mailchimp: {

@@ -14,7 +14,7 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import { EMAIL_CONFIG } from '~/lib/email.config';
-import { sendWithAlert } from '~/lib/form-alert';
+import { sendWithAlert , notifySubmission, fieldsFromFormData } from '~/lib/form-alert';
 import { createLead, shopmonkeyConfigured } from '~/lib/shopmonkey';
 
 export const prerender = false; // server route — must not be statically built
@@ -23,7 +23,11 @@ export const prerender = false; // server route — must not be statically built
 // `new Resend("")` throws, which would crash the whole function with a non-JSON
 // 500 before any error handling runs. Construct it lazily inside the handler.
 const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-const FORM_ALERT_SLACK_URL = import.meta.env.FORM_ALERT_SLACK_URL;
+// Slack destination. FORM_SLACK_WEBHOOK is this client's own channel and takes
+// precedence for BOTH submissions and failures; SLACK_WEBHOOK is the
+// shared fallback for clients without a channel of their own.
+const SLACK_WEBHOOK =
+  import.meta.env.FORM_SLACK_WEBHOOK || import.meta.env.FORM_ALERT_SLACK_URL;
 
 // Internal labels shown on the Shopmonkey board card + shop notification email.
 // Keys MUST stay book/question to match the form's intent values; estimate is
@@ -119,30 +123,50 @@ export const POST: APIRoute = async ({ request }) => {
     if (RESEND_API_KEY) {
       try {
         const resend = new Resend(RESEND_API_KEY);
-        await sendWithAlert(
-          { client: EMAIL_CONFIG.brand.name, formName: 'Appointment request — notification', slackWebhookUrl: FORM_ALERT_SLACK_URL },
-          () => resend.emails.send({
-            from: EMAIL_CONFIG.from.notifications,
-            to: EMAIL_CONFIG.notify,
-            subject: `New ${intentLabel.toLowerCase()}: ${name}${vehicle ? ` (${vehicle})` : ''}`,
-            html: `
-              <h2>${INTENT_HEADING[intent] || 'New Request'}</h2>
-              <p><strong>Intent:</strong> ${intentLabel}</p>
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Phone:</strong> ${phone}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              ${customerStatus ? `<p><strong>Customer:</strong> ${customerStatus}</p>` : ''}
-              ${referral ? `<p><strong>How they heard about us:</strong> ${referral}</p>` : ''}
-              ${intent === 'book' ? `
-              <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
-              ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
-              <p><strong>Preferred drop-off date:</strong> ${date || '— (none given)'}</p>
-              <p><strong>Preferred drop-off time:</strong> ${time || '— (no preference)'}</p>` : (vehicle ? `<p><strong>Vehicle:</strong> ${vehicle}</p>` : '')}
-              ${message ? `<p><strong>${intent === 'book' ? 'What it needs' : 'Message'}:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
-              ${smLine}
-            `,
-          })
-        );
+        // The error is held rather than thrown so the Slack log below still runs;
+        // it is re-thrown straight after, so the caller behaves exactly as before.
+        let notifyError: unknown = null;
+        try {
+          await sendWithAlert(
+            { client: EMAIL_CONFIG.brand.name, formName: 'Appointment request — notification', slackWebhookUrl: SLACK_WEBHOOK },
+            () => resend.emails.send({
+              from: EMAIL_CONFIG.from.notifications,
+              to: EMAIL_CONFIG.notify,
+              subject: `New ${intentLabel.toLowerCase()}: ${name}${vehicle ? ` (${vehicle})` : ''}`,
+              html: `
+                <h2>${INTENT_HEADING[intent] || 'New Request'}</h2>
+                <p><strong>Intent:</strong> ${intentLabel}</p>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                ${customerStatus ? `<p><strong>Customer:</strong> ${customerStatus}</p>` : ''}
+                ${referral ? `<p><strong>How they heard about us:</strong> ${referral}</p>` : ''}
+                ${intent === 'book' ? `
+                <p><strong>Vehicle:</strong> ${vehicle || '—'}</p>
+                ${vin ? `<p><strong>VIN:</strong> ${vin}</p>` : ''}
+                <p><strong>Preferred drop-off date:</strong> ${date || '— (none given)'}</p>
+                <p><strong>Preferred drop-off time:</strong> ${time || '— (no preference)'}</p>` : (vehicle ? `<p><strong>Vehicle:</strong> ${vehicle}</p>` : '')}
+                ${message ? `<p><strong>${intent === 'book' ? 'What it needs' : 'Message'}:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
+                ${smLine}
+              `,
+            })
+          );
+        } catch (err) {
+          notifyError = err;
+        }
+
+        // Log the submission to the client's Slack channel, whether or not the
+        // email went out. When the send failed this is the *only* surviving copy
+        // of what someone typed, so it posts either way and says which it is.
+        await notifySubmission({
+          client: EMAIL_CONFIG.brand.name,
+          slackWebhookUrl: SLACK_WEBHOOK,
+          route: 'Appointment request',
+          delivered: !notifyError,
+          fields: fieldsFromFormData(data),
+        });
+
+        if (notifyError) throw notifyError;
       } catch (err) {
         console.error('Resend notify error:', err);
       }

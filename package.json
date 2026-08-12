@@ -2,13 +2,14 @@
   "name": "german-car-specialists-site",
   "type": "module",
   "version": "1.0.0",
-  "description": "AGP client site — replace with client name",
+  "description": "AGP client site \u2014 replace with client name",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "test:forms": "node scripts/test-form-alert.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
